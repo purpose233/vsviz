@@ -2,6 +2,14 @@ import cv2 as cv
 import numpy as np
 import urllib
 import socket
+import json
+
+def send(s, data):
+  info = {
+    'type': 'image',
+    'size': len(data)
+  }
+  s.send(json.dumps(info) + '|' + data)
 
 if __name__ == '__main__':
 
@@ -9,8 +17,8 @@ if __name__ == '__main__':
 
   cv.namedWindow("camera", 1)
   capture = cv.VideoCapture(0) 
-  capture.set(3, 320)
-  capture.set(4, 240)
+  capture.set(3, 640)
+  capture.set(4, 480)
 
   s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
   s.connect(("127.0.0.1", VIDEO_SERVER_PORT))
@@ -25,7 +33,7 @@ if __name__ == '__main__':
     dataEncoded = np.array(img)
     strEncoded = dataEncoded.tostring()
     
-    s.send(strEncoded)
+    send(s, strEncoded)
 
     # c = cv.waitKey(30) & 0xff 
     # if c == 27:

@@ -1,20 +1,28 @@
 const net = require('net');
 const fs = require('fs');
+const Parser = require('./common/parser');
+const {writeFile} = require('./common/file');
 
 const VIDEO_SERVER_PORT = 9000;
 
 const videoServer = net.createServer((socket) => {
+  const parser = new Parser();
+
   // TODO: only one client will be received at one time
   socket.on('error', (e) => {console.log(e);});
 
-  let isPacking = false;
-  socket.on('data', (data) => {
+  socket.on('data', async (data) => {
+    console.log('Receive package.');
 
-    console.log(data);
-    fs.appendFile('img.jpg', data, (err) => {
-      if (err) throw err;
-      console.log('图片已被保存于 img.jpg');
-    });
+    const info = parser.parse(data);
+    if (info) {
+      switch (info.type) {
+        case 'image': 
+          await writeFile('img.jpg', info.data); 
+          console.log('Image has been writen to: img.jpg');
+          break;
+      }
+    }
   });
 });
 
