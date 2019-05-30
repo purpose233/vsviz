@@ -18,6 +18,7 @@
   "homepage": "https://github.com/purpose233/vsviz#readme",
   "dependencies": {
     "lodash": "^4.17.11",
-    "text-encoding": "^0.7.0"
+    "text-encoding": "^0.7.0",
+    "videoshow": "^0.1.11"
   }
 }

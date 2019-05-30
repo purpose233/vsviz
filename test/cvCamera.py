@@ -3,6 +3,7 @@ import numpy as np
 import urllib
 import socket
 import json
+import time
 
 def send(s, data):
   info = {
@@ -23,6 +24,7 @@ if __name__ == '__main__':
   s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
   s.connect(("127.0.0.1", VIDEO_SERVER_PORT))
 
+  imgCount = 0
   while(True):
     ref,frame = capture.read()
 
@@ -35,10 +37,14 @@ if __name__ == '__main__':
     
     send(s, strEncoded)
 
+    imgCount += 1
+    if imgCount == 20:
+      break
+
+    time.sleep(30.0 / 1000)
     # c = cv.waitKey(30) & 0xff 
     # if c == 27:
     #     break
-    break
   
   s.close()
   capture.release()

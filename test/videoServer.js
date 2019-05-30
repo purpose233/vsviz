@@ -5,6 +5,8 @@ const {writeFile} = require('./common/file');
 
 const VIDEO_SERVER_PORT = 9000;
 
+let imgCount = 0;
+
 const videoServer = net.createServer((socket) => {
   const parser = new Parser();
 
@@ -18,8 +20,12 @@ const videoServer = net.createServer((socket) => {
     if (info) {
       switch (info.type) {
         case 'image': 
-          await writeFile('img.jpg', info.data); 
-          console.log('Image has been writen to: img.jpg');
+          const fileName = 'img' + (imgCount++) +'.jpg';
+          if (imgCount == 10) {
+            imgCount = 0;
+          }
+          await writeFile(fileName, info.data); 
+          console.log('Image has been writen to: ', fileName);
           break;
       }
     }

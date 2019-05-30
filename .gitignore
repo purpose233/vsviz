@@ -3,6 +3,7 @@
 .vscode/
 node_modules/
 
-# test images
+# test images & videos
 *.jpg
 *.png
+*.mp4
