@@ -38,7 +38,7 @@ if __name__ == '__main__':
     send(s, strEncoded)
 
     imgCount += 1
-    if imgCount == 20:
+    if imgCount == 10:
       break
 
     time.sleep(30.0 / 1000)

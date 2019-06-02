@@ -20,5 +20,8 @@
     "lodash": "^4.17.11",
     "text-encoding": "^0.7.0",
     "videoshow": "^0.1.11"
+  },
+  "devDependencies": {
+    "lerna": "^3.14.1"
   }
 }

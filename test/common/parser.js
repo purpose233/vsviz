@@ -46,6 +46,9 @@ class Parser {
       this._stashedData.push(data);
       this._stashedSize += data.length;
       if (this._stashedSize >= this._stashedDataInfo.size) {
+        if (this._stashedSize > this._stashedDataInfo.size) {
+          console.log('Receive sticky package!');
+        }
         const parseResult = {
           data: this._stashedData, 
           ...this._stashedDataInfo

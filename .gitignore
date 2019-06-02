@@ -7,3 +7,11 @@ node_modules/
 *.jpg
 *.png
 *.mp4
+
+# lib
+packages/builder/lib/
+packages/builder/node_modules/
+packages/parser/lib/
+packages/parser/node_modules/
+packages/server/lib/
+packages/server/node_modules/
