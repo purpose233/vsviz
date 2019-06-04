@@ -1,15 +1,5 @@
 import textEncoding from 'text-encoding';
-
-export interface DataInfo {
-  type: 'image',
-  size: number,
-  timestamp: number
-};
-
-export interface ParsedData {
-  info: DataInfo,
-  data: Buffer
-};
+import { DataInfo, ParsedData } from '../common/types';
 
 const decoder = new textEncoding.TextDecoder('utf-8');
 const encoder = new textEncoding.TextEncoder();
