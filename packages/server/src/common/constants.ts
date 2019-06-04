@@ -1,5 +1,5 @@
 export enum SessionEventType {
-  CONNECT,
+  CONNECTION,
   CLOSE,
   MESSAGE
 };

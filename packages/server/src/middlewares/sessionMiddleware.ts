@@ -4,8 +4,8 @@ export class SessionMiddleware {
 
   public async callMiddleware(next: Function, type: SessionEventType, msg: any) {
     switch (type) {
-      case SessionEventType.CONNECT:
-        await this.onConnect(next);
+      case SessionEventType.CONNECTION:
+        await this.onConnection(next, msg);
         break;
       case SessionEventType.CLOSE: 
         await this.onClose(next);
@@ -16,7 +16,7 @@ export class SessionMiddleware {
     }
   }
 
-  private async onConnect(next: Function) {}
+  private async onConnection(next: Function, msg: any) {}
 
   private async onClose(next: Function) {}
 

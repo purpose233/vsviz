@@ -1,4 +1,4 @@
-import { SessionMiddleware } from '../middlewares/middleware';
+import { SessionMiddleware } from '../middlewares/sessionMiddleware';
 
 export type SessionMiddlewareType = SessionMiddleware | Function;
 

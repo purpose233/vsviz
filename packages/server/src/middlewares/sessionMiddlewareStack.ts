@@ -1,6 +1,6 @@
 import { SessionMiddlewareType } from '../common/types';
 import { SessionEventType } from '../common/constants';
-import { SessionMiddleware } from './middleware';
+import { SessionMiddleware } from './sessionMiddleware';
 
 // TODO: MiddleStack could be generic for both session and timer
 export class SessionMiddlewareStack {
@@ -20,7 +20,7 @@ export class SessionMiddlewareStack {
 
   // add next to arguments, similar to koa
   private async execMiddleware(middleware: SessionMiddlewareType, 
-                         type: SessionEventType, msg: any) {
+                               type: SessionEventType, msg: any) {
     const next = async () => {
       const nextMiddleware = this.getNextMiddleware(middleware);
       if (nextMiddleware) {
