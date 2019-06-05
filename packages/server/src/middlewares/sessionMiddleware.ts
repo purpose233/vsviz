@@ -1,6 +1,7 @@
 import { SessionEventType } from '../common/constants';
+import { Middleware } from './baseMiddleware';
 
-export class SessionMiddleware {
+export class SessionMiddleware extends Middleware {
 
   public async callMiddleware(next: Function, type: SessionEventType, msg: any) {
     switch (type) {

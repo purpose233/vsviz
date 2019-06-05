@@ -3,3 +3,7 @@ export enum SessionEventType {
   CLOSE,
   MESSAGE
 };
+
+export enum TimerEventType {
+  INITIAL
+}

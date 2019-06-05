@@ -1,5 +1,5 @@
 import net from 'net';
-import {Parser} from './common/parser';
+import { Parser } from './common/parser';
 
 export class DataServer {
   private server: net.Server;
