@@ -16,7 +16,7 @@ export class WSHandler {
     this.middlewareProtos.push(middlewareProto);
   }
 
-  public handleNewSession(socket: WebSocket, request: IncomingMessage) {
+  public handleNewSession(socket: WebSocket, request: IncomingMessage): void {
     const session = new WSSession(socket, request, this.middlewareProtos);
     this.sessionMap.set(this.sessionCount, session);
     this.sessionCount++;

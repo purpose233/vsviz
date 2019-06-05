@@ -10,7 +10,7 @@ export class MiddlewareStack {
     this.middlewares = this.setupMiddlewares(middlewareProtos);
   }
 
-  public async dispatch(type: MiddlewareEventType, msg: any) {
+  public async dispatch(type: MiddlewareEventType, msg: any): Promise<void> {
     if (this.middlewares.length > 0) {
       await this.execMiddleware(this.middlewares[0], type, msg);
     }
@@ -18,7 +18,7 @@ export class MiddlewareStack {
 
   // add next to arguments, similar to koa
   private async execMiddleware(middleware: MiddlewareType, 
-                               type: MiddlewareEventType, msg: any) {
+                               type: MiddlewareEventType, msg: any): Promise<void> {
     const next = async () => {
       const nextMiddleware = this.getNextMiddleware(middleware);
       if (nextMiddleware) {

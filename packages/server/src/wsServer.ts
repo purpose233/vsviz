@@ -2,26 +2,39 @@ import WebSocket from 'ws';
 import { IncomingMessage } from 'http';
 import { SessionMiddlewareType } from './common/types';
 import { WSHandler } from './handlers/wsHandler';
+import { BaseServer } from './baseServer';
 
-export class WSServer {
+export class WSServer extends BaseServer {
   
+  private port: number;
   private server: WebSocket.Server;
   private handler: WSHandler;
 
-  // TODO: add handler
+  // TODO: set option argument
   constructor(port: number) {
-    this.server = new WebSocket.Server({port});
-    this.server.on('connection', this.handleConnection);
-
+    super();
+    this.port = port;
     this.handler = new WSHandler();
   }
 
-  public close() {
+  public start(): void {
+    this.isStarted = true;
+    this.server = new WebSocket.Server({port: this.port});
+    this.server.on('connection', this.handleConnection);
+  }
+
+  public close(): void {
     this.server.close();
   }
 
-  public use(middleware: SessionMiddlewareType) {
+  public use(middleware: SessionMiddlewareType): WSServer {
+    // once started, server will not accept new middleware
+    if (this.isStarted) {
+      return this;
+    }
     this.handler.addMiddlewareProto(middleware);
+    // Enable to use chain syntax
+    return this;
   }
 
   private handleConnection(socket: WebSocket, request: IncomingMessage): void {

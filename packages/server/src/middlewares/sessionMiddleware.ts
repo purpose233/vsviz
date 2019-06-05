@@ -3,7 +3,7 @@ import { Middleware } from './baseMiddleware';
 
 export class SessionMiddleware extends Middleware {
 
-  public async callMiddleware(next: Function, type: SessionEventType, msg: any) {
+  public async callMiddleware(next: Function, type: SessionEventType, msg: any): Promise<void> {
     switch (type) {
       case SessionEventType.CONNECTION:
         await this.onConnection(next, msg);
