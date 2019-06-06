@@ -14,6 +14,7 @@ export class StreamBuilder {
 
   public getID(): string { return this.id; }
 
+  // TODO: check the type of data
   public build(parsedData: ParsedDataType): void {
     this.dataStack.push(parsedData);
     this.currentData = parsedData;

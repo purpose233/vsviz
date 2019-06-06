@@ -8,7 +8,7 @@ export interface DataInfoType {
 
 export interface ParsedDataType {
   info: DataInfoType,
-  data: Buffer
+  data: StreamDataType
 };
 
 export type StreamDataType = Buffer | String | Object;

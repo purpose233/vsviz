@@ -32,7 +32,7 @@ function concatBuffer(datas: Buffer[]): Buffer {
   if (datas.length <= 0) { return null; }
   // TODO: reduce will cause the type inference 
   const size: any = datas.reduce(<any>((old: number, cur: Buffer) => (old + cur.length)));
-  const concatedData = new Buffer(size);
+  const concatedData = Buffer.alloc(size);
   let count: number = 0;
   for (const data of datas) {
     concatedData.copy(data, count, 0, data.length);
