@@ -1,10 +1,10 @@
-export enum SessionEventType {
+export enum SessionEventEnum {
   CONNECTION,
   CLOSE,
   MESSAGE
 };
 
-export enum TimerEventType {
+export enum TimerEventEnum {
   INITIAL,
   END,
   TIMEOUT,

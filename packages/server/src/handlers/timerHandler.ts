@@ -1,6 +1,6 @@
 import { TimerMiddlewareType } from '../common/types';
 import { EventEmitter } from 'events';
-import { TimerEventName, TimerEventType } from '../common/constants';
+import { TimerEventName, TimerEventEnum } from '../common/constants';
 import { MiddlewareStack } from '../middlewares/middlewareStack';
 
 export class TimerHandler {
@@ -21,12 +21,12 @@ export class TimerHandler {
   // TODO: maybe add await for async dispatch
   private setupEventEmitter(): void {
     this.timerEmitter.on(TimerEventName.INITIAL, 
-      () => {this.middlewareStack.dispatch(TimerEventType.INITIAL, null)});
+      () => {this.middlewareStack.dispatch(TimerEventEnum.INITIAL, null)});
     this.timerEmitter.on(TimerEventName.END,
-      () => {this.middlewareStack.dispatch(TimerEventType.END, null)});
+      () => {this.middlewareStack.dispatch(TimerEventEnum.END, null)});
     this.timerEmitter.on(TimerEventName.DATA,
-      (data: any) => {this.middlewareStack.dispatch(TimerEventType.DATA, data)});
+      (data: any) => {this.middlewareStack.dispatch(TimerEventEnum.DATA, data)});
     this.timerEmitter.on(TimerEventName.TIMEOUT, 
-      (data: any) => {this.middlewareStack.dispatch(TimerEventType.TIMEOUT, data)});
+      (data: any) => {this.middlewareStack.dispatch(TimerEventEnum.TIMEOUT, data)});
   }
 }

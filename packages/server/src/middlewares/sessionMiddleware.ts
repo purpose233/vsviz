@@ -1,17 +1,17 @@
-import { SessionEventType } from '../common/constants';
+import { SessionEventEnum } from '../common/constants';
 import { Middleware } from './baseMiddleware';
 
 export class SessionMiddleware extends Middleware {
 
-  public async callMiddleware(next: Function, type: SessionEventType, msg: any): Promise<void> {
+  public async callMiddleware(next: Function, type: SessionEventEnum, msg: any): Promise<void> {
     switch (type) {
-      case SessionEventType.CONNECTION:
+      case SessionEventEnum.CONNECTION:
         await this.onConnection(next, msg);
         break;
-      case SessionEventType.CLOSE: 
+      case SessionEventEnum.CLOSE: 
         await this.onClose(next);
         break;
-      case SessionEventType.MESSAGE: 
+      case SessionEventEnum.MESSAGE: 
         await this.onMessage(next, msg);
         break;
     }

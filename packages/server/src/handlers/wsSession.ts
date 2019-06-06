@@ -3,7 +3,7 @@ import { MiddlewareContext } from '../middlewares/middlewareContext';
 import { MiddlewareStack } from '../middlewares/middlewareStack';
 import { SessionMiddlewareType } from '../common/types';
 import { IncomingMessage } from 'http';
-import { SessionEventType } from '../common/constants';
+import { SessionEventEnum } from '../common/constants';
 
 export class WSSession {
 
@@ -17,16 +17,16 @@ export class WSSession {
     this.socket = socket;
     this.middlewareStack = new MiddlewareStack(middlewareProtos);
     
-    this.middlewareStack.dispatch(SessionEventType.CONNECTION, request);
+    this.middlewareStack.dispatch(SessionEventEnum.CONNECTION, request);
     this.setupSocket();
   }
 
   private setupSocket(): void {
     // this.socket.on('open', 
-    //   () => {this.middlewareStack.dispatch(SessionEventType.CONNECTION, null)});
+    //   () => {this.middlewareStack.dispatch(SessionEventEnum.CONNECTION, null)});
     this.socket.on('close', 
-      () => {this.middlewareStack.dispatch(SessionEventType.CLOSE, null);});
+      () => {this.middlewareStack.dispatch(SessionEventEnum.CLOSE, null);});
     this.socket.on('message', 
-      (data: WebSocket.Data) => {this.middlewareStack.dispatch(SessionEventType.MESSAGE, data)});
+      (data: WebSocket.Data) => {this.middlewareStack.dispatch(SessionEventEnum.MESSAGE, data)});
   }
 }

@@ -6,6 +6,7 @@ export abstract class BaseServer {
   // private server;
   // private handler;
   
+  // TODO: maybe return this for start & close
   public abstract start(): void;
   
   public abstract close(): void;

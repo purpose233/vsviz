@@ -19,7 +19,8 @@
   "dependencies": {
     "lodash": "^4.17.11",
     "text-encoding": "^0.7.0",
-    "videoshow": "^0.1.11"
+    "videoshow": "^0.1.11",
+    "ws": "^7.0.0"
   },
   "devDependencies": {
     "lerna": "^3.14.1"
