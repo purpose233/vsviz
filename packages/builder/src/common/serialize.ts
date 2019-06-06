@@ -3,7 +3,7 @@ import { DataTypeName, NumberTypeEnum } from './constants';
 import { StreamDataType, ParsedDataType } from './types';
 
 // The size of header is 32 bytes
-const HeaderSize = 32;
+export const HeaderSize = 32;
 
 export function serialize(builder: StreamBuilder) {
   const headerInfo = builder.getHeader();
@@ -56,7 +56,7 @@ export function deserialize(buffer: Buffer, offset: number = 0): ParsedDataType 
     size:       readNumberFromBuffer(buffer, NumberTypeEnum.UINT32, 24 + offset),
     timestamp:  readNumberFromBuffer(buffer, NumberTypeEnum.UINT32, 28 + offset)
   };
-  const data = buffer.slice(32);
+  const data = buffer.slice(HeaderSize, HeaderSize + info.size);
   return {info, data};
 };
 

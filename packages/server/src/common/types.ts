@@ -10,15 +10,3 @@ export type TimerMiddlewareType = TimerMiddleware | Function;
 export type MiddlewareType = Middleware | Function;
 
 export type MiddlewareEventType = SessionEventEnum | TimerEventEnum;
-
-// TODO: import DataInfo & ParsedData from @vsviz/builder
-export interface DataInfo {
-  type: string,
-  size: number,
-  timestamp: number
-}
-
-export interface ParsedData {
-  info: DataInfo,
-  data: Buffer
-};

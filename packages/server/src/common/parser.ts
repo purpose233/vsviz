@@ -1,31 +1,5 @@
-import textEncoding from 'text-encoding';
-import { DataInfo, ParsedData } from '../common/types';
-
-const decoder = new textEncoding.TextDecoder('utf-8');
-const encoder = new textEncoding.TextEncoder();
-
-function decodeMetaData(metaData: Buffer): string {
-  return metaData instanceof Uint8Array ? decoder.decode(metaData) : metaData;
-}
-
-// TODO: validate the info attribute
-
-// TODO: handle error of JSON parsing
-function parseWithMetaData(metaData: Buffer): ParsedData {
-  const decodedData = decodeMetaData(metaData);
-  const index = (decodedData).indexOf('|');
-  if (~index) {
-    return {
-      info: JSON.parse(decodedData.slice(0, index)),
-      data: metaData.slice(index + 1)
-    };
-  } else {
-    return {
-      info: JSON.parse(decodedData),
-      data: null
-    };
-  }
-}
+import { DataInfoType, ParsedDataType, 
+         deserialize, HeaderSize } from '@vsviz/builder';
 
 // assume that all element in datas are the same type
 function concatBuffer(datas: Buffer[]): Buffer {
@@ -42,9 +16,10 @@ function concatBuffer(datas: Buffer[]): Buffer {
 }
 
 export class Parser {
+
   private isPacking: boolean = false;
   private stashedData: Buffer[] = [];
-  private stashedDataInfo: DataInfo = null;
+  private stashedDataInfo: DataInfoType = null;
   private stashedSize: number = 0;
 
   private initPacking(): void {
@@ -54,68 +29,46 @@ export class Parser {
     this.stashedSize = 0;
   }
 
-  public parse(metaData: Buffer): ParsedData[] {
-    const parsedData: ParsedData[] = [];
+  // argument offset is used for sticky packages
+  public parse(metaData: Buffer, offset: number = 0): ParsedDataType[] {
+    const parsedResults: ParsedDataType[] = [];
+    if (metaData.length - offset === 0) {
+      return parsedResults;
+    }
     if (this.isPacking) {
-      const {info, data} = parseWithMetaData(metaData);
+      const parsedData = deserialize(metaData, offset);
+      const info = parsedData.info;
+      const data = <Buffer>parsedData.data;
       if (info.size > data.length) {
         this.isPacking = true;
         this.stashedData.push(data);
         this.stashedDataInfo = info;
         this.stashedSize = data.length;
       } else {
-        parsedData.push(...this.parseSinglePackage(data, info));
+        parsedResults.push(parsedData);
+        parsedResults.push(...this.parse(metaData, offset + HeaderSize + info.size));
       }
     } else {
       const currentSize = this.stashedSize + metaData.length;
-      if (currentSize == this.stashedDataInfo.size) {
-        this.stashedData.push(metaData);
-        const parseResult: ParsedData = {
-          data: concatBuffer(this.stashedData), 
-          info: this.stashedDataInfo
+      if (currentSize >= this.stashedDataInfo.size) {
+        // when isPacking is true, the offset must be 0
+        const remainLength = this.stashedDataInfo.size - this.stashedSize;
+        const dataBuffer = metaData.slice(0, remainLength);
+        this.stashedData.push(dataBuffer);
+        const parsedData: ParsedDataType = {
+          info: this.stashedDataInfo,
+          data: concatBuffer(this.stashedData)
         };
         this.initPacking();
-        parsedData.push(parseResult);
+        parsedResults.push(parsedData);
+        if (currentSize > this.stashedDataInfo.size) {
+          parsedResults.push(...this.parse(metaData, remainLength))
+        }
       } else if (currentSize > this.stashedDataInfo.size) {
-        const packageOffset = currentSize - this.stashedDataInfo.size;
-        const nextPackage = metaData.slice(packageOffset);
-        metaData = metaData.slice(0, packageOffset);
         this.stashedData.push(metaData);
-        parsedData.push({
-          data: concatBuffer(this.stashedData),
-          info: this.stashedDataInfo
-        });
-        this.initPacking();
-        parsedData.push(...this.parse(nextPackage));
-      } else {
-        this.stashedSize = currentSize;  
+        this.stashedSize = currentSize;
       }
     }
-    return parsedData;
+    return parsedResults;
   }
-
-  public parseSinglePackage(metaData: Buffer, info: DataInfo = null): ParsedData[] {
-    const parsedData: ParsedData[] = [];
-    if (info === null) {
-      const result = parseWithMetaData(metaData);
-      info = result.info;
-      metaData = result.data;
-    }
-
-    if (info.size < metaData.length) {
-      const nextPackage = metaData.slice(info.size);
-      metaData = metaData.slice(0, info.size);
-      parsedData.push({
-        data: metaData, 
-        info
-      });
-      parsedData.push(...this.parse(nextPackage));
-    } else {
-      parsedData.push({
-        data: metaData,
-        info
-      });
-    }
-    return parsedData;
-  }
-}
+};

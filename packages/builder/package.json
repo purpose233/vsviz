@@ -1,9 +1,9 @@
 {
-  "name": "builder",
+  "name": "@vsviz/builder",
   "version": "1.0.0",
   "description": "",
   "main": "lib/index.js",
-  "types": "lib/index.d.ts",
+  "typings": "lib/index.d.ts",
   "scripts": {
     "start": "tsc -w",
     "build": "tsc"

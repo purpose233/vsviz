@@ -1,13 +1,15 @@
 {
-  "name": "server",
+  "name": "@vsviz/server",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "./lib/index.js",
+  "typings": "./lib/index.d.ts",
   "directories": {
     "lib": "lib"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "tsc -w",
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",
@@ -17,6 +19,7 @@
     "@types/ws": "^6.0.1"
   },
   "dependencies": {
+    "@vsviz/builder": "^1.0.0",
     "ws": "^7.0.0"
   }
 }

@@ -37,7 +37,7 @@ export class DataServer extends BaseServer {
         const parsedDatas = parser.parse(data);
         
         for (const parsedData of parsedDatas) {
-          console.log('get parsed data type: ', parsedData.info.type, ' size: ', parsedData.info.size);
+          console.log('get parsed data type: ', parsedData.info.streamType, ' size: ', parsedData.info.size);
         }
       });
     });
