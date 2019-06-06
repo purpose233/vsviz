@@ -1,6 +1,44 @@
 import { DataInfoType, StreamDataType, ParsedDataType } from '../common/types';
 
-// TODO: Maybe use BaseBuilder to replace all sub builder
+export class StreamBuilder {
+
+  private id: string;
+  private streamType: string;
+  private dataStack: ParsedDataType[] = [];
+  private currentData: ParsedDataType = null;
+
+  constructor(id: string, streamType: string) {
+    this.id = id;
+    this.streamType = streamType;
+  }
+
+  public getID(): string { return this.id; }
+
+  public build(parsedData: ParsedDataType): void {
+    this.dataStack.push(parsedData);
+    this.currentData = parsedData;
+  };
+
+  public getHeader(): DataInfoType {
+    return this.currentData ? this.currentData.info : null;
+  };
+
+  public getBody(): StreamDataType {
+    return this.currentData ? this.currentData.data : null;
+  };
+
+  public clear(): void {
+    this.dataStack = [];
+    this.currentData = null;
+  };
+
+  public isDirty(): boolean {
+    return !!this.currentData;
+  };
+
+  public validate(): void {};
+}
+
 export abstract class BaseBuilder {
 
   protected id: string;

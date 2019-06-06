@@ -1,28 +1,32 @@
-import { BaseBuilder } from './baseBuidler';
+import { StreamBuilder } from './baseBuidler';
 import { ParsedDataType } from '../common/types';
+import { serialize } from '../common/serialize';
 
 export class Builder {
 
-  private streamBuilders: BaseBuilder[] = [];
+  private streamBuilders: StreamBuilder[] = [];
 
-  constructor() {}
+  // constructor() {}
 
   public handleData(parsedData: ParsedDataType) {
-    let builder = this.findBuilderById(parsedData.info.id);
+    const info = parsedData.info;
+    let builder = this.findBuilderById(info.id);
     if (!builder) {
-      // TODO: create builder instance
-      // builder = new BaseBuilder()
+      builder = new StreamBuilder(info.id, info.streamType);
     }
     builder.build(parsedData);
     return builder;
   }
 
-  public getFrame() {
-    const dirtyBuilders = this.getAllDirtyBuilders();
-
+  public getFrameData() {
+    return this.getAllDirtyBuilders().map((builder) => serialize(builder));
   }
 
-  public getAllDirtyBuilders(): BaseBuilder[] {
+  // public getFrame() {
+  //   const dirtyBuilders = this.getAllDirtyBuilders();
+  // }
+
+  public getAllDirtyBuilders(): StreamBuilder[] {
     const dirtyBuilders = [];
     for (const builder of this.streamBuilders) {
       if (builder.isDirty()) {

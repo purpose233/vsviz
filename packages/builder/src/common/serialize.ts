@@ -1,11 +1,11 @@
-import { BaseBuilder } from '../builder/baseBuidler';
-import { DataTypeName, StreamTypeName, NumberTypeEnum } from './constants';
+import { StreamBuilder } from '../builder/baseBuidler';
+import { DataTypeName, NumberTypeEnum } from './constants';
 import { StreamDataType } from './types';
 
 // The size of header is 32 bytes
 const HeaderSize = 32;
 
-export function serialize(builder: BaseBuilder) {
+export function serialize(builder: StreamBuilder) {
   const headerInfo = builder.getHeader();
   let bodyData = builder.getBody();
   
