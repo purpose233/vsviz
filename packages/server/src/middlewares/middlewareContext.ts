@@ -2,7 +2,7 @@
 export class MiddlewareContext {
   private value: Map<any, any>;
 
-  constructor(initState: any) {
+  constructor(initState: any = {}) {
     this.value = new Map(Object.entries(initState));
   }
 

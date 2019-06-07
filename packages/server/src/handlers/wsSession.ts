@@ -8,16 +8,16 @@ import { SessionEventEnum } from '../common/constants';
 export class WSSession {
 
   private socket: WebSocket;
-  // TODO: middleware context is not used
   private context: MiddlewareContext;
   private middlewareStack: MiddlewareStack;
 
   constructor(socket: WebSocket, request: IncomingMessage,
               middlewareProtos: SessionMiddlewareType[]) {
     this.socket = socket;
+    this.context = new MiddlewareContext();
     this.middlewareStack = new MiddlewareStack(middlewareProtos);
     
-    this.middlewareStack.dispatch(SessionEventEnum.CONNECTION, request);
+    this.middlewareStack.dispatch(SessionEventEnum.CONNECTION, request, this.context);
     this.setupSocket();
   }
 
@@ -25,8 +25,8 @@ export class WSSession {
     // this.socket.on('open', 
     //   () => {this.middlewareStack.dispatch(SessionEventEnum.CONNECTION, null)});
     this.socket.on('close', 
-      () => {this.middlewareStack.dispatch(SessionEventEnum.CLOSE, null);});
+      () => {this.middlewareStack.dispatch(SessionEventEnum.CLOSE, null, this.context);});
     this.socket.on('message', 
-      (data: WebSocket.Data) => {this.middlewareStack.dispatch(SessionEventEnum.MESSAGE, data)});
+      (data: WebSocket.Data) => {this.middlewareStack.dispatch(SessionEventEnum.MESSAGE, data, this.context)});
   }
 }

@@ -35,6 +35,9 @@ export class DataServer extends BaseServer {
         console.log('Receive package.');
 
         const parsedDatas = parser.parse(data);
+        if (parsedDatas.length > 0) {
+          this.timerEmitter.emit(TimerEventName.DATA, parsedDatas);
+        }
         
         for (const parsedData of parsedDatas) {
           console.log('get parsed data type: ', parsedData.info.streamType, ' size: ', parsedData.info.size);
