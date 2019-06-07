@@ -1,6 +1,7 @@
 import { TimerEventEnum } from '../common/constants';
 import { BaseMiddleware } from './baseMiddleware';
 import { MiddlewareContext } from './middlewareContext';
+import { ParsedDataType } from '@vsviz/builder';
 
 export class TimerMiddleware extends BaseMiddleware {
   
@@ -8,7 +9,7 @@ export class TimerMiddleware extends BaseMiddleware {
                               msg: any, context: MiddlewareContext): Promise<void> {
     switch (type) {
       case TimerEventEnum.INITIAL: 
-        await this.onInitial(next, msg, context);
+        await this.onInitial(next, context);
         break;
       case TimerEventEnum.END:
         await this.onEnd(next, context);
@@ -22,11 +23,12 @@ export class TimerMiddleware extends BaseMiddleware {
     }
   }
 
-  private async onInitial(next: Function, msg: any, context: MiddlewareContext) {}
+  protected async onInitial(next: Function, context: MiddlewareContext): Promise<void> {}
 
-  private async onEnd(next: Function, context: MiddlewareContext) {};
+  protected async onEnd(next: Function, context: MiddlewareContext): Promise<void> {};
 
-  private async onData(next: Function, msg: any, context: MiddlewareContext) {};
+  protected async onData(next: Function, msg: ParsedDataType[], context: MiddlewareContext): Promise<void> {};
 
-  private async onTimeout(next: Function, msg: any, context: MiddlewareContext) {};
+  // TODO: maybe remove the msg argument of onTimeout
+  protected async onTimeout(next: Function, msg: any, context: MiddlewareContext): Promise<void> {};
 }

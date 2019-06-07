@@ -14,9 +14,8 @@ export class TimerHandler {
 
   constructor(timerEmitter: EventEmitter) {
     this.timerEmitter = timerEmitter;
-    this.context = new MiddlewareContext({
-      builder: new Builder() 
-    });
+    this.context = new MiddlewareContext();
+    this.context.set(Symbol('builder'), new Builder());
     this.setupEventEmitter();
   }
 

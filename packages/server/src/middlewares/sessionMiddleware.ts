@@ -1,6 +1,8 @@
+import WebSocket from 'ws';
 import { SessionEventEnum } from '../common/constants';
 import { BaseMiddleware } from './baseMiddleware';
 import { MiddlewareContext } from './middlewareContext';
+import { IncomingMessage } from 'http';
 
 export class SessionMiddleware extends BaseMiddleware {
 
@@ -19,9 +21,9 @@ export class SessionMiddleware extends BaseMiddleware {
     }
   }
 
-  private async onConnection(next: Function, msg: any, context: MiddlewareContext) {}
+  protected async onConnection(next: Function, msg: IncomingMessage, context: MiddlewareContext): Promise<void> {}
 
-  private async onClose(next: Function, context: MiddlewareContext) {}
+  protected async onClose(next: Function, context: MiddlewareContext): Promise<void> {}
 
-  private async onMessage(next: Function, msg: any, context: MiddlewareContext) {}
+  protected async onMessage(next: Function, msg: WebSocket.Data, context: MiddlewareContext): Promise<void> {}
 }
