@@ -1,4 +1,4 @@
-import { StreamBuilder } from './baseBuidler';
+import { StreamBuilder } from './streamBuidler';
 import { ParsedDataType } from '../common/types';
 import { serialize } from '../common/serialize';
 

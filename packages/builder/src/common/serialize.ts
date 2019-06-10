@@ -1,4 +1,4 @@
-import { StreamBuilder } from '../builder/baseBuidler';
+import { StreamBuilder } from '../builder/streamBuidler';
 import { DataTypeName, NumberTypeEnum } from './constants';
 import { StreamDataType, ParsedDataType } from './types';
 
