@@ -21,6 +21,10 @@ export class SessionMiddleware extends BaseMiddleware {
     }
   }
 
+  public copy(): SessionMiddleware {
+    return new SessionMiddleware();
+  }
+
   protected async onConnection(next: Function, msg: IncomingMessage, context: MiddlewareContext): Promise<void> {}
 
   protected async onClose(next: Function, context: MiddlewareContext): Promise<void> {}

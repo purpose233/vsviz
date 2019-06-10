@@ -16,10 +16,12 @@
   "license": "ISC",
   "devDependencies": {
     "@types/text-encoding": "0.0.35",
+    "@types/uuid": "^3.4.4",
     "@types/ws": "^6.0.1"
   },
   "dependencies": {
     "@vsviz/builder": "^1.0.0",
+    "uuid": "^3.3.2",
     "ws": "^7.0.0"
   }
 }

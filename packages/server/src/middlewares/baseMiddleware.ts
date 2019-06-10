@@ -5,4 +5,5 @@ import { MiddlewareContext } from './middlewareContext';
 export abstract class BaseMiddleware {
   public abstract async callMiddleware(next: Function, type: MiddlewareEventType, 
                                        msg: any, context: MiddlewareContext): Promise<void>;
+  public abstract copy(): BaseMiddleware;
 }

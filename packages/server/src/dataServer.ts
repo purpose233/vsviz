@@ -15,13 +15,17 @@ export class DataServer extends BaseServer {
   private timerEmitter: EventEmitter;
 
   // TODO: add handler
-  constructor(port: number, addr: string = '127.0.0.1') {
+  constructor(port: number, addr: string = '127.0.0.1', interval: number = 500) {
     super();
     this.port = port;
     this.addr = addr;
 
     this.timerEmitter = new EventEmitter();
     this.handler = new TimerHandler(this.timerEmitter);
+
+    setInterval(() => {
+      this.timerEmitter.emit(TimerEventName.TIMEOUT);
+    }, interval);
   }
 
   public start(): void {

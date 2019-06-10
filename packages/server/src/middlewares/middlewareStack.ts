@@ -1,5 +1,4 @@
 import { MiddlewareType, MiddlewareEventType } from '../common/types';
-import { SessionMiddleware } from './sessionMiddleware';
 import { BaseMiddleware } from './baseMiddleware';
 import { MiddlewareContext } from './middlewareContext';
 
@@ -45,9 +44,14 @@ export class MiddlewareStack {
   private setupMiddlewares(middlewareProtos: MiddlewareType[]): MiddlewareType[] {
     const middlewares = [];
     for (const middlewareProto of middlewareProtos) {
-      if (middlewareProto instanceof SessionMiddleware) {
+      if (middlewareProto instanceof BaseMiddleware) {
+        // when proto is instance of middleware
+        middlewares.push(middlewareProto.copy());
+      } else if (BaseMiddleware.isPrototypeOf(middlewareProto)) {
+        // when proto is class of middleware
         middlewares.push(new (<any>middlewareProto)());
       } else {
+        // when proto is function
         middlewares.push(middlewareProto);
       }
     }

@@ -9,6 +9,7 @@ export class WSServer extends BaseServer {
   private port: number;
   private server: WebSocket.Server;
   private handler: WSHandler;
+  // private session: 
 
   // TODO: set option argument
   constructor(port: number) {
@@ -35,6 +36,14 @@ export class WSServer extends BaseServer {
     this.handler.addMiddlewareProto(middleware);
     // Enable to use chain syntax
     return this;
+  }
+
+  public getServer(): WebSocket.Server {
+    return this.server;
+  }
+
+  public sendAll(data: any) {
+    this.handler.sendAll(data);
   }
 
   private handleConnection(socket: WebSocket, request: IncomingMessage): void {

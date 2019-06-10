@@ -23,6 +23,10 @@ export class TimerMiddleware extends BaseMiddleware {
     }
   }
 
+  public copy(): TimerMiddleware {
+    return new TimerMiddleware();
+  }
+
   protected async onInitial(next: Function, context: MiddlewareContext): Promise<void> {}
 
   protected async onEnd(next: Function, context: MiddlewareContext): Promise<void> {};

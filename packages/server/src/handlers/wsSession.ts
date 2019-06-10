@@ -11,8 +11,8 @@ export class WSSession {
   private context: MiddlewareContext;
   private middlewareStack: MiddlewareStack;
 
-  constructor(socket: WebSocket, request: IncomingMessage,
-              middlewareProtos: SessionMiddlewareType[]) {
+  constructor(socket: WebSocket, sessionID: string,
+              request: IncomingMessage, middlewareProtos: SessionMiddlewareType[]) {
     this.socket = socket;
     this.context = new MiddlewareContext();
     this.middlewareStack = new MiddlewareStack(middlewareProtos);
@@ -21,6 +21,12 @@ export class WSSession {
     this.setupSocket();
   }
 
+  public sendData(data: any) {
+    // TODO: switch the data type and make use of option&callback arguments
+    this.socket.send(data);
+  }
+
+  // TODO: clear the sessionMap of handler when closing
   private setupSocket(): void {
     // this.socket.on('open', 
     //   () => {this.middlewareStack.dispatch(SessionEventEnum.CONNECTION, null)});

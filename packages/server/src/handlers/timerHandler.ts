@@ -3,13 +3,14 @@ import { EventEmitter } from 'events';
 import { TimerEventName, TimerEventEnum } from '../common/constants';
 import { MiddlewareStack } from '../middlewares/middlewareStack';
 import { MiddlewareContext } from '../middlewares/middlewareContext';
+import { TimerSender } from '../middlewares/timerSender';
 import { Builder } from '@vsviz/builder';
 
 export class TimerHandler {
   
   private timerEmitter: EventEmitter;
   private context: MiddlewareContext;
-  private middlewareProtos: TimerMiddlewareType[];
+  private middlewareProtos: TimerMiddlewareType[] = [TimerSender];
   private middlewareStack: MiddlewareStack;
 
   constructor(timerEmitter: EventEmitter) {
