@@ -2,7 +2,7 @@ import socket
 import time
 
 SERVER = ("127.0.0.1", 9000)
-TIME_INTERVAL = 100 / 1000
+TIME_INTERVAL = 1000 / 1000
 HEADER_SIZE = 32
 
 def copyByte(src, target, targetOffset, srcStart, srcEnd):
@@ -14,29 +14,35 @@ def copyByte(src, target, targetOffset, srcStart, srcEnd):
     j += 1
     i += 1
 
-def send(s, info, data):
+def wrapData(info, data):
   size = HEADER_SIZE + len(data)
-  b = bytes(size)
+  b = bytearray(size)
   copyByte(bytearray(info['id'], 'utf-8'), b, 0, 0, 8)
   copyByte(bytearray(info['streamType'], 'utf-8'), b, 8, 0, 8)
   copyByte(bytearray(info['dataType'], 'utf-8'), b, 16, 0, 8)
   copyByte(len(data).to_bytes(4, byteorder='big'), b, 24, 0, 8)
   copyByte(info['timestamp'].to_bytes(4, byteorder='big'), b, 28, 0, 8)
   copyByte(bytearray(data, 'utf-8'), b, 32, 0, len(data))
-  print(b)
-  s.send(b)
+  return b
+
+def send(s, info, data):
+  s.send(wrapData(info, data))
 
 if __name__ == "__main__":
 
   s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
   s.connect(SERVER)
-  info['id'] = 'aaa'
-  info['streamType'] = 'customed'
-  info['dataType'] = 'string'
-  info['timestamp'] = 123
-  data = '{test: true}'
+
+  info = {
+    'id': 'aaa',
+    'streamType': 'customed',
+    'dataType': 'string',
+    'timestamp': 123
+  }
+  data = '{test: 123}'
 
   while(True):
     time.sleep(TIME_INTERVAL)
     info['timestamp'] += 1
-    send(s, info, data)    
+    send(s, info, data)
+

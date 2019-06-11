@@ -18,8 +18,13 @@ export class TimerSender extends TimerMiddleware {
   }
 
   protected async onTimeout(next: Function, context: MiddlewareContext): Promise<void> {
-    const builder: Builder = context.get(Symbol('builder'));
+    const builder: Builder = context.get(Symbol.for('builder'));
     const data = concatBuffer(builder.getFrameData());
-    this.server.sendAll(data);
+    if (data != null) {
+      console.log('prepare to send data: ', data);
+      this.server.sendAll(data);
+      builder.clearAllDirtyBuilders();
+    }
+    await next();
   }
 }

@@ -21,7 +21,7 @@ export class WSServer extends BaseServer {
   public start(): void {
     this.isStarted = true;
     this.server = new WebSocket.Server({port: this.port});
-    this.server.on('connection', this.handleConnection);
+    this.server.on('connection', this.handleConnection.bind(this));
   }
 
   public close(): void {

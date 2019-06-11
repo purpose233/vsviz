@@ -15,3 +15,6 @@ packages/parser/lib/
 packages/parser/node_modules/
 packages/server/lib/
 packages/server/node_modules/
+
+# build
+example/basic/src/server.js

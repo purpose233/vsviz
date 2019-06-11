@@ -25,9 +25,15 @@ export class SessionMiddleware extends BaseMiddleware {
     return new SessionMiddleware();
   }
 
-  protected async onConnection(next: Function, msg: IncomingMessage, context: MiddlewareContext): Promise<void> {}
+  protected async onConnection(next: Function, msg: IncomingMessage, context: MiddlewareContext): Promise<void> {
+    await next();
+  }
 
-  protected async onClose(next: Function, context: MiddlewareContext): Promise<void> {}
+  protected async onClose(next: Function, context: MiddlewareContext): Promise<void> {
+    await next();
+  }
 
-  protected async onMessage(next: Function, msg: WebSocket.Data, context: MiddlewareContext): Promise<void> {}
+  protected async onMessage(next: Function, msg: WebSocket.Data, context: MiddlewareContext): Promise<void> {
+    await next();
+  }
 }

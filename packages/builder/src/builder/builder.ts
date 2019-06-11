@@ -8,18 +8,25 @@ export class Builder {
 
   // constructor() {}
 
-  public handleData(parsedData: ParsedDataType) {
+  public handleData(parsedData: ParsedDataType): StreamBuilder {
     const info = parsedData.info;
     let builder = this.findBuilderById(info.id);
     if (!builder) {
       builder = new StreamBuilder(info.id, info.streamType);
+      this.streamBuilders.push(builder);
     }
     builder.build(parsedData);
     return builder;
   }
 
-  public getFrameData() {
+  public getFrameData(): Buffer[] {
     return this.getAllDirtyBuilders().map((builder) => serialize(builder));
+  }
+
+  public clearAllDirtyBuilders(): void {
+    for (const builder of this.getAllDirtyBuilders()) {
+      builder.clear();
+    }
   }
 
   // public getFrame() {
@@ -36,7 +43,7 @@ export class Builder {
     return dirtyBuilders;
   }
 
-  private findBuilderById(id: string) {
+  private findBuilderById(id: string): StreamBuilder {
     for (const builder of this.streamBuilders) {
       if (builder.getID() === id) {
         return builder;

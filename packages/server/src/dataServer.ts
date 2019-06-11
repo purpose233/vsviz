@@ -19,6 +19,24 @@ export class DataServer extends BaseServer {
     super();
     this.port = port;
     this.addr = addr;
+    
+    this.server = net.createServer((socket: net.Socket): void => {
+      const parser = new Parser();
+
+      socket.on('error', e => console.log(e));
+      
+      socket.on('data', (data: Buffer) => {
+        // console.log('Receive package.');
+
+        const parsedDatas = parser.parse(data);
+        if (parsedDatas.length > 0) {
+          this.timerEmitter.emit(TimerEventName.DATA, parsedDatas);
+        }
+        // for (const parsedData of parsedDatas) {
+        //   console.log('get parsed data type: ', parsedData.info.streamType, ' size: ', parsedData.info.size);
+        // }
+      });
+    });
 
     this.timerEmitter = new EventEmitter();
     this.handler = new TimerHandler(this.timerEmitter);
@@ -30,25 +48,7 @@ export class DataServer extends BaseServer {
 
   public start(): void {
     this.isStarted = true;
-    this.server = net.createServer((socket: net.Socket): void => {
-      const parser = new Parser();
-
-      socket.on('error', e => console.log(e));
-      
-      socket.on('data', (data: Buffer) => {
-        console.log('Receive package.');
-
-        const parsedDatas = parser.parse(data);
-        if (parsedDatas.length > 0) {
-          this.timerEmitter.emit(TimerEventName.DATA, parsedDatas);
-        }
-        
-        for (const parsedData of parsedDatas) {
-          console.log('get parsed data type: ', parsedData.info.streamType, ' size: ', parsedData.info.size);
-        }
-      });
-    });
-
+    this.handler.start();
     this.server.listen(this.port, this.addr);
     this.timerEmitter.emit(TimerEventName.INITIAL);
   }

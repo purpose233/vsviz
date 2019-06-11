@@ -1,11 +1,19 @@
 import { DataInfoType, ParsedDataType, 
          deserialize, HeaderSize } from '@vsviz/builder';
 
+function calcBufferSize(datas: Buffer[]): number {
+  let size = 0;
+  for (const data of datas) {
+    size += data.length;
+  }
+  return size;
+}
+
 // assume that all element in datas are the same type
 export function concatBuffer(datas: Buffer[]): Buffer {
   if (datas.length <= 0) { return null; }
   // TODO: reduce will cause the type inference 
-  const size: any = datas.reduce(<any>((old: number, cur: Buffer) => (old + cur.length)));
+  const size: any = calcBufferSize(datas);
   const concatedData = Buffer.alloc(size);
   let count: number = 0;
   for (const data of datas) {
@@ -35,7 +43,7 @@ export class Parser {
     if (metaData.length - offset === 0) {
       return parsedResults;
     }
-    if (this.isPacking) {
+    if (!this.isPacking) {
       const parsedData = deserialize(metaData, offset);
       const info = parsedData.info;
       const data = <Buffer>parsedData.data;

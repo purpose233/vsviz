@@ -9,9 +9,10 @@ export class TimerBuilder extends TimerMiddleware {
   }
 
   protected async onData(next: Function, parsedDatas: ParsedDataType[], context: MiddlewareContext): Promise<void> {
-    const builder: Builder = context.get(Symbol('builder'));
+    const builder: Builder = context.get(Symbol.for('builder'));
     for (const parsedData of parsedDatas) {
       builder.handleData(parsedData);
     }
+    await next();
   }
 }

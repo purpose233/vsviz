@@ -18,7 +18,7 @@ export class TimerMiddleware extends BaseMiddleware {
         await this.onData(next, msg, context);
         break;
       case TimerEventEnum.TIMEOUT:
-        await this.onTimeout(next, msg, context);
+        await this.onTimeout(next, context);
         break;
     }
   }
@@ -27,12 +27,19 @@ export class TimerMiddleware extends BaseMiddleware {
     return new TimerMiddleware();
   }
 
-  protected async onInitial(next: Function, context: MiddlewareContext): Promise<void> {}
+  protected async onInitial(next: Function, context: MiddlewareContext): Promise<void> { 
+    await next();
+  }
 
-  protected async onEnd(next: Function, context: MiddlewareContext): Promise<void> {};
+  protected async onEnd(next: Function, context: MiddlewareContext): Promise<void> {
+    await next();
+  };
 
-  protected async onData(next: Function, msg: ParsedDataType[], context: MiddlewareContext): Promise<void> {};
+  protected async onData(next: Function, msg: ParsedDataType[], context: MiddlewareContext): Promise<void> {
+    await next();
+  };
 
-  // TODO: maybe remove the msg argument of onTimeout
-  protected async onTimeout(next: Function, msg: any, context: MiddlewareContext): Promise<void> {};
+  protected async onTimeout(next: Function, context: MiddlewareContext): Promise<void> {
+    await next();
+  };
 }
