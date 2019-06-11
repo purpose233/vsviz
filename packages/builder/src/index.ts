@@ -3,4 +3,4 @@ export { DataInfoType, ParsedDataType, StreamDataType } from './common/types';
 export { serialize, deserialize } from './common/serialize';
 
 export { Builder } from './builder/builder';
-export { Parser } from './parser/parser';
+export { Parser, concatBuffer } from './parser/parser';

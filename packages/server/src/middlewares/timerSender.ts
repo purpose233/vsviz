@@ -2,7 +2,7 @@ import { TimerMiddleware } from './timerMiddleware';
 import { MiddlewareContext } from './middlewareContext';
 import { WSServer } from '../wsServer';
 import { Builder } from '@vsviz/builder';
-import { concatBuffer } from '../common/parser';
+import { concatBuffer } from '@vsviz/builder';
 
 export class TimerSender extends TimerMiddleware {
 
