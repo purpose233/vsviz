@@ -1,5 +1,5 @@
 {
-  "name": "@vsviz/builder",
+  "name": "@vsviz/ui",
   "version": "1.0.0",
   "description": "",
   "main": "lib/index.js",
@@ -10,11 +10,5 @@
   },
   "keywords": [],
   "author": "Purpose233",
-  "license": "ISC",
-  "devDependencies": {
-    "@types/text-encoding": "0.0.35"
-  },
-  "dependencies": {
-    "text-encoding": "^0.7.0"
-  }
+  "license": "ISC"
 }

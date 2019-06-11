@@ -1,7 +1,7 @@
 import WebSocket from 'ws';
 import { IncomingMessage } from 'http';
-import { SessionMiddlewareType } from './common/types';
-import { WSHandler } from './handlers/wsHandler';
+import { SessionMiddlewareType } from '../common/types';
+import { WSHandler } from '../handlers/wsHandler';
 import { BaseServer } from './baseServer';
 
 export class WSServer extends BaseServer {

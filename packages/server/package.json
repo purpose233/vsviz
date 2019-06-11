@@ -4,15 +4,12 @@
   "description": "",
   "main": "./lib/index.js",
   "typings": "./lib/index.d.ts",
-  "directories": {
-    "lib": "lib"
-  },
   "scripts": {
     "start": "tsc -w",
     "build": "tsc"
   },
   "keywords": [],
-  "author": "",
+  "author": "Purpose233",
   "license": "ISC",
   "devDependencies": {
     "@types/uuid": "^3.4.4",

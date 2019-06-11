@@ -1,10 +1,10 @@
 import net from 'net';
 import { Parser } from '@vsviz/builder';
 import { BaseServer } from './baseServer';
-import { TimerHandler } from './handlers/timerHandler';
+import { TimerHandler } from '../handlers/timerHandler';
 import { EventEmitter } from 'events';
-import { TimerMiddlewareType } from './common/types';
-import { TimerEventName } from './common/constants';
+import { TimerMiddlewareType } from '../common/types';
+import { TimerEventName } from '../common/constants';
 
 export class DataServer extends BaseServer {
 

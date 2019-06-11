@@ -1,6 +1,6 @@
 import { TimerMiddleware } from './timerMiddleware';
 import { MiddlewareContext } from './middlewareContext';
-import { WSServer } from '../wsServer';
+import { WSServer } from '../servers/wsServer';
 import { Builder } from '@vsviz/builder';
 import { concatBuffer } from '@vsviz/builder';
 

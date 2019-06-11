@@ -4,5 +4,5 @@ export { TimerMiddleware } from './middlewares/timerMiddleware';
 export { MiddlewareContext } from './middlewares/middlewareContext';
 export { TimerSender } from './middlewares/timerSender';
 
-export { WSServer } from './wsServer';
-export { DataServer } from './dataServer';
+export { WSServer } from './servers/wsServer';
+export { DataServer } from './servers/dataServer';

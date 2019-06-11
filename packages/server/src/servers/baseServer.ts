@@ -1,4 +1,4 @@
-import { MiddlewareType } from './common/types';
+import { MiddlewareType } from '../common/types';
 
 export abstract class BaseServer {
   
