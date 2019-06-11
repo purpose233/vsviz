@@ -1,5 +1,5 @@
 import net from 'net';
-import { Parser } from './common/parser';
+import { Parser } from '@vsviz/builder';
 import { BaseServer } from './baseServer';
 import { TimerHandler } from './handlers/timerHandler';
 import { EventEmitter } from 'events';

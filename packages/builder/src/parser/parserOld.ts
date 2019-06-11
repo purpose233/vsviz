@@ -1,8 +1,7 @@
 import textEncoding from 'text-encoding';
-import { DataInfoType, ParsedDataType } from '@vsviz/builder';
+import { DataInfoType, ParsedDataType } from '../common/types';
 
 const decoder = new textEncoding.TextDecoder('utf-8');
-const encoder = new textEncoding.TextEncoder();
 
 function decodeMetaData(metaData: Buffer): string {
   return metaData instanceof Uint8Array ? decoder.decode(metaData) : metaData;

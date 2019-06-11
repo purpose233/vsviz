@@ -16,12 +16,7 @@
     "url": "https://github.com/purpose233/vsviz/issues"
   },
   "homepage": "https://github.com/purpose233/vsviz#readme",
-  "dependencies": {
-    "lodash": "^4.17.11",
-    "text-encoding": "^0.7.0",
-    "videoshow": "^0.1.11",
-    "ws": "^7.0.0"
-  },
+  "dependencies": {},
   "devDependencies": {
     "lerna": "^3.14.1"
   }

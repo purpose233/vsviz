@@ -15,7 +15,6 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@types/text-encoding": "0.0.35",
     "@types/uuid": "^3.4.4",
     "@types/ws": "^6.0.1"
   },

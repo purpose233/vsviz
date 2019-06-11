@@ -10,5 +10,11 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "@types/text-encoding": "0.0.35"
+  },
+  "dependencies": {
+    "text-encoding": "^0.7.0"
+  }
 }

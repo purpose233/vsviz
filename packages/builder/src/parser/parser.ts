@@ -1,5 +1,6 @@
-import { DataInfoType, ParsedDataType, 
-         deserialize, HeaderSize } from '@vsviz/builder';
+import { DataInfoType, ParsedDataType } from '../common/types';
+import { deserialize } from '../common/serialize';
+import { HeaderSize } from '../common/constants';
 
 function calcBufferSize(datas: Buffer[]): number {
   let size = 0;

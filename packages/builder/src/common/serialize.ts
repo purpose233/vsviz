@@ -1,9 +1,7 @@
 import { StreamBuilder } from '../builder/streamBuidler';
 import { DataTypeName, NumberTypeEnum } from './constants';
 import { StreamDataType, ParsedDataType } from './types';
-
-// The size of header is 32 bytes
-export const HeaderSize = 32;
+import { HeaderSize } from './constants';
 
 export function serialize(builder: StreamBuilder) {
   const headerInfo = builder.getHeader();
