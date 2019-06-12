@@ -7,6 +7,8 @@ export type SessionMiddlewareType = SessionMiddleware | Function;
 
 export type TimerMiddlewareType = TimerMiddleware | Function;
 
-export type MiddlewareType = BaseMiddleware | Function;
+export type MiddlewareType = BaseMiddleware | typeof BaseMiddleware | Function;
+
+export type MiddlewareInstanceType = BaseMiddleware | Function;
 
 export type MiddlewareEventType = SessionEventEnum | TimerEventEnum;

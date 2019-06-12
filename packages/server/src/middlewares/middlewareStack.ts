@@ -1,10 +1,10 @@
-import { MiddlewareType, MiddlewareEventType } from '../common/types';
+import { MiddlewareType, MiddlewareEventType, MiddlewareInstanceType } from '../common/types';
 import { BaseMiddleware } from './baseMiddleware';
 import { MiddlewareContext } from './middlewareContext';
 
 export class MiddlewareStack {
   
-  private middlewares: MiddlewareType[];
+  private middlewares: MiddlewareInstanceType[];
 
   constructor (middlewareProtos: MiddlewareType[] = []) {
     this.middlewares = this.setupMiddlewares(middlewareProtos);
@@ -17,7 +17,7 @@ export class MiddlewareStack {
   }
 
   // add next to arguments, similar to koa
-  private async execMiddleware(middleware: MiddlewareType, type: MiddlewareEventType, 
+  private async execMiddleware(middleware: MiddlewareInstanceType, type: MiddlewareEventType, 
                                msg: any, context: MiddlewareContext): Promise<void> {
     const next = async () => {
       const nextMiddleware = this.getNextMiddleware(middleware);
@@ -33,7 +33,7 @@ export class MiddlewareStack {
     }
   }
 
-  private getNextMiddleware(middleware: MiddlewareType): MiddlewareType {
+  private getNextMiddleware(middleware: MiddlewareType): MiddlewareInstanceType {
     for (let i = 0; i < this.middlewares.length; i++) {
       if (middleware === this.middlewares[i]) {
         return this.middlewares[i+1];
@@ -41,7 +41,7 @@ export class MiddlewareStack {
     }
   }
 
-  private setupMiddlewares(middlewareProtos: MiddlewareType[]): MiddlewareType[] {
+  private setupMiddlewares(middlewareProtos: MiddlewareType[]): MiddlewareInstanceType[] {
     const middlewares = [];
     for (const middlewareProto of middlewareProtos) {
       if (middlewareProto instanceof BaseMiddleware) {

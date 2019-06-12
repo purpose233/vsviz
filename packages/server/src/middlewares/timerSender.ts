@@ -17,6 +17,7 @@ export class TimerSender extends TimerMiddleware {
     return new TimerSender(this.server);
   }
 
+  // TODO: maybe send data one by one to make use of multiple workers
   protected async onTimeout(next: Function, context: MiddlewareContext): Promise<void> {
     const builder: Builder = context.get(Symbol.for('builder'));
     const data = concatBuffer(builder.getFrameData());

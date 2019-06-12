@@ -47,6 +47,7 @@ function writeIntoBuffer(target: Buffer, source: StreamDataType,
 }
 
 export function deserialize(buffer: Buffer, offset: number = 0): ParsedDataType {
+  if (offset < 0 || offset >= buffer.length) { return null; }
   const info = {
     id:         readStringFromBuffer(buffer, 0 + offset, 8 + offset),
     streamType: readStringFromBuffer(buffer, 8 + offset, 16 + offset),
