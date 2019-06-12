@@ -16,7 +16,6 @@ export class WSLoader {
   private currentData: Map<string, ParsedDataType> = new Map();
 
   private socket: WebSocket;
-  // private msgStack
   private workerFarm: WorkerFarm;
 
   constructor(addr: string) {
@@ -28,7 +27,7 @@ export class WSLoader {
     this.callbacks.push(cb);
   }
 
-  public unsubscribe(cb) {
+  public unsubscribe(cb: Function) {
     const index = this.callbacks.findIndex(item => item === cb);
     if (index > 0) {
       this.callbacks.splice(index, 1);
