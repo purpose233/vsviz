@@ -1,6 +1,7 @@
 export const StreamTypeName = {
   VIDEO: 'video',
-  CUSTOMED: 'customed'
+  CUSTOMED: 'customed',
+  META: 'meta'
 };
 
 export const DataTypeName = {

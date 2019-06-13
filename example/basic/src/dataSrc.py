@@ -33,13 +33,23 @@ if __name__ == "__main__":
   s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
   s.connect(SERVER)
 
+  metaInfo = {
+    'id': 'aaa',
+    'streamType': 'meta',
+    'dataType': 'json',
+    'timestamp': 122
+  }
+  metaData = '{\"metaData\": 666}'
+  send(s, metaInfo, metaData)
+  time.sleep(TIME_INTERVAL)
+
   info = {
     'id': 'aaa',
     'streamType': 'customed',
     'dataType': 'string',
     'timestamp': 123
   }
-  data = '{test: 123}'
+  data = '{\"test\": 123}'
 
   while(True):
     time.sleep(TIME_INTERVAL)

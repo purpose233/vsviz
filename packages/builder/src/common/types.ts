@@ -1,7 +1,9 @@
+import { StreamTypeName } from './constants';
+
 export interface DataInfoType {
   id: string,
-  streamType: 'meta' | 'video',
-  dataType: 'json' | 'string' | 'metaData',
+  streamType: 'customed' | 'video' | 'meta',
+  dataType: 'json' | 'string' | 'metadata',
   size: number,
   timestamp: number
 }

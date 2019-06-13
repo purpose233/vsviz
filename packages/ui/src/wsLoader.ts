@@ -48,6 +48,7 @@ export class WSLoader {
     });
   }
 
+  // TODO: actually the received data is blob
   private async handleData(data: any): Promise<void> {
     // TODO: handle data when data is not buffer
     if (data instanceof Buffer) {

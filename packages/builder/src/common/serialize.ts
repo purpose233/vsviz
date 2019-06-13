@@ -60,7 +60,7 @@ export function deserialize(buffer: Buffer, offset: number = 0): ParsedDataType 
     size:       readNumberFromBuffer(buffer, NumberTypeEnum.UINT32, 24 + offset),
     timestamp:  readNumberFromBuffer(buffer, NumberTypeEnum.UINT32, 28 + offset)
   };
-  const data = buffer.slice(HeaderSize, HeaderSize + info.size);
+  const data = transformStreamData(buffer.slice(HeaderSize, HeaderSize + info.size), info.dataType);
   return {info, data};
 };
 
@@ -91,7 +91,7 @@ function readNumberFromBuffer(buffer: Buffer, numType: NumberTypeEnum,
 
 // TODO: handle when data is not buffer
 // for now, only parse data when data is buffer
-export function transformStreamData(data: StreamDataType, dataType: string): StreamDataType {
+function transformStreamData(data: StreamDataType, dataType: string): StreamDataType {
   if (Buffer.isBuffer(data)) {
     return readStreamData(data, dataType);
   }

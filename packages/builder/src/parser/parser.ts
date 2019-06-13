@@ -18,7 +18,7 @@ export function concatBuffer(datas: Buffer[]): Buffer {
   const concatedData = Buffer.alloc(size);
   let count: number = 0;
   for (const data of datas) {
-    concatedData.copy(data, count, 0, data.length);
+    data.copy(concatedData, count, 0, data.length);
     count += data.length;
   }
   return concatedData;

@@ -1,7 +1,7 @@
 import WebSocket from 'ws';
 import { TimerMiddleware } from './timerMiddleware';
 import { MiddlewareContext } from './middlewareContext';
-import { ParsedDataType } from '@vsviz/builder';
+import { ParsedDataType, StreamTypeName } from '@vsviz/builder';
 import { SessionMiddleware } from './sessionMiddleware';
 import { sendMetaData } from '../common/utils';
 
@@ -10,7 +10,11 @@ let metaDataString: string = null;
 
 // TODO: maybe use deep join instead
 function shallowJoin(map: Map<string, any>, parsedData: ParsedDataType): Map<string, any> {
-  const data = map.get(parsedData.info.id);
+  let data = map.get(parsedData.info.id);
+  if (!data) {
+    data = {};
+    map.set(parsedData.info.id, data);
+  }
   // for now, the data type of meta stream must be json
   for (const entry of Object.entries(parsedData.data)) {
     if (data[entry[0]] !== entry[1]) {
@@ -29,10 +33,10 @@ function mapToString(map: Map<string, any>): string {
   return JSON.stringify(json);
 }
 
-export class TimerMetaData extends TimerMiddleware {
+export class TimerMetaDataCollector extends TimerMiddleware {
 
-  public copy(): TimerMetaData {
-    return new TimerMetaData();
+  public copy(): TimerMetaDataCollector {
+    return new TimerMetaDataCollector();
   }
 
   public async init(context: MiddlewareContext): Promise<void> {
@@ -43,6 +47,9 @@ export class TimerMetaData extends TimerMiddleware {
     const map = context.get(Symbol.for('metaData'));
     metaDataString = mapToString(map);
     for (const parsedData of parsedDatas) {
+      if (parsedData.info.streamType !== StreamTypeName.META) {
+        continue;
+      }
       shallowJoin(map, parsedData);
     }
     await next();
