@@ -1,12 +1,16 @@
 import { StreamBuilder } from '../builder/streamBuidler';
 import { DataTypeName, NumberTypeEnum } from './constants';
-import { StreamDataType, ParsedDataType } from './types';
+import { StreamDataType, ParsedDataType, DataInfoType } from './types';
 import { HeaderSize } from './constants';
 
-export function serialize(builder: StreamBuilder) {
+export function serializeBuilder(builder: StreamBuilder) {
   const headerInfo = builder.getHeader();
   let bodyData = builder.getBody();
-  
+
+  return serialize(headerInfo, bodyData);
+}
+
+export function serialize(headerInfo: DataInfoType, bodyData: StreamDataType) {
   if (headerInfo.dataType === DataTypeName.JSON) {
     bodyData = JSON.stringify(bodyData);
   }
@@ -46,9 +50,10 @@ function writeIntoBuffer(target: Buffer, source: StreamDataType,
   return (<Buffer>source).copy(target, targetstart); 
 }
 
+// TODO: add validation
 export function deserialize(buffer: Buffer, offset: number = 0): ParsedDataType {
   if (offset < 0 || offset >= buffer.length) { return null; }
-  const info = {
+  const info = <DataInfoType> {
     id:         readStringFromBuffer(buffer, 0 + offset, 8 + offset),
     streamType: readStringFromBuffer(buffer, 8 + offset, 16 + offset),
     dataType:   readStringFromBuffer(buffer, 16 + offset, 24 + offset),

@@ -19,6 +19,8 @@ export class WSSession {
     this.sessionId = sessionId;
     this.request = request;
     this.context = new MiddlewareContext();
+    this.context.set(Symbol.for('sessionId'), this.sessionId);
+    this.context.set(Symbol.for('socket'), this.socket);
     this.middlewareStack = new MiddlewareStack(middlewareProtos);
   }
 

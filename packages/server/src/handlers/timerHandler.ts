@@ -4,7 +4,6 @@ import { TimerEventName, TimerEventEnum } from '../common/constants';
 import { MiddlewareStack } from '../middlewares/middlewareStack';
 import { MiddlewareContext } from '../middlewares/middlewareContext';
 import { TimerBuilder } from '../middlewares/timerBuilder';
-import { Builder } from '@vsviz/builder';
 
 export class TimerHandler {
   
@@ -16,7 +15,6 @@ export class TimerHandler {
   constructor(timerEmitter: EventEmitter) {
     this.timerEmitter = timerEmitter;
     this.context = new MiddlewareContext();
-    this.context.set(Symbol.for('builder'), new Builder());
     this.setupEventEmitter();
   }
 

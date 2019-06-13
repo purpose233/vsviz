@@ -10,6 +10,8 @@ export class MiddlewareStack {
     this.middlewares = this.setupMiddlewares(middlewareProtos);
   }
 
+  // TODO: if msg is modified by middleware, next middlewares will be influenced.
+
   public async dispatch(type: MiddlewareEventType, msg: any, context: MiddlewareContext): Promise<void> {
     if (this.middlewares.length > 0) {
       await this.execMiddleware(this.middlewares[0], type, msg, context);

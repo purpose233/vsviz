@@ -1,7 +1,7 @@
 export interface DataInfoType {
   id: string,
-  streamType: string,
-  dataType: string,
+  streamType: 'meta' | 'video',
+  dataType: 'json' | 'string' | 'metaData',
   size: number,
   timestamp: number
 }
