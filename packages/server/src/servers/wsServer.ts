@@ -18,7 +18,7 @@ export class WSServer extends BaseServer {
     this.handler = new WSHandler();
   }
 
-  public start(): void {
+  public async start(): Promise<void> {
     this.isStarted = true;
     this.server = new WebSocket.Server({port: this.port});
     this.server.on('connection', this.handleConnection.bind(this));
@@ -46,7 +46,7 @@ export class WSServer extends BaseServer {
     this.handler.sendAll(data);
   }
 
-  private handleConnection(socket: WebSocket, request: IncomingMessage): void {
-    this.handler.handleNewSession(socket, request);    
+  private async handleConnection(socket: WebSocket, request: IncomingMessage): Promise<void> {
+    await this.handler.handleNewSession(socket, request);    
   }
 }

@@ -17,16 +17,18 @@ export class WSHandler {
     this.middlewareProtos.push(middlewareProto);
   }
 
-  public handleNewSession(socket: WebSocket, request: IncomingMessage): void {
-    const sessionID = uuidv4();
-    const session = new WSSession(socket, sessionID, request, this.middlewareProtos);
-    this.sessionMap.set(sessionID, session);
+  public async handleNewSession(socket: WebSocket, 
+                                request: IncomingMessage): Promise<void> {
+    const sessionId = uuidv4();
+    const session = new WSSession(socket, sessionId, request, this.middlewareProtos);
+    await session.start();
+    this.sessionMap.set(sessionId, session);
     this.sessionCount++;
   }
 
-  public deleteSession(sessionID: string) {
+  public deleteSession(sessionId: string) {
     this.sessionCount--;
-    this.sessionMap.delete(sessionID);
+    this.sessionMap.delete(sessionId);
   }
 
   public sendAll(data: any) {

@@ -7,17 +7,24 @@ import { SessionEventEnum } from '../common/constants';
 
 export class WSSession {
 
+  private sessionId: string;
+  private request: IncomingMessage;
   private socket: WebSocket;
   private context: MiddlewareContext;
   private middlewareStack: MiddlewareStack;
 
-  constructor(socket: WebSocket, sessionID: string,
+  constructor(socket: WebSocket, sessionId: string,
               request: IncomingMessage, middlewareProtos: SessionMiddlewareType[]) {
     this.socket = socket;
+    this.sessionId = sessionId;
+    this.request = request;
     this.context = new MiddlewareContext();
     this.middlewareStack = new MiddlewareStack(middlewareProtos);
-    
-    this.middlewareStack.dispatch(SessionEventEnum.CONNECTION, request, this.context);
+  }
+
+  public async start(): Promise<void> {
+    await this.middlewareStack.initMiddlewares(this.context);
+    await this.middlewareStack.dispatch(SessionEventEnum.CONNECTION, this.request, this.context);
     this.setupSocket();
   }
 

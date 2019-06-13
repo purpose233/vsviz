@@ -45,7 +45,7 @@ export class Builder {
 
   private findBuilderById(id: string): StreamBuilder {
     for (const builder of this.streamBuilders) {
-      if (builder.getID() === id) {
+      if (builder.getId() === id) {
         return builder;
       }
     }

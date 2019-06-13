@@ -57,4 +57,12 @@ export class MiddlewareStack {
     }
     return middlewares;
   }
+
+  public async initMiddlewares(context: MiddlewareContext): Promise<void> {
+    for (const middleware of this.middlewares) {
+      if (middleware instanceof BaseMiddleware) {
+        await middleware.init.call(middleware, context);
+      }
+    }
+  }
 }

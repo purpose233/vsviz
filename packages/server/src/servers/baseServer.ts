@@ -7,7 +7,7 @@ export abstract class BaseServer {
   // private handler;
   
   // TODO: maybe return this for start & close
-  public abstract start(): void;
+  public abstract async start(): Promise<void>;
   
   public abstract close(): void;
 

@@ -6,7 +6,8 @@
   "typings": "lib/index.d.ts",
   "scripts": {
     "start": "tsc -w",
-    "build": "tsc"
+    "build": "tsc",
+    "buildWorker": "./node_modules/.bin/webpack"
   },
   "keywords": [],
   "author": "Purpose233",
@@ -14,7 +15,10 @@
   "devDependencies": {
     "@types/react": "^16.8.19",
     "@types/react-dom": "^16.8.4",
-    "@types/ws": "^6.0.1"
+    "@types/ws": "^6.0.1",
+    "ts-loader": "^6.0.2",
+    "webpack": "^4.34.0",
+    "webpack-cli": "^3.3.4"
   },
   "dependencies": {
     "@types/prop-types": "^15.7.1",

@@ -20,8 +20,10 @@ export class TimerHandler {
     this.setupEventEmitter();
   }
 
-  public start(): void {
+  public async start(): Promise<void> {
     this.middlewareStack = new MiddlewareStack(this.middlewareProtos);
+    
+    await this.middlewareStack.initMiddlewares(this.context);
   }
 
   public addMiddlewareProto(middleware: TimerMiddlewareType): void {

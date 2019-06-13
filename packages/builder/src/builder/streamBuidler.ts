@@ -12,7 +12,7 @@ export class StreamBuilder {
     this.streamType = streamType;
   }
 
-  public getID(): string { return this.id; }
+  public getId(): string { return this.id; }
 
   // TODO: check the type of data
   public build(parsedData: ParsedDataType): void {
@@ -51,7 +51,7 @@ export class StreamBuilder {
 //     this.streamType = streamType;
 //   }
 
-//   public getID(): string { return this.id; }
+//   public getId(): string { return this.id; }
 
 //   public abstract build(parsedData: ParsedDataType): void;
 

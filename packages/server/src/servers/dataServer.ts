@@ -46,9 +46,9 @@ export class DataServer extends BaseServer {
     }, interval);
   }
 
-  public start(): void {
+  public async start(): Promise<void> {
     this.isStarted = true;
-    this.handler.start();
+    await this.handler.start();
     this.server.listen(this.port, this.addr);
     this.timerEmitter.emit(TimerEventName.INITIAL);
   }
