@@ -25,7 +25,7 @@ export class Video extends BaseWidget<WidgetBasePropsType> {
     // this.canvasCtx.drawImage(img, 0, 0);
   }
 
-  renderNodes(loaderData: Map<string, ParsedDataType>): React.ReactNode {
+  public renderNodes(loaderData: Map<string, ParsedDataType>): React.ReactNode {
     return (
       <div>
         <canvas ref={this.onCanvasLoad}/>
@@ -33,7 +33,7 @@ export class Video extends BaseWidget<WidgetBasePropsType> {
     );
   }
 
-  render(): React.ReactNode {
+  public render(): React.ReactNode {
     return (
       <ConnectComponent 
         loader={this.props.loader} 

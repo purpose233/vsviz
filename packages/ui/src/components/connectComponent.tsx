@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { ParsedDataType } from '@vsviz/builder';
 import { WidgetBasePropsType } from '../common/types';
 import { WSLoader } from '../wsLoader';
+import { LoaderEventName } from '../common/constants';
 
 type ConnectPropsType = {
   loader: WSLoader,
@@ -32,21 +33,30 @@ export function connectToLoader(Component: React.ComponentType<ConnectPropsType>
       loaderData: new Map<string, ParsedDataType>()
     };
 
-    componentDidMount(): void {
+    public componentDidMount(): void {
       const { loader } = this.props;
       if (loader) {
-        loader.subscribe(this.update);
+        loader.on(LoaderEventName.INIT, this.init);
+        loader.on(LoaderEventName.DATA, this.update);
       }
     }
 
-    componentWillUnmount(): void {
+    public componentWillUnmount(): void {
       const { loader } = this.props;
       if (loader) {
-        loader.unsubscribe(this.update);
+        loader.off(LoaderEventName.INIT, this.init);
+        loader.off(LoaderEventName.DATA, this.update);
       }
     }
 
-    update = (newData: ParsedDataType[], allData: Map<string, ParsedDataType>): void => {
+    public init = (metaData: any) => {
+      const { onInit } = this.props;
+      if (!!onInit) {
+        onInit(metaData);
+      }
+    };
+
+    public update = (newData: ParsedDataType[], allData: Map<string, ParsedDataType>): void => {
       if (this.state.loaderData = null) {
         this.setState({
           loaderData: mapShallowCopy(allData, this.props.dataIds)
@@ -67,9 +77,9 @@ export function connectToLoader(Component: React.ComponentType<ConnectPropsType>
           });
         }
       }
-    }
+    };
     
-    render(): React.ReactNode {
+    public render(): React.ReactNode {
       const { loader, renderNodes } = this.props;
       const { loaderData } = this.state;
 
@@ -78,9 +88,10 @@ export function connectToLoader(Component: React.ComponentType<ConnectPropsType>
   };
 };
 
+// TODO: ConnectComponentProto could be removed
 class ConnectComponnetProto extends React.Component<ConnectPropsType> {
   
-  render (): React.ReactNode {
+  public render (): React.ReactNode {
     const { renderNodes, loaderData } = this.props;
     return renderNodes(loaderData);
   }
