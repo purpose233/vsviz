@@ -11,6 +11,7 @@ export class ParseWorker {
 
   constructor() {
     const blob = new Blob([PackedWorker], {type: 'application/javascript'});
+    console.log(blob);
     this.worker = new Worker(URL.createObjectURL(blob));
   }
 

@@ -2,16 +2,16 @@ import React from 'react';
 import { ConnectComponent } from './connectComponent';
 import { ParsedDataType } from '@vsviz/builder';
 import { BaseWidget } from './baseWidget';
-import { WidgetBasePropsType } from '../common/types';
+import { BaseWidgetPropsType } from '../common/types';
 
 // TODO: enable to render multiple type of images, jpg/meta/etc.
 
-export type VideoPropsType = WidgetBasePropsType & {
+export type VideoPropsType = BaseWidgetPropsType & {
   width: number,
   height: number
 };
 
-export class Video extends BaseWidget<WidgetBasePropsType> {
+export class Video extends BaseWidget<VideoPropsType> {
 
   private canvas: HTMLCanvasElement;
   private canvasCtx: CanvasRenderingContext2D;

@@ -1,4 +1,3 @@
-import WebSocket from 'ws';
 import { WorkerFarm } from './worker/workerFarm';
 import { LoaderEventName } from './common/constants';
 import { ParsedDataType, StreamTypeName } from '@vsviz/builder';
@@ -73,9 +72,9 @@ export class WSLoader {
   // TODO: maybe add option argument
   private connect(addr: string): void {
     this.socket = new WebSocket(addr);
-    this.socket.on('message', (data: any) => {
+    this.socket.onmessage = (data: any) => {
       this.handleData(data);
-    });
+    };
   }
 
   // TODO: actually the received data is blob

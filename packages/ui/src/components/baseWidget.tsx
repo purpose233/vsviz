@@ -2,7 +2,7 @@ import React from 'react'
 import { ParsedDataType } from '@vsviz/builder';
 
 // TODO: enable to receive meta data, add abstract function like init, requireMetaData, etc.
-export abstract class BaseWidget<P> extends React.Component<P> {
+export abstract class BaseWidget<P> extends React.PureComponent<P> {
   
   public onInit(metaData: any): void {}
 

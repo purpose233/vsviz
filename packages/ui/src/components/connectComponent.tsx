@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { ParsedDataType } from '@vsviz/builder';
-import { WidgetBasePropsType } from '../common/types';
+import { ConnectPropsType } from '../common/types';
 import { WSLoader } from '../wsLoader';
 import { LoaderEventName } from '../common/constants';
 
-type ConnectPropsType = {
+type ConnectProtoPropsType = {
   loader: WSLoader,
   loaderData: Map<string, ParsedDataType>,
   renderNodes: Function
@@ -22,8 +22,8 @@ function mapShallowCopy(map: Map<string, ParsedDataType>,
   return newMap;
 }
 
-export function connectToLoader(Component: React.ComponentType<ConnectPropsType>) {
-  return class WrappedComponent extends React.Component<WidgetBasePropsType> {
+export function connectToLoader(Component: React.ComponentType<ConnectProtoPropsType>) {
+  return class WrappedComponent extends React.PureComponent<ConnectPropsType> {
     static propTypes = {
       loader: PropTypes.object,
       getData: PropTypes.func
@@ -89,7 +89,7 @@ export function connectToLoader(Component: React.ComponentType<ConnectPropsType>
 };
 
 // TODO: ConnectComponentProto could be removed
-class ConnectComponnetProto extends React.Component<ConnectPropsType> {
+class ConnectComponnetProto extends React.PureComponent<ConnectProtoPropsType> {
   
   public render (): React.ReactNode {
     const { renderNodes, loaderData } = this.props;

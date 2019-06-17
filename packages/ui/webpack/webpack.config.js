@@ -1,10 +1,14 @@
 const path = require('path');
 
-// TODO: add babel
 module.exports = {
-  mode: 'production',
+  mode: 'development',
 
-  entry: path.resolve(__dirname, './parse.worker.js'),
+  // devtool: 'inline-source-map',
+
+  entry: [
+    'babel-polyfill',
+    path.resolve(__dirname, './parse.worker.js')
+  ],
 
   output: {
     path: path.resolve(__dirname, '../lib'),
@@ -19,7 +23,7 @@ module.exports = {
         use: {
           loader: 'babel-loader',
           options: {
-            presets: ['@babel/preset-env']
+            presets: [['@babel/preset-env', {modules: 'commonjs'}]]
           }
         }
       }
