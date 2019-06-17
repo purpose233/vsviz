@@ -8,6 +8,7 @@ node_modules/
 *.jpg
 *.png
 *.mp4
+example/basic/dist
 
 # lib
 packages/builder/lib/
@@ -16,6 +17,3 @@ packages/ui/lib/
 packages/ui/node_modules/
 packages/server/lib/
 packages/server/node_modules/
-
-# build
-example/basic/src/server.js
