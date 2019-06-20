@@ -62,7 +62,7 @@ if __name__ == "__main__":
     info = {
       'id': 'video0',
       'streamType': 'video',
-      'dataType': 'rgb',
+      'dataType': 'bgr',
       'timestamp': 123
     }
 

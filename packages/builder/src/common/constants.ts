@@ -8,6 +8,7 @@ export const ImageTypeName = {
   JPG: 'jpg',
   PNG: 'png',
   RGB: 'rgb',
+  BGR: 'bgr',
   RGBA: 'rgba'
 };
 

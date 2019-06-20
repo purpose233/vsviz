@@ -1,4 +1,5 @@
-export type ImageDataType = 'jpg' | 'png' | 'rgb' | 'rgba';
+// Note that BGR is used by opencv
+export type ImageDataType = 'jpg' | 'png' | 'rgb' | 'bgr' | 'rgba';
 
 export interface DataInfoType {
   id: string,

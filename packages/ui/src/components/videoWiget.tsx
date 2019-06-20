@@ -35,6 +35,7 @@ export class Video extends Custom2DCanvas {
     switch (parsedData.info.dataType) {
       case ImageTypeName.JPG:
       case ImageTypeName.PNG: 
+      case ImageTypeName.BGR:
       case ImageTypeName.RGB: return;
       case ImageTypeName.RGBA:
         const buf = new Uint8ClampedArray(parsedData.data as Buffer);
