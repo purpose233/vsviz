@@ -14,6 +14,7 @@ const DataPort = 9000;
 class MyTimerMiddleware extends TimerMiddleware {
   async onData(next: Function, data: any, context: MiddlewareContext): Promise<void> {
     console.log('received data.');
+    console.log(context.get(Symbol.for('metaData')));
     await next();
   }
 }
@@ -29,3 +30,5 @@ dataServer
 .use(MyTimerMiddleware)
 .use(new TimerSender(wsServer))
 .start();
+
+console.log('WSServer & DataServer have started');

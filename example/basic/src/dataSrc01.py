@@ -1,5 +1,6 @@
 import socket
 import time
+import sys
 
 SERVER = ("127.0.0.1", 9000)
 TIME_INTERVAL = 1000 / 1000
@@ -30,19 +31,34 @@ def send(s, info, data):
 
 if __name__ == "__main__":
 
+  scriptType = sys.argv[1]
+  if scriptType == 'meta':
+    isMeta = True
+  else:
+    isMeta = False
+
   s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
   s.connect(SERVER)
 
-  info = {
-    'id': 'canvas0',
-    'streamType': 'customed',
-    'dataType': 'string',
-    'timestamp': 123
-  }
-  data = '{\"test\": 123}'
-
-  while(True):
-    time.sleep(TIME_INTERVAL)
-    info['timestamp'] += 1
+  if isMeta:
+    info = {
+      'id': 'canvas0',
+      'streamType': 'meta',
+      'dataType': 'json',
+      'timestamp': 122
+    }
+    data = '{\"width\": 800}'
     send(s, info, data)
+  else:
+    info = {
+      'id': 'canvas0',
+      'streamType': 'customed',
+      'dataType': 'string',
+      'timestamp': 123
+    }
+    data = '{\"test\": 123}'
 
+    while(True):
+      time.sleep(TIME_INTERVAL)
+      info['timestamp'] += 1
+      send(s, info, data)

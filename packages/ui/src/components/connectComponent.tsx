@@ -44,10 +44,17 @@ export function connectToLoader(Component: React.ComponentType<ConnectProtoProps
       }
     }
 
-    public init = (metaData: any) => {
-      const { onInit } = this.props;
+    public init = (metaData: ParsedDataType) => {
+      const { onInit, dataIds } = this.props;
       if (!!onInit) {
-        onInit(metaData);
+        const data = (metaData.data as Object);
+        const filteredData = new Map<string, any>();
+        for (const entry of Object.entries(data)) {
+          if (dataIds.includes(entry[0])) {
+            filteredData.set(entry[0], entry[1]);
+          }
+        }
+        onInit(filteredData);
       }
     };
 

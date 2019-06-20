@@ -18,7 +18,7 @@ export class WSLoader {
   private workerFarm: WorkerFarm;
 
   private isFirstPackage: boolean = true;
-  private metaData: any = null;
+  private metaData: ParsedDataType = null;
 
   constructor(addr: string) {
     this.connect(addr);
@@ -39,7 +39,7 @@ export class WSLoader {
   public on(eventName: string, cb: Function): void {
     if (WSLoader.checkEventName(eventName)) {
       this.callbacks[eventName].push(cb);
-      if (this.metaData !== null) {
+      if (this.metaData !== null && eventName === LoaderEventName.INIT) {
         cb(this.metaData);
       }
     }
@@ -90,7 +90,7 @@ export class WSLoader {
 
       if (this.isFirstPackage && WSLoader.checkMetaData(parsedResult)) {
         this.metaData = parsedResult[0];
-        this.emit(LoaderEventName.INIT, parsedResult);
+        this.emit(LoaderEventName.INIT);
       } else {
         for (const parsedData of parsedResult) {
           this.currentData.set(parsedData.info.id, parsedData);

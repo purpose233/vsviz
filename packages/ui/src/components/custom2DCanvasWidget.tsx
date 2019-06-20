@@ -52,6 +52,7 @@ export abstract class Custom2DCanvas extends BaseWidget<Custom2DCanvasPropsType>
         loader={this.props.loader}
         dataIds={this.props.dataIds}
         renderNodes={this.renderNodes.bind(this)}
+        onInit={this.onInit.bind(this)}
       />
     )
   }

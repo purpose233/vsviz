@@ -15,7 +15,7 @@ function shallowJoin(map: Map<string, any>, parsedData: ParsedDataType): Map<str
     data = {};
     map.set(parsedData.info.id, data);
   }
-  // for now, the data type of meta stream must be json
+  // TODO: for now, assume that the data type of meta stream is json
   for (const entry of Object.entries(parsedData.data)) {
     if (data[entry[0]] !== entry[1]) {
       data[entry[0]] = entry[1];
@@ -45,13 +45,13 @@ export class TimerMetaDataCollector extends TimerMiddleware {
 
   protected async onData(next: Function, parsedDatas: ParsedDataType[], context: MiddlewareContext) {
     const map = context.get(Symbol.for('metaData'));
-    metaDataString = mapToString(map);
     for (const parsedData of parsedDatas) {
       if (parsedData.info.streamType !== StreamTypeName.META) {
         continue;
       }
       shallowJoin(map, parsedData);
     }
+    metaDataString = mapToString(map);
     await next();
   }
 }
