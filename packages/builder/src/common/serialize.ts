@@ -100,12 +100,12 @@ function transformStreamData(data: StreamDataType, dataType: string): StreamData
 
 function readStreamData(buffer: Buffer, dataType: string): StreamDataType {
   switch (dataType) {
-    case DataTypeName.METADATA: 
-      return buffer;
     case DataTypeName.JSON:
       return JSON.parse(readStringFromBuffer(buffer));
     case DataTypeName.STRING:
       return readStringFromBuffer(buffer);
+    default:
+      return buffer;
   }
 }
 

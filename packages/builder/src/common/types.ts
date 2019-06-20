@@ -1,9 +1,9 @@
-import { StreamTypeName } from './constants';
+export type ImageDataType = 'jpg' | 'png' | 'rgb' | 'rgba';
 
 export interface DataInfoType {
   id: string,
   streamType: 'customed' | 'video' | 'meta',
-  dataType: 'json' | 'string' | 'metadata',
+  dataType: 'json' | 'string' | 'metadata' | ImageDataType,
   size: number,
   timestamp: number
 }

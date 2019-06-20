@@ -28,6 +28,10 @@ export function connectToLoader(Component: React.ComponentType<ConnectProtoProps
       loaderData: null
     };
 
+    static checkNewDataUsefull(parsedResult: ParsedDataType[], dataIds: string[]): boolean {
+      return parsedResult.some(parsedData => dataIds.includes(parsedData.info.id));
+    }
+
     public componentDidMount(): void {
       const { loader } = this.props;
       if (loader) {
@@ -60,9 +64,11 @@ export function connectToLoader(Component: React.ComponentType<ConnectProtoProps
 
     public update = (newData: ParsedDataType[], allData: Map<string, ParsedDataType>): void => {
       if (this.state.loaderData == null) {
-        this.setState({
-          loaderData: mapShallowCopy(allData, this.props.dataIds)
-        });
+        if (WrappedComponent.checkNewDataUsefull(newData, this.props.dataIds)) {
+          this.setState({
+            loaderData: mapShallowCopy(allData, this.props.dataIds)
+          });
+        }
       } else {
         const { loaderData } = this.state;
         let needUpdate = false;
@@ -80,7 +86,7 @@ export function connectToLoader(Component: React.ComponentType<ConnectProtoProps
         }
       }
     };
-    
+
     public render(): React.ReactNode {
       const { loader, renderNodes } = this.props;
       const { loaderData } = this.state;

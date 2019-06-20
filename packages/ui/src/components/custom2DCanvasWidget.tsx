@@ -9,25 +9,28 @@ export type Custom2DCanvasPropsType = BaseWidgetPropsType & {
   height: number
 }
 
+// TODO: add requestAnimationFrame
+
+// TODO: enable to set width & height by meta data
+
 export abstract class Custom2DCanvas extends BaseWidget<Custom2DCanvasPropsType> {
 
   private canvas: HTMLCanvasElement;
   private canvasCtx: CanvasRenderingContext2D;
 
-  protected abstract renderCanvas(loaderData: Map<string, ParsedDataType>, 
-                                  canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D): void;
+  protected abstract async renderCanvas(loaderData: Map<string, ParsedDataType>, 
+                                        canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D): Promise<void>;
 
-  private onCanvasLoad = (ref: HTMLCanvasElement) => {
+  protected async onCanvasInit(canvas: HTMLCanvasElement, context: CanvasRenderingContext2D): Promise<void> {}
+
+  private onCanvasLoad = async (ref: HTMLCanvasElement) => {
     this.canvas = ref;
     this.canvasCtx = this.canvas.getContext('2d');
-    this.initCanvas();
-    console.log('Canvas has initialized');
-  }
 
-  private initCanvas() {
     const { width, height } = this.props;
     this.canvas.width = width;
     this.canvas.height = height;
+    await this.onCanvasInit(this.canvas, this.canvasCtx);
   }
 
   protected clearCanvas() {

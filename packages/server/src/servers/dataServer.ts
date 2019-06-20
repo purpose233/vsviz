@@ -28,13 +28,10 @@ export class DataServer extends BaseServer {
       socket.on('data', (data: Buffer) => {
         // console.log('Receive package.');
 
-        const parsedDatas = parser.parse(data);
-        if (parsedDatas.length > 0) {
-          this.timerEmitter.emit(TimerEventName.DATA, parsedDatas);
+        const parsedResult = parser.parse(data);
+        if (parsedResult.length > 0) {
+          this.timerEmitter.emit(TimerEventName.DATA, parsedResult);
         }
-        // for (const parsedData of parsedDatas) {
-        //   console.log('get parsed data type: ', parsedData.info.streamType, ' size: ', parsedData.info.size);
-        // }
       });
     });
 

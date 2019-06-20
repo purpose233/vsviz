@@ -60,6 +60,7 @@ export class Parser {
     } else {
       const currentSize = this.stashedSize + metaData.length;
       if (currentSize >= this.stashedDataInfo.size) {
+        const continueParsing = currentSize > this.stashedDataInfo.size;
         // when isPacking is true, the offset must be 0
         const remainLength = this.stashedDataInfo.size - this.stashedSize;
         const dataBuffer = metaData.slice(0, remainLength);
@@ -70,10 +71,10 @@ export class Parser {
         };
         this.initPacking();
         parsedResults.push(parsedData);
-        if (currentSize > this.stashedDataInfo.size) {
+        if (continueParsing) {
           parsedResults.push(...this.parse(metaData, remainLength))
         }
-      } else if (currentSize > this.stashedDataInfo.size) {
+      } else if (currentSize < this.stashedDataInfo.size) {
         this.stashedData.push(metaData);
         this.stashedSize = currentSize;
       }

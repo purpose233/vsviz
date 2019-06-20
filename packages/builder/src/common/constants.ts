@@ -4,11 +4,20 @@ export const StreamTypeName = {
   META: 'meta'
 };
 
-export const DataTypeName = {
+export const ImageTypeName = {
+  JPG: 'jpg',
+  PNG: 'png',
+  RGB: 'rgb',
+  RGBA: 'rgba'
+};
+
+const SimpleDataTypeName = {
   JSON: 'json',
   STRING: 'string',
   METADATA: 'metadata'
 };
+
+export const DataTypeName = Object.assign(SimpleDataTypeName, ImageTypeName);
 
 export enum NumberTypeEnum {
   UINT8,

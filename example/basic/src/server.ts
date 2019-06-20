@@ -5,6 +5,7 @@ import {
   TimerMiddleware,
   MiddlewareContext,
   TimerMetaDataCollector,
+  TimerDataUniteMiddleware,
   SessionMetaDataSender
 } from '../../../packages/server/lib/index';
 
@@ -27,6 +28,7 @@ wsServer
 const dataServer = new DataServer(DataPort);
 dataServer
 .use(TimerMetaDataCollector)
+.use(TimerDataUniteMiddleware)
 .use(MyTimerMiddleware)
 .use(new TimerSender(wsServer))
 .start();
