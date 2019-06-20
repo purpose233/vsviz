@@ -72,8 +72,10 @@ export class WSLoader {
   // TODO: maybe add option argument
   private connect(addr: string): void {
     this.socket = new WebSocket(addr);
-    this.socket.onmessage = (data: any) => {
-      this.handleData(data);
+    this.socket.onmessage = (e: MessageEvent) => {
+      if (e.data) {
+        this.handleData(e.data);
+      }
     };
   }
 
@@ -83,6 +85,9 @@ export class WSLoader {
     if (data instanceof Buffer || data instanceof Blob) {
       // TODO: remove repeated data
       const parsedResult: ParsedDataType[] = await this.workerFarm.parse(data);
+
+      console.log(parsedResult);
+
       if (this.isFirstPackage && WSLoader.checkMetaData(parsedResult)) {
         this.metaData = parsedResult[0];
         this.emit(LoaderEventName.INIT, parsedResult);

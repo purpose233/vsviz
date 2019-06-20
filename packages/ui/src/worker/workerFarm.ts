@@ -21,7 +21,7 @@ export class WorkerFarm {
     }
     const worker = this.idleWorkers.pop();
     const parsedResult = await worker.parse(data);
-    this.workers.push(worker);
+    this.idleWorkers.push(worker);
     return parsedResult;
   }
 }

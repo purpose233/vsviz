@@ -63,8 +63,10 @@ export class SessionMetaDataSender extends SessionMiddleware {
   }
 
   protected async onConnection(next: Function, msg: any, context: MiddlewareContext): Promise<void> {
-    const socket: WebSocket = context.get(Symbol.for('socket'));
-    sendMetaData(socket, metaDataString);
+    if (metaDataString !== null) {
+      const socket: WebSocket = context.get(Symbol.for('socket'));
+      sendMetaData(socket, metaDataString);
+    }
     await next();
   }
 }

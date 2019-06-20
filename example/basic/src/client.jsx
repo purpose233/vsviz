@@ -5,6 +5,10 @@ import { WSLoader, Custom2DCanvas } from '../../../packages/ui/lib/index';
 class MyCanvas extends Custom2DCanvas {
   renderCanvas(loaderData, canvas, context) {
     console.log(loaderData);
+    console.log(this);
+    this.clearCanvas();
+    context.fillStyle = 'green';
+    context.fillRect(10, 10, 100, 100);
   }
 }
 

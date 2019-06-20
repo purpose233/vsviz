@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { ParsedDataType } from '@vsviz/builder';
 import { ConnectPropsType } from '../common/types';
 import { WSLoader } from '../wsLoader';
@@ -24,13 +23,9 @@ function mapShallowCopy(map: Map<string, ParsedDataType>,
 
 export function connectToLoader(Component: React.ComponentType<ConnectProtoPropsType>) {
   return class WrappedComponent extends React.PureComponent<ConnectPropsType> {
-    static propTypes = {
-      loader: PropTypes.object,
-      getData: PropTypes.func
-    };
 
     state = {
-      loaderData: new Map<string, ParsedDataType>()
+      loaderData: null
     };
 
     public componentDidMount(): void {
@@ -57,7 +52,7 @@ export function connectToLoader(Component: React.ComponentType<ConnectProtoProps
     };
 
     public update = (newData: ParsedDataType[], allData: Map<string, ParsedDataType>): void => {
-      if (this.state.loaderData = null) {
+      if (this.state.loaderData == null) {
         this.setState({
           loaderData: mapShallowCopy(allData, this.props.dataIds)
         });

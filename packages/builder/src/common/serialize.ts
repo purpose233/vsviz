@@ -11,7 +11,7 @@ export function serializeBuilder(builder: StreamBuilder) {
 }
 
 export function serialize(headerInfo: DataInfoType, bodyData: StreamDataType) {
-  if (headerInfo.dataType === DataTypeName.JSON) {
+  if (headerInfo.dataType === DataTypeName.JSON && typeof bodyData !== 'string') {
     bodyData = JSON.stringify(bodyData);
   }
 

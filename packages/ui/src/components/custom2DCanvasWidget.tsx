@@ -21,6 +21,7 @@ export abstract class Custom2DCanvas extends BaseWidget<Custom2DCanvasPropsType>
     this.canvas = ref;
     this.canvasCtx = this.canvas.getContext('2d');
     this.initCanvas();
+    console.log('Canvas has initialized');
   }
 
   private initCanvas() {
@@ -29,8 +30,14 @@ export abstract class Custom2DCanvas extends BaseWidget<Custom2DCanvasPropsType>
     this.canvas.height = height;
   }
 
+  protected clearCanvas() {
+    this.canvas.width = this.props.width;
+  }
+
   public renderNodes(loaderData: Map<string, ParsedDataType>): React.ReactNode {
-    this.renderCanvas(loaderData, this.canvas, this.canvasCtx);
+    if (this.canvas && this.context) {
+      this.renderCanvas(loaderData, this.canvas, this.canvasCtx);
+    }
     return (
       <div>
         <canvas ref={this.onCanvasLoad} />
