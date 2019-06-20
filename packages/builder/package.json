@@ -11,6 +11,10 @@
   "keywords": [],
   "author": "Purpose233",
   "license": "ISC",
-  "devDependencies": {},
-  "dependencies": {}
+  "devDependencies": {
+    "@types/jpeg-js": "^0.3.0"
+  },
+  "dependencies": {
+    "jpeg-js": "^0.3.5"
+  }
 }

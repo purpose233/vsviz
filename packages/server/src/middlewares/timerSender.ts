@@ -22,7 +22,7 @@ export class TimerSender extends TimerMiddleware {
     const builder: Builder = context.get(Symbol.for('builder'));
     const data = concatBuffer(builder.getFrameData());
     if (data != null) {
-      console.log('prepare to send data: ', data);
+      // console.log('prepare to send data: ', data);
       this.server.sendAll(data);
       builder.clearAllDirtyBuilders();
     }

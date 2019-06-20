@@ -10,6 +10,8 @@ import { ParsedDataType, StreamTypeName } from '@vsviz/builder';
 
 // TODO: multiple events for listeners
 
+// TODO: add option for meta data and others
+
 export class WSLoader {
 
   private callbacks: any = {};
@@ -17,7 +19,6 @@ export class WSLoader {
   private socket: WebSocket;
   private workerFarm: WorkerFarm;
 
-  private isFirstPackage: boolean = true;
   private metaData: ParsedDataType = null;
 
   constructor(addr: string) {
@@ -88,7 +89,7 @@ export class WSLoader {
 
       console.log(parsedResult);
 
-      if (this.isFirstPackage && WSLoader.checkMetaData(parsedResult)) {
+      if (WSLoader.checkMetaData(parsedResult)) {
         this.metaData = parsedResult[0];
         this.emit(LoaderEventName.INIT);
       } else {
@@ -98,6 +99,5 @@ export class WSLoader {
         this.emit(LoaderEventName.DATA, parsedResult);
       }
     }
-    this.isFirstPackage = false;
   }
 }

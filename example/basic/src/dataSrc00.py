@@ -6,7 +6,7 @@ import sys
 import json
 
 SERVER = ("127.0.0.1", 9000)
-TIME_INTERVAL = 1000 / 1000
+TIME_INTERVAL = 30 / 1000
 HEADER_SIZE = 32
 
 def copyByte(src, target, targetOffset, srcStart, srcEnd):
@@ -62,7 +62,7 @@ if __name__ == "__main__":
     info = {
       'id': 'video0',
       'streamType': 'video',
-      'dataType': 'bgr',
+      'dataType': 'jpg',
       'timestamp': 123
     }
 
@@ -70,14 +70,14 @@ if __name__ == "__main__":
       ref, frame = capture.read()
       # cv.imshow('camera', frame)
 
-      data = frame.flatten()
-      # img = cv.imencode('.jpg', frame)[1]
-      # data = np.array(img)
+      # data = frame.flatten()
+      img = cv.imencode('.jpg', frame)[1]
+      data = np.array(img)
 
       time.sleep(TIME_INTERVAL)
       info['timestamp'] += 1
       send(s, info, data, 'array')
-      break
+      # break
 
-    capture.release()
-    s.close()
+    # capture.release()
+    # s.close()

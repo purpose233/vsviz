@@ -1,8 +1,7 @@
 import { TimerMiddleware } from './timerMiddleware';
 import { MiddlewareContext } from './middlewareContext';
 import { ParsedDataType, StreamTypeName, 
-  ImageTypeName, ImageDataType } from '@vsviz/builder';
-import { getImageRGBA } from '../common/utils';
+  ImageTypeName, ImageDataType, getImageRGBA } from '@vsviz/builder';
 
 export class TimerDataUniteMiddleware extends TimerMiddleware {
   
