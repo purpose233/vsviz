@@ -6,7 +6,7 @@ import sys
 import json
 
 SERVER = ("127.0.0.1", 9000)
-TIME_INTERVAL = 30 / 1000
+TIME_INTERVAL = 100 / 1000
 HEADER_SIZE = 32
 
 def copyByte(src, target, targetOffset, srcStart, srcEnd):

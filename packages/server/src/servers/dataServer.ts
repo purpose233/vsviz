@@ -15,7 +15,7 @@ export class DataServer extends BaseServer {
   private timerEmitter: EventEmitter;
 
   // TODO: add handler
-  constructor(port: number, addr: string = '127.0.0.1', interval: number = 500) {
+  constructor(port: number, addr: string = '127.0.0.1', interval: number = 30) {
     super();
     this.port = port;
     this.addr = addr;
@@ -26,8 +26,6 @@ export class DataServer extends BaseServer {
       socket.on('error', e => console.log(e));
       
       socket.on('data', (data: Buffer) => {
-        // console.log('Receive package.');
-
         const parsedResult = parser.parse(data);
         if (parsedResult.length > 0) {
           this.timerEmitter.emit(TimerEventName.DATA, parsedResult);

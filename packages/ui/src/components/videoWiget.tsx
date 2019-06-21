@@ -20,8 +20,9 @@ export class Video extends Custom2DCanvas {
     this.imageHeight = data.height;
   }
 
-  protected async renderCanvas(loaderData: Map<string, ParsedDataType>,
-                               canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D): Promise<void> { 
+  protected async renderCanvasOnData(loaderData: Map<string, ParsedDataType>,
+                                     canvas: HTMLCanvasElement, 
+                                     ctx: CanvasRenderingContext2D): Promise<void> { 
     if (this.imageWidth <= 0 || this.imageHeight <= 0) {
       console.log('No meta config for Video!');
       return;

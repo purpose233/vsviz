@@ -70,11 +70,20 @@ export class WSLoader {
     }
   }
 
+  // private lastTime = 0;
+
   // TODO: maybe add option argument
   private connect(addr: string): void {
     this.socket = new WebSocket(addr);
     this.socket.onmessage = (e: MessageEvent) => {
       if (e.data) {
+        // if (this.lastTime === 0) {
+        //   this.lastTime = new Date().getTime();
+        // } else {
+        //   const currentTime = new Date().getTime();
+        //   console.log('Time interval: ', currentTime - this.lastTime);
+        //   this.lastTime = currentTime;
+        // }
         this.handleData(e.data);
       }
     };
@@ -86,7 +95,7 @@ export class WSLoader {
     if (data instanceof Buffer || data instanceof Blob) {
       // TODO: remove repeated data
       const parsedResult: ParsedDataType[] = await this.workerFarm.parse(data);
-
+      
       console.log(parsedResult);
 
       if (WSLoader.checkMetaData(parsedResult)) {

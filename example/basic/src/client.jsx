@@ -3,7 +3,7 @@ import { render } from 'react-dom'
 import { WSLoader, Custom2DCanvas, Video } from '../../../packages/ui/lib/index';
 
 class MyCanvas extends Custom2DCanvas {
-  renderCanvas(loaderData, canvas, context) {
+  renderCanvasOnData(loaderData, canvas, context) {
     // console.log(loaderData);
     this.clearCanvas();
     context.fillStyle = 'green';

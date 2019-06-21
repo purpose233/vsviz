@@ -33,4 +33,4 @@ dataServer
 .use(new TimerSender(wsServer))
 .start();
 
-console.log('WSServer & DataServer have started');
+console.log('WSServer & DataServer have started\n');

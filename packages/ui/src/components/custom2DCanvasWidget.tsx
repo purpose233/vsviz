@@ -9,19 +9,41 @@ export type Custom2DCanvasPropsType = BaseWidgetPropsType & {
   height: number
 }
 
-// TODO: add requestAnimationFrame
-
 // TODO: enable to set width & height by meta data
 
 export abstract class Custom2DCanvas extends BaseWidget<Custom2DCanvasPropsType> {
 
   private canvas: HTMLCanvasElement;
   private canvasCtx: CanvasRenderingContext2D;
+  private isRAFEnabled: boolean = true;
 
-  protected abstract async renderCanvas(loaderData: Map<string, ParsedDataType>, 
-                                        canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D): Promise<void>;
+  protected async renderCanvasOnRAF(canvas: HTMLCanvasElement,
+                                    ctx: CanvasRenderingContext2D): Promise<void> {};
+
+  protected async renderCanvasOnData(loaderData: Map<string, ParsedDataType>, 
+                                     canvas: HTMLCanvasElement, 
+                                     ctx: CanvasRenderingContext2D): Promise<void> {};
 
   protected async onCanvasInit(canvas: HTMLCanvasElement, context: CanvasRenderingContext2D): Promise<void> {}
+
+  public enableRAF(): void {
+    if (this.isRAFEnabled) { return; }
+    this.isRAFEnabled = true;
+    requestAnimationFrame(this.runRAF);
+  }
+
+  public disableRAF(): void {
+    this.isRAFEnabled = false;
+  }
+
+  private runRAF = async (): Promise<void> => {
+    if (!this.isRAFEnabled) { return; }
+
+    if (this.canvas && this.canvasCtx) {
+      await this.renderCanvasOnRAF(this.canvas, this.canvasCtx);
+    }
+    requestAnimationFrame(this.runRAF);
+  }
 
   private onCanvasLoad = async (ref: HTMLCanvasElement) => {
     this.canvas = ref;
@@ -31,6 +53,7 @@ export abstract class Custom2DCanvas extends BaseWidget<Custom2DCanvasPropsType>
     this.canvas.width = width;
     this.canvas.height = height;
     await this.onCanvasInit(this.canvas, this.canvasCtx);
+    requestAnimationFrame(this.runRAF);
   }
 
   protected clearCanvas() {
@@ -39,7 +62,7 @@ export abstract class Custom2DCanvas extends BaseWidget<Custom2DCanvasPropsType>
 
   public renderNodes(loaderData: Map<string, ParsedDataType>): React.ReactNode {
     if (this.canvas && this.context) {
-      this.renderCanvas(loaderData, this.canvas, this.canvasCtx);
+      this.renderCanvasOnData(loaderData, this.canvas, this.canvasCtx);
     }
     return (
       <div>
