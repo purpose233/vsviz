@@ -30,7 +30,7 @@ dataServer
 .use(TimerMetaDataCollector)
 // .use(TimerDataUniteMiddleware)
 .use(MyTimerMiddleware)
-.use(new TimerSender(wsServer))
+.use(new TimerSender(wsServer, true))
 .start();
 
 console.log('WSServer & DataServer have started\n');

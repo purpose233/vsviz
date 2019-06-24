@@ -1,6 +1,7 @@
 import { WorkerFarm } from './worker/workerFarm';
 import { LoaderEventName } from './common/constants';
-import { ParsedDataType, StreamTypeName } from '@vsviz/builder';
+import { StreamTypeName } from '@vsviz/builder';
+import { LoaderDataType } from './common/types';
 
 // TODO: different way of handle msg when all workers are busy:
 //  1. drop msg immediately;
@@ -15,15 +16,15 @@ import { ParsedDataType, StreamTypeName } from '@vsviz/builder';
 export class WSLoader {
 
   private callbacks: any = {};
-  private currentData: Map<string, ParsedDataType> = new Map();
+  private currentData: Map<string, LoaderDataType> = new Map();
   private socket: WebSocket;
   private workerFarm: WorkerFarm;
 
-  private metaData: ParsedDataType = null;
+  private metaData: LoaderDataType = null;
 
   constructor(addr: string) {
     this.connect(addr);
-    this.workerFarm = new WorkerFarm();
+    this.workerFarm = new WorkerFarm(1);
 
     this.callbacks[LoaderEventName.INIT] = [];
     this.callbacks[LoaderEventName.DATA] = [];
@@ -33,8 +34,8 @@ export class WSLoader {
     return eventName === LoaderEventName.INIT || eventName === LoaderEventName.DATA;
   }
 
-  static checkMetaData(parsedResult: ParsedDataType[]) {
-    return parsedResult.length === 1 && parsedResult[0].info.streamType === StreamTypeName.META;
+  static checkMetaData(loaderDatas: LoaderDataType[]) {
+    return loaderDatas.length === 1 && loaderDatas[0].info.streamType === StreamTypeName.META;
   }
 
   public on(eventName: string, cb: Function): void {
@@ -55,7 +56,7 @@ export class WSLoader {
     }
   }
 
-  private emit(eventName: string, parsedResult: ParsedDataType[] = null): void {
+  private emit(eventName: string, loaderDatas: LoaderDataType[] = null): void {
     switch (eventName) {
       case LoaderEventName.INIT:
         for (const cb of this.callbacks[LoaderEventName.INIT]) {
@@ -64,26 +65,26 @@ export class WSLoader {
         break;
       case LoaderEventName.DATA:
         for (const cb of this.callbacks[LoaderEventName.DATA]) {
-          cb(parsedResult, this.currentData);
+          cb(loaderDatas, this.currentData);
         }
         break;
     }
   }
 
-  // private lastTime = 0;
+  private lastTime = 0;
 
   // TODO: maybe add option argument
   private connect(addr: string): void {
     this.socket = new WebSocket(addr);
     this.socket.onmessage = (e: MessageEvent) => {
       if (e.data) {
-        // if (this.lastTime === 0) {
-        //   this.lastTime = new Date().getTime();
-        // } else {
-        //   const currentTime = new Date().getTime();
-        //   console.log('Time interval: ', currentTime - this.lastTime);
-        //   this.lastTime = currentTime;
-        // }
+        if (this.lastTime === 0) {
+          this.lastTime = new Date().getTime();
+        } else {
+          const currentTime = new Date().getTime();
+          console.log('Time interval: ', currentTime - this.lastTime);
+          this.lastTime = currentTime;
+        }
         this.handleData(e.data);
       }
     };
@@ -93,19 +94,20 @@ export class WSLoader {
   private async handleData(data: any): Promise<void> {
     // TODO: handle data when data is not buffer
     if (data instanceof Buffer || data instanceof Blob) {
-      // TODO: remove repeated data
-      const parsedResult: ParsedDataType[] = await this.workerFarm.parse(data);
-      
-      console.log(parsedResult);
+      // TODO: remove repeated data & use timestamp to make sure the order of data is right
+      const loaderDatas: LoaderDataType[] = await this.workerFarm.parse(data);
+      if (!loaderDatas) { return; }
 
-      if (WSLoader.checkMetaData(parsedResult)) {
-        this.metaData = parsedResult[0];
+      console.log(loaderDatas);
+
+      if (WSLoader.checkMetaData(loaderDatas)) {
+        this.metaData = loaderDatas[0];
         this.emit(LoaderEventName.INIT);
       } else {
-        for (const parsedData of parsedResult) {
-          this.currentData.set(parsedData.info.id, parsedData);
+        for (const loaderData of loaderDatas) {
+          this.currentData.set(loaderData.info.id, loaderData);
         }
-        this.emit(LoaderEventName.DATA, parsedResult);
+        this.emit(LoaderEventName.DATA, loaderDatas);
       }
     }
   }

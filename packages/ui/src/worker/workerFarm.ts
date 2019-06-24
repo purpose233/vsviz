@@ -1,6 +1,5 @@
 import { ParseWorker } from './parseWorker';
-import { ParsedDataType } from '@vsviz/builder';
-import { WorkerParseType } from '../common/types';
+import { WorkerParseType, LoaderDataType } from '../common/types';
 
 export class WorkerFarm {
 
@@ -15,8 +14,8 @@ export class WorkerFarm {
     this.idleWorkers = [...this.workers];
   }
 
-  public async parse(data: WorkerParseType): Promise<ParsedDataType[]> {
-    if (this.idleWorkers.length < 0) {
+  public async parse(data: WorkerParseType): Promise<LoaderDataType[]> {
+    if (this.idleWorkers.length <= 0) {
       return null;
     }
     const worker = this.idleWorkers.pop();

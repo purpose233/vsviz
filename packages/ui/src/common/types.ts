@@ -1,4 +1,5 @@
 import { WSLoader } from '../wsLoader';
+import { ParsedDataType } from '@vsviz/builder';
 
 // TODO: optional dataIds prop, handle when dataIds is not setx
 export type ConnectPropsType = {
@@ -14,3 +15,7 @@ export type BaseWidgetPropsType = {
 }
 
 export type WorkerParseType = Buffer | Blob;
+
+export type LoaderDataType = ParsedDataType & {
+  appendData?: any
+}

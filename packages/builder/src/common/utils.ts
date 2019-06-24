@@ -2,7 +2,13 @@ import { ImageDataType } from './types';
 import { ImageTypeName } from './constants';
 import JPEG from 'jpeg-js';
 
+export function isImageType(type: string): boolean {
+  return Object.values(ImageTypeName).some(imageType => imageType === type);
+}
+
 export function getImageRGBA(src: Buffer, srcType: ImageDataType): Buffer {
+  // if (!isImageType(srcType)) { return null; }
+
   let rgbaBuffer, i, j;
   switch (srcType) {
     case ImageTypeName.JPG: return JPEG.decode(src).data;

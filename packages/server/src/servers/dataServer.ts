@@ -25,9 +25,17 @@ export class DataServer extends BaseServer {
 
       socket.on('error', e => console.log(e));
       
+      let lastTime = 0;
       socket.on('data', (data: Buffer) => {
         const parsedResult = parser.parse(data);
-        if (parsedResult.length > 0) {
+          if (parsedResult.length > 0) {
+                    if (lastTime === 0) {
+            lastTime = new Date().getTime();
+          } else {
+            const currentTime = new Date().getTime();
+            console.log('Time interval: ', currentTime - lastTime);
+            lastTime = currentTime;
+          }
           this.timerEmitter.emit(TimerEventName.DATA, parsedResult);
         }
       });

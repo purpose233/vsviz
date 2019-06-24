@@ -1,5 +1,6 @@
-import { ParsedDataType, StreamTypeName, getImageRGBA, ImageDataType } from '@vsviz/builder';
+import { StreamTypeName, getImageRGBA, ImageDataType } from '@vsviz/builder';
 import { Canvas2D } from './Canvas2DWidget';
+import { LoaderDataType } from '../common/types';
 
 export class Video extends Canvas2D {
 
@@ -20,7 +21,7 @@ export class Video extends Canvas2D {
     this.disableRAF();
   }
 
-  protected async renderCanvasOnData(loaderData: Map<string, ParsedDataType>,
+  protected async renderCanvasOnData(loaderDataMap: Map<string, LoaderDataType>,
                                      canvas: HTMLCanvasElement, 
                                      ctx: CanvasRenderingContext2D): Promise<void> { 
     if (this.imageWidth <= 0 || this.imageHeight <= 0) {
@@ -28,13 +29,15 @@ export class Video extends Canvas2D {
       return;
     }
     const dataId = this.props.dataIds[0];
-    const parsedData = loaderData.get(dataId);
-    if (!parsedData || parsedData.info.streamType !== StreamTypeName.VIDEO) { 
+    const loaderData = loaderDataMap.get(dataId);
+    if (!loaderData || loaderData.info.streamType !== StreamTypeName.VIDEO) { 
+      console.log('No loaderData!');
       return; 
     }
     this.clearCanvas();
-    const imageRGBAData = getImageRGBA(parsedData.data as Buffer, 
-      parsedData.info.dataType as ImageDataType);
+    const imageRGBAData = loaderData.appendData as Buffer;
+    // const imageRGBAData = getImageRGBA(parsedData.data as Buffer, 
+      // loaderData.info.dataType as ImageDataType);
     if (!imageRGBAData) {
       console.log('Image data parsing error!');
       return;

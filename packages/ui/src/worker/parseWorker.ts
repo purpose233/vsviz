@@ -1,5 +1,4 @@
-import { ParsedDataType } from '@vsviz/builder';
-import { WorkerParseType } from '../common/types';
+import { WorkerParseType, LoaderDataType } from '../common/types';
 // need to disable noImplicitAny to import module without d.ts file
 import PackedWorker from './parse.worker.js';
 
@@ -17,7 +16,7 @@ export class ParseWorker {
     return this.isWorking;
   }
 
-  public async parse(data: WorkerParseType): Promise<ParsedDataType[]> {
+  public async parse(data: WorkerParseType): Promise<LoaderDataType[]> {
     return new Promise((resolve, reject) => {
       this.worker.onmessage = (e): void => {
         this.isWorking = false;

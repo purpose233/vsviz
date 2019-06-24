@@ -6,7 +6,7 @@ import sys
 import json
 
 SERVER = ("127.0.0.1", 9000)
-TIME_INTERVAL = 100 / 1000
+TIME_INTERVAL = 30
 HEADER_SIZE = 32
 
 def copyByte(src, target, targetOffset, srcStart, srcEnd):
@@ -73,11 +73,14 @@ if __name__ == "__main__":
       # data = frame.flatten()
       img = cv.imencode('.jpg', frame)[1]
       data = np.array(img)
-
-      time.sleep(TIME_INTERVAL)
-      info['timestamp'] += 1
       send(s, info, data, 'array')
-      # break
 
-    # capture.release()
-    # s.close()
+      info['timestamp'] += 1
+
+      c = cv.waitKey(TIME_INTERVAL)
+      if c != -1:
+        break
+      # time.sleep(TIME_INTERVAL)
+
+    capture.release()
+    s.close()

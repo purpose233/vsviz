@@ -1,8 +1,7 @@
 import React from 'react';
 import { ConnectComponent } from './connectComponent';
-import { BaseWidgetPropsType } from '../common/types';
+import { BaseWidgetPropsType, LoaderDataType } from '../common/types';
 import { BaseWidget } from './baseWidget';
-import { ParsedDataType } from '@vsviz/builder';
 
 export type Canvas2DPropsType = BaseWidgetPropsType & {
   width: number,
@@ -20,7 +19,7 @@ export abstract class Canvas2D extends BaseWidget<Canvas2DPropsType> {
   protected async renderCanvasOnRAF(canvas: HTMLCanvasElement,
                                     ctx: CanvasRenderingContext2D): Promise<void> {};
 
-  protected async renderCanvasOnData(loaderData: Map<string, ParsedDataType>, 
+  protected async renderCanvasOnData(LoaderDataMap: Map<string, LoaderDataType>, 
                                      canvas: HTMLCanvasElement, 
                                      ctx: CanvasRenderingContext2D): Promise<void> {};
 
@@ -60,9 +59,9 @@ export abstract class Canvas2D extends BaseWidget<Canvas2DPropsType> {
     this.canvas.width = this.props.width;
   }
 
-  public renderNodes(loaderData: Map<string, ParsedDataType>): React.ReactNode {
+  public renderNodes(loaderDataMap: Map<string, LoaderDataType>): React.ReactNode {
     if (this.canvas && this.context) {
-      this.renderCanvasOnData(loaderData, this.canvas, this.canvasCtx);
+      this.renderCanvasOnData(loaderDataMap, this.canvas, this.canvasCtx);
     }
     return (
       <div>

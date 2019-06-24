@@ -1,5 +1,7 @@
-import { deserialize, HeaderSize, blobToBuffer } from '@vsviz/builder';
+import { deserialize, HeaderSize, 
+  blobToBuffer, getImageRGBA, isImageType } from '@vsviz/builder';
 
+// TODO: maybe parse image in worker
 if (self !== undefined) {
   self.onmessage = async (e) => {
     let offset = 0;
@@ -17,6 +19,15 @@ if (self !== undefined) {
     while (true) {
       const parsedData = deserialize(buffer, offset);
       if (!parsedData) { break; }
+
+      if (isImageType(parsedData.info.dataType)) {
+        try {
+          parsedData.appendData = getImageRGBA(parsedData.data, parsedData.info.dataType);
+        } catch(e) {
+          console.log(e);
+        }
+      }
+      
       parsedResults.push(parsedData);
       offset += HeaderSize + parsedData.info.size;
     }

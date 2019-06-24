@@ -1,18 +1,17 @@
 import React from 'react';
-import { ParsedDataType } from '@vsviz/builder';
-import { ConnectPropsType } from '../common/types';
+import { ConnectPropsType, LoaderDataType } from '../common/types';
 import { WSLoader } from '../wsLoader';
 import { LoaderEventName } from '../common/constants';
 
 type ConnectProtoPropsType = {
   loader: WSLoader,
-  loaderData: Map<string, ParsedDataType>,
+  loaderDataMap: Map<string, LoaderDataType>,
   renderNodes: Function
 };
 
-function mapShallowCopy(map: Map<string, ParsedDataType>, 
-                        includedIds: string[] = null): Map<string, ParsedDataType> {
-  const newMap = new Map<string, ParsedDataType>();
+function mapShallowCopy(map: Map<string, LoaderDataType>, 
+                        includedIds: string[] = null): Map<string, LoaderDataType> {
+  const newMap = new Map<string, LoaderDataType>();
   for (const entry of map.entries()) {
     if (!includedIds || includedIds.includes(entry[0])) {
       newMap.set(entry[0], entry[1]);
@@ -25,11 +24,11 @@ export function connectToLoader(Component: React.ComponentType<ConnectProtoProps
   return class WrappedComponent extends React.PureComponent<ConnectPropsType> {
 
     state = {
-      loaderData: null
+      loaderDataMap: null
     };
 
-    static checkNewDataUsefull(parsedResult: ParsedDataType[], dataIds: string[]): boolean {
-      return parsedResult.some(parsedData => dataIds.includes(parsedData.info.id));
+    static checkNewDataUsefull(loaderDatas: LoaderDataType[], dataIds: string[]): boolean {
+      return loaderDatas.some(loaderData => dataIds.includes(loaderData.info.id));
     }
 
     public componentDidMount(): void {
@@ -48,7 +47,7 @@ export function connectToLoader(Component: React.ComponentType<ConnectProtoProps
       }
     }
 
-    public init = (metaData: ParsedDataType) => {
+    public init = (metaData: LoaderDataType) => {
       const { onInit, dataIds } = this.props;
       if (!!onInit) {
         const data = (metaData.data as Object);
@@ -62,26 +61,26 @@ export function connectToLoader(Component: React.ComponentType<ConnectProtoProps
       }
     };
 
-    public update = (newData: ParsedDataType[], allData: Map<string, ParsedDataType>): void => {
-      if (this.state.loaderData == null) {
+    public update = (newData: LoaderDataType[], allData: Map<string, LoaderDataType>): void => {
+      if (this.state.loaderDataMap == null) {
         if (WrappedComponent.checkNewDataUsefull(newData, this.props.dataIds)) {
           this.setState({
-            loaderData: mapShallowCopy(allData, this.props.dataIds)
+            loaderDataMap: mapShallowCopy(allData, this.props.dataIds)
           });
         }
       } else {
-        const { loaderData } = this.state;
+        const { loaderDataMap } = this.state;
         let needUpdate = false;
-        for (const parsedData of newData) {
-          const id = parsedData.info.id;
-          if (loaderData.get(id) !== undefined && loaderData.get(id) !== parsedData) {
-            loaderData.set(id, parsedData);
+        for (const loaderData of newData) {
+          const id = loaderData.info.id;
+          if (loaderDataMap.get(id) !== undefined && loaderDataMap.get(id) !== loaderData) {
+            loaderDataMap.set(id, loaderData);
             needUpdate = true;
           }
         }
         if (needUpdate) {
           this.setState({
-            loaderData: mapShallowCopy(loaderData)
+            loaderDataMap: mapShallowCopy(loaderDataMap)
           });
         }
       }
@@ -89,9 +88,9 @@ export function connectToLoader(Component: React.ComponentType<ConnectProtoProps
 
     public render(): React.ReactNode {
       const { loader, renderNodes } = this.props;
-      const { loaderData } = this.state;
+      const { loaderDataMap } = this.state;
 
-      return (<Component loaderData={loaderData} loader={loader} renderNodes={renderNodes}/>);
+      return (<Component loaderDataMap={loaderDataMap} loader={loader} renderNodes={renderNodes}/>);
     }
   };
 };
@@ -100,8 +99,8 @@ export function connectToLoader(Component: React.ComponentType<ConnectProtoProps
 class ConnectComponnetProto extends React.PureComponent<ConnectProtoPropsType> {
   
   public render (): React.ReactNode {
-    const { renderNodes, loaderData } = this.props;
-    return renderNodes(loaderData);
+    const { renderNodes, loaderDataMap } = this.props;
+    return renderNodes(loaderDataMap);
   }
 }
 
