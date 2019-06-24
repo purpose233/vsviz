@@ -6,6 +6,7 @@ export interface DataInfoType {
   streamType: 'customed' | 'video' | 'meta',
   dataType: 'json' | 'string' | 'metadata' | ImageDataType,
   size: number,
+  sequence: number,
   timestamp: number
 }
 

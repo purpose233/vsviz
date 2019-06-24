@@ -15,9 +15,13 @@ if (self !== undefined) {
       buffer = data;
     }
 
-    // TODO: handle parsing error
     while (true) {
-      const parsedData = deserialize(buffer, offset);
+      let parsedData;
+      try {
+        parsedData = deserialize(buffer, offset);
+      } catch(e) {
+        break;
+      }
       if (!parsedData) { break; }
 
       if (isImageType(parsedData.info.dataType)) {

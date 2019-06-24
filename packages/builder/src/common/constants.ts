@@ -26,4 +26,4 @@ export enum NumberTypeEnum {
   UINT32
 };
 
-export const HeaderSize: number = 32;
+export const HeaderSize: number = 36;

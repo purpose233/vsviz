@@ -21,8 +21,9 @@ export function serialize(headerInfo: DataInfoType, bodyData: StreamDataType) {
   writeIntoBuffer(buffer, headerInfo.streamType, 8);
   writeIntoBuffer(buffer, headerInfo.dataType, 16);
   writeNumberIntoBuffer(buffer, headerInfo.size, NumberTypeEnum.UINT32, 24);
-  writeNumberIntoBuffer(buffer, headerInfo.timestamp, NumberTypeEnum.UINT32, 28);
-  writeIntoBuffer(buffer, bodyData, 32);
+  writeNumberIntoBuffer(buffer, headerInfo.sequence, NumberTypeEnum.UINT32, 28)
+  writeNumberIntoBuffer(buffer, headerInfo.timestamp, NumberTypeEnum.UINT32, 32);
+  writeIntoBuffer(buffer, bodyData, 36);
   
   return buffer;
 }
@@ -58,7 +59,8 @@ export function deserialize(buffer: Buffer, offset: number = 0): ParsedDataType 
     streamType: readStringFromBuffer(buffer, 8 + offset, 16 + offset),
     dataType:   readStringFromBuffer(buffer, 16 + offset, 24 + offset),
     size:       readNumberFromBuffer(buffer, NumberTypeEnum.UINT32, 24 + offset),
-    timestamp:  readNumberFromBuffer(buffer, NumberTypeEnum.UINT32, 28 + offset)
+    sequence:   readNumberFromBuffer(buffer, NumberTypeEnum.UINT32, 28 + offset),
+    timestamp:  readNumberFromBuffer(buffer, NumberTypeEnum.UINT32, 32 + offset)
   };
   const data = transformStreamData(buffer.slice(HeaderSize, HeaderSize + info.size), info.dataType);
   return {info, data};

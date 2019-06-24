@@ -18,8 +18,7 @@ export class WSLoader {
   private socket: WebSocket;
   private callbacks: any = {};
   private currentData: Map<string, LoaderDataType> = new Map();
-  // TODO: use sequence instead of timestamp
-  private timestampMap: Map<string, number> = new Map(); 
+  private sequenceMap: Map<string, number> = new Map(); 
   private workerFarm: WorkerFarm;
 
   private metaData: LoaderDataType = null;
@@ -96,7 +95,7 @@ export class WSLoader {
   private async handleData(data: any): Promise<void> {
     // TODO: handle data when data is not buffer
     if (data instanceof Buffer || data instanceof Blob) {
-      // TODO: remove repeated data & use timestamp to make sure the order of data is right
+      // TODO: remove repeated data & use sequence to make sure the order of data is right
       const loaderDatas: LoaderDataType[] = await this.workerFarm.parse(data);
       const washedDatas = this.washLoaderData(loaderDatas);
       if (!washedDatas || washedDatas.length <= 0) { return; }
@@ -121,10 +120,10 @@ export class WSLoader {
     for (const loaderData of loaderDatas) {
       const id = loaderData.info.id;
       const oldData = dataMap.get(id);
-      if ((this.timestampMap.get(id) == null || loaderData.info.timestamp > this.timestampMap.get(id)) && 
-          (!oldData || loaderData.info.timestamp > oldData.info.timestamp)) {
+      if ((this.sequenceMap.get(id) == null || loaderData.info.sequence > this.sequenceMap.get(id)) && 
+          (!oldData || loaderData.info.sequence > oldData.info.sequence)) {
         dataMap.set(id, loaderData);
-        this.timestampMap.set(id, loaderData.info.timestamp);
+        this.sequenceMap.set(id, loaderData.info.sequence);
       }
     }
     const washedDatas = [];

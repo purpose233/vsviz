@@ -22,6 +22,9 @@ export class DataServer extends BaseServer {
     
     this.server = net.createServer((socket: net.Socket): void => {
       const parser = new Parser();
+      console.log('Data socket connected!');
+
+      socket.on('close', () => console.log('Data socket closed!'));
 
       socket.on('error', e => console.log(e));
       

@@ -9,6 +9,7 @@ export function sendMetaData (socket: WebSocket, metaData: string | any): void {
     streamType: 'meta',
     dataType: 'json',
     size: str.length,
+    sequence: 0,
     timestamp: 0
   };
   const buffer = serialize(info, str);

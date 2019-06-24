@@ -45,7 +45,12 @@ export class Parser {
       return parsedResults;
     }
     if (!this.isPacking) {
-      const parsedData = deserialize(metaData, offset);
+      let parsedData;
+      try {
+        parsedData = deserialize(metaData, offset);
+      } catch(e) {
+        return parsedResults;
+      }
       if (!parsedData) { return parsedResults; }
       const info = parsedData.info;
       const data = <Buffer>parsedData.data;
