@@ -1,9 +1,7 @@
 import { ParsedDataType, StreamTypeName, getImageRGBA, ImageDataType } from '@vsviz/builder';
-import { Custom2DCanvas } from './custom2DCanvasWidget';
+import { Canvas2D } from './Canvas2DWidget';
 
-// TODO: enable to render multiple type of images, jpg/meta/etc.
-
-export class Video extends Custom2DCanvas {
+export class Video extends Canvas2D {
 
   private imageWidth: number = 0;
   private imageHeight: number = 0;
@@ -18,6 +16,8 @@ export class Video extends Custom2DCanvas {
     }
     this.imageWidth = data.width;
     this.imageHeight = data.height;
+
+    this.disableRAF();
   }
 
   protected async renderCanvasOnData(loaderData: Map<string, ParsedDataType>,

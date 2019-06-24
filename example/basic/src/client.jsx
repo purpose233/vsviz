@@ -1,8 +1,8 @@
 import React from 'react';
 import { render } from 'react-dom'
-import { WSLoader, Custom2DCanvas, Video } from '../../../packages/ui/lib/index';
+import { WSLoader, Canvas2D, Video } from '../../../packages/ui/lib/index';
 
-class MyCanvas extends Custom2DCanvas {
+class MyCanvas extends Canvas2D {
   renderCanvasOnData(loaderData, canvas, context) {
     // console.log(loaderData);
     this.clearCanvas();
