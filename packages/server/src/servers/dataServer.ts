@@ -31,6 +31,7 @@ export class DataServer extends BaseServer {
       socket.on('data', (data: Buffer) => {
         const parsedResult = parser.parse(data);
         if (parsedResult.length > 0) {
+          console.log('receive pacakge');
           this.timerEmitter.emit(TimerEventName.DATA, parsedResult);
         }
       });

@@ -10,6 +10,8 @@ function calcBufferSize(datas: Buffer[]): number {
   return size;
 }
 
+// TODO: parse MIGHT be error and lead to further packages all fail
+
 // assume that all element in datas are the same type
 export function concatBuffer(datas: Buffer[]): Buffer {
   if (datas.length <= 0) { return null; }

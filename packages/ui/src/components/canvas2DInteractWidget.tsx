@@ -1,4 +1,4 @@
-import { Canvas2D } from './Canvas2DWidget';
+import { Canvas2D } from './canvas2DWidget';
 
 export abstract class Canvas2DInteract extends Canvas2D {
   

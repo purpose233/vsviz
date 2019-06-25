@@ -1,5 +1,5 @@
 import { StreamTypeName, getImageRGBA, ImageDataType } from '@vsviz/builder';
-import { Canvas2D } from './Canvas2DWidget';
+import { Canvas2D } from './canvas2DWidget';
 import { LoaderDataType } from '../common/types';
 
 const FPSCountThreshold: number = 10;

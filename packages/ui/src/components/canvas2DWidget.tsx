@@ -10,6 +10,8 @@ export type Canvas2DPropsType = BaseWidgetPropsType & {
 
 // TODO: enable to set width & height by meta data
 
+// TODO: maybe use this to find canvas and context not by arguments
+
 export abstract class Canvas2D extends BaseWidget<Canvas2DPropsType> {
 
   private canvas: HTMLCanvasElement;
