@@ -27,12 +27,14 @@
   "dependencies": {
     "@types/prop-types": "^15.7.1",
     "@vsviz/builder": "^0.0.1",
+    "babylonjs": "^4.0.3",
     "prop-types": "^15.7.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "ws": "^7.0.0"
   },
   "peerDependencies": {
+    "babylonjs": ">=4.0.0",
     "react": ">=16.3.0",
     "react-dom": ">=16.3.0"
   }

@@ -1,6 +1,6 @@
 import { Canvas2D } from './canvas2DWidget';
 
-export abstract class Canvas2DInteract extends Canvas2D {
+export class Canvas2DInteract extends Canvas2D {
   
   // when onCanvasInit is overrided, super.onCanvasInit need to be called
   protected async onCanvasInit(): Promise<void> {

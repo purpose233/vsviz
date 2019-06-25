@@ -1,0 +1,64 @@
+import React from 'react';
+import { ConnectComponent } from './connectComponent';
+import { BaseWidgetPropsType, LoaderDataType } from '../common/types';
+import { BaseWidget } from './baseWidget';
+import Babylon from 'babylonjs';
+
+export type Canvas3DPropsType = BaseWidgetPropsType & {
+  width: number,
+  height: number
+}
+
+// enable to stop&start loop
+
+export abstract class Canvas3D extends BaseWidget<Canvas3DPropsType> {
+
+  protected canvas: HTMLCanvasElement;
+  protected engine: Babylon.Engine;
+  protected scene: Babylon.Scene;
+  
+  protected async renderCanvasOnLoop(): Promise<void> {};
+
+  protected async renderCanvasOnData(LoaderDataMap: Map<string, LoaderDataType>): Promise<void> {};
+
+  protected async onCanvasInit(): Promise<void> {}
+
+  private onCanvasLoad = async (ref: HTMLCanvasElement) => {
+    this.canvas = ref;
+    const { width, height } = this.props;
+    this.canvas.width = width;
+    this.canvas.height = height;
+
+    this.engine = new Babylon.Engine(this.canvas, true, {preserveDrawingBuffer: true, stencil: true});
+    this.scene = new Babylon.Scene(this.engine);
+
+    await this.onCanvasInit();
+    this.engine.runRenderLoop(async () => { 
+      await this.renderCanvasOnLoop();
+      this.scene.render();
+    });
+  }
+
+  public renderNodes(loaderDataMap: Map<string, LoaderDataType>): React.ReactNode {
+    if (this.canvas) {
+      this.renderCanvasOnData(loaderDataMap);
+    }
+    return (
+      <div>
+        <canvas ref={this.onCanvasLoad} />
+      </div>
+    );
+  }
+
+  // TODO: maybe put render in BaseWidget
+  public render(): React.ReactNode {
+    return (
+      <ConnectComponent 
+        loader={this.props.loader}
+        dataIds={this.props.dataIds}
+        renderNodes={this.renderNodes.bind(this)}
+        onInit={this.onInit.bind(this)}
+      />
+    )
+  }
+}
