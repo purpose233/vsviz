@@ -14,18 +14,15 @@ export type Canvas2DPropsType = BaseWidgetPropsType & {
 
 export abstract class Canvas2D extends BaseWidget<Canvas2DPropsType> {
 
-  private canvas: HTMLCanvasElement;
-  private canvasCtx: CanvasRenderingContext2D;
   private isRAFEnabled: boolean = true;
+  protected canvas: HTMLCanvasElement;
+  protected canvasCtx: CanvasRenderingContext2D;
 
-  protected async renderCanvasOnRAF(canvas: HTMLCanvasElement,
-                                    ctx: CanvasRenderingContext2D): Promise<void> {};
+  protected async renderCanvasOnRAF(): Promise<void> {};
 
-  protected async renderCanvasOnData(LoaderDataMap: Map<string, LoaderDataType>, 
-                                     canvas: HTMLCanvasElement, 
-                                     ctx: CanvasRenderingContext2D): Promise<void> {};
+  protected async renderCanvasOnData(LoaderDataMap: Map<string, LoaderDataType>): Promise<void> {};
 
-  protected async onCanvasInit(canvas: HTMLCanvasElement, context: CanvasRenderingContext2D): Promise<void> {}
+  protected async onCanvasInit(): Promise<void> {}
 
   public enableRAF(): void {
     if (this.isRAFEnabled) { return; }
@@ -41,7 +38,7 @@ export abstract class Canvas2D extends BaseWidget<Canvas2DPropsType> {
     if (!this.isRAFEnabled) { return; }
 
     if (this.canvas && this.canvasCtx) {
-      await this.renderCanvasOnRAF(this.canvas, this.canvasCtx);
+      await this.renderCanvasOnRAF();
     }
     requestAnimationFrame(this.runRAF);
   }
@@ -53,7 +50,7 @@ export abstract class Canvas2D extends BaseWidget<Canvas2DPropsType> {
     const { width, height } = this.props;
     this.canvas.width = width;
     this.canvas.height = height;
-    await this.onCanvasInit(this.canvas, this.canvasCtx);
+    await this.onCanvasInit();
     requestAnimationFrame(this.runRAF);
   }
 
@@ -63,7 +60,7 @@ export abstract class Canvas2D extends BaseWidget<Canvas2DPropsType> {
 
   public renderNodes(loaderDataMap: Map<string, LoaderDataType>): React.ReactNode {
     if (this.canvas && this.context) {
-      this.renderCanvasOnData(loaderDataMap, this.canvas, this.canvasCtx);
+      this.renderCanvasOnData(loaderDataMap);
     }
     return (
       <div>

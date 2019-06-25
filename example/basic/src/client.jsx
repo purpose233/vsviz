@@ -3,11 +3,11 @@ import { render } from 'react-dom'
 import { WSLoader, Canvas2D, Video } from '../../../packages/ui/lib/index';
 
 class MyCanvas extends Canvas2D {
-  renderCanvasOnData(loaderData, canvas, context) {
+  renderCanvasOnData(loaderData) {
     // console.log(loaderData);
     this.clearCanvas();
-    context.fillStyle = 'green';
-    context.fillRect(10, 10, 100, 100);
+    this.canvasCtx.fillStyle = 'green';
+    this.canvasCtx.fillRect(10, 10, 100, 100);
   }
 
   onInit(metaData) {

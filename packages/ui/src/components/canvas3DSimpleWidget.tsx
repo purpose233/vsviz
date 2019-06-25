@@ -9,5 +9,5 @@ export type Canvas3DPropsType = BaseWidgetPropsType & {
 }
 
 export abstract class Canvas3DSimple extends BaseWidget<Canvas3DPropsType> {
-  protected 
+  
 }

@@ -27,9 +27,7 @@ export class Video extends Canvas2D {
     this.disableRAF();
   }
 
-  protected async renderCanvasOnData(loaderDataMap: Map<string, LoaderDataType>,
-                                     canvas: HTMLCanvasElement, 
-                                     ctx: CanvasRenderingContext2D): Promise<void> { 
+  protected async renderCanvasOnData(loaderDataMap: Map<string, LoaderDataType>): Promise<void> { 
     if (this.imageWidth <= 0 || this.imageHeight <= 0) {
       console.log('No meta config for Video!');
       return;
@@ -48,7 +46,7 @@ export class Video extends Canvas2D {
     }
     const imageData = new ImageData(new Uint8ClampedArray(imageRGBAData), 
       this.imageWidth, this.imageHeight);
-    ctx.putImageData(imageData, 0, 0);
+    this.canvasCtx.putImageData(imageData, 0, 0);
 
     if (this.frameCount === 0) {
       this.initFrameTime = new Date().getTime();
@@ -59,7 +57,7 @@ export class Video extends Canvas2D {
       this.frameCount = -1;
     }
     this.frameCount++;
-    ctx.strokeStyle = 'black';
-    ctx.fillText('FPS:' + this.fps.toFixed(0), 5, 16);
+    this.canvasCtx.strokeStyle = 'black';
+    this.canvasCtx.fillText('FPS:' + this.fps.toFixed(0), 5, 16);
   }
 }
