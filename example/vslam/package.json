@@ -12,6 +12,8 @@
   "author": "Purpose233",
   "license": "ISC",
   "dependencies": {
+    "babylonjs": "^4.0.3",
+    "express": "^4.17.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6"
   },
@@ -19,6 +21,7 @@
     "@babel/core": "^7.4.5",
     "@babel/preset-env": "^7.4.5",
     "@babel/preset-react": "^7.0.0",
+    "@types/express": "^4.17.0",
     "babel-loader": "^8.0.6",
     "webpack": "^4.35.0",
     "webpack-cli": "^3.3.5"

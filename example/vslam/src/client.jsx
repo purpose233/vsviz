@@ -1,17 +1,8 @@
 import React from 'react';
 import { render } from 'react-dom';
-import { WSLoader, Canvas2D, Video,  Canvas2DInteract } from '../../../packages/ui/lib/index';
+import { WSLoader, Video, Canvas3DSimple } from '../../../packages/ui/lib/index';
 
-class SlamCanvas extends Canvas2DInteract {
-  renderCanvasOnData(loaderData, canvas, context) {
-    this.clearCanvas();
-  }
-
-  onCanvasMouseDown(e, canvas, context) {}
-
-  onCanvasMouseMove(e, canvas, context) {}
-
-  onCanvasMouseUp(e, canvas, context) {}
+class SlamCanvas extends Canvas3DSimple {
 }
 
 class App extends React.Component {
