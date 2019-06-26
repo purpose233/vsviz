@@ -7,7 +7,7 @@ module.exports = {
 
   devtool: 'sourcemap',
 
-  // watch: true,
+  watch: true,
 
   output: {
     path: path.resolve(__dirname, './dist'),
@@ -18,7 +18,7 @@ module.exports = {
     rules: [
       {
         test: /\.(js|jsx)$/,
-        exclude: '/node_modules/',
+        exclude: ['/node_modules/', path.resolve(__dirname, '../../packages/ui/node_modules/')],
         use: {
           loader: 'babel-loader',
           options: {

@@ -3,6 +3,7 @@
 .vscode/
 node_modules/
 *.log
+__pycache__/
 
 # test images & videos
 *.jpg
@@ -12,9 +13,4 @@ example/basic/dist
 example/vslam/dist
 
 # lib
-packages/builder/lib/
-packages/builder/node_modules/
-packages/ui/lib/
-packages/ui/node_modules/
-packages/server/lib/
-packages/server/node_modules/
+lib/

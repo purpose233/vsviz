@@ -5,13 +5,14 @@
   "main": "./lib/index.js",
   "typings": "./lib/index.d.ts",
   "scripts": {
-    "start": "tsc -w",
-    "build": "tsc"
+    "start": "./node_modules/.bin/tsc -w",
+    "build": "./node_modules/.bin/tsc"
   },
   "keywords": [],
   "author": "Purpose233",
   "license": "ISC",
   "devDependencies": {
+    "typescript": "^3.5.2",
     "@types/uuid": "^3.4.4",
     "@types/ws": "^6.0.1"
   },

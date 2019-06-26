@@ -1,9 +1,9 @@
 const path = require('path');
 
 module.exports = {
-  mode: 'development',
+  mode: 'production',
 
-  devtool: 'inline-source-map',
+  // devtool: 'inline-source-map',
 
   watch: true,
 

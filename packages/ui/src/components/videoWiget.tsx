@@ -1,4 +1,4 @@
-import { StreamTypeName, getImageRGBA, ImageDataType } from '@vsviz/builder';
+import { StreamTypeName } from '@vsviz/builder';
 import { Canvas2D } from './canvas2DWidget';
 import { LoaderDataType } from '../common/types';
 

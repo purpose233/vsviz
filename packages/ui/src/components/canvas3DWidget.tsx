@@ -2,20 +2,22 @@ import React from 'react';
 import { ConnectComponent } from './connectComponent';
 import { BaseWidgetPropsType, LoaderDataType } from '../common/types';
 import { BaseWidget } from './baseWidget';
-import Babylon from 'babylonjs';
+import { Engine, Scene } from 'babylonjs';
 
 export type Canvas3DPropsType = BaseWidgetPropsType & {
   width: number,
   height: number
 }
 
-// enable to stop&start loop
+// TODO: enable to stop&start loop
+
+// TODO: add hook for global events like key input
 
 export abstract class Canvas3D extends BaseWidget<Canvas3DPropsType> {
 
   protected canvas: HTMLCanvasElement;
-  protected engine: Babylon.Engine;
-  protected scene: Babylon.Scene;
+  protected engine: Engine;
+  protected scene: Scene;
   
   protected async renderCanvasOnLoop(): Promise<void> {};
 
@@ -29,8 +31,8 @@ export abstract class Canvas3D extends BaseWidget<Canvas3DPropsType> {
     this.canvas.width = width;
     this.canvas.height = height;
 
-    this.engine = new Babylon.Engine(this.canvas, true, {preserveDrawingBuffer: true, stencil: true});
-    this.scene = new Babylon.Scene(this.engine);
+    this.engine = new Engine(this.canvas, true, {preserveDrawingBuffer: true, stencil: true});
+    this.scene = new Scene(this.engine);
 
     await this.onCanvasInit();
     this.engine.runRenderLoop(async () => { 
@@ -40,7 +42,7 @@ export abstract class Canvas3D extends BaseWidget<Canvas3DPropsType> {
   }
 
   public renderNodes(loaderDataMap: Map<string, LoaderDataType>): React.ReactNode {
-    if (this.canvas) {
+    if (this.canvas && this.engine) {
       this.renderCanvasOnData(loaderDataMap);
     }
     return (
