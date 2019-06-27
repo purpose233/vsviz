@@ -194,7 +194,7 @@ class SlamCanvas extends Canvas3D {
     
     if (loaderData.data['observers']) {
       let lastObserver = this.observers.length > 0 ? this.observers[this.observers.length - 1] : null;
-      for (const observerData of loaderData.data['observer']) {
+      for (const observerData of loaderData.data['observers']) {
         const location = this.transfromAxis(observerData.location);
         const observer = new Observer(this.scene, location, null, lastObserver, null);
         lastObserver = observer;

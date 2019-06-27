@@ -3,9 +3,9 @@ import json
 import cv2 as cv
 import numpy as np
 import rospy
-from std_msgs.msg import String
+from vslam.msg import Viz
 
-from common import send
+from common import send, SERVER
   
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect(SERVER)
@@ -24,29 +24,33 @@ def onData(msg):
     'observers': [],
     'marks': []
   }
-  # for in :
-  #   jsonData['observers'].append({
-  #     'location': {
-  #       'x': , 'y': , 'z'
-  #     }
-  #   })
-  # for in :
-  #   jsonData['marks'].append({
-  #     'id': ,
-  #     'code': ,
-  #     'location': {
-  #       'x': ,'y': , 'z'
-  #     }
-  #   })
-  send(s, info, json.dumps(jsonData), 'string')
+  for data in msg.cameras:
+    jsonData['observers'].append({
+      'location': {
+        'x': data.camera_pose.position.x, 
+        'y': data.camera_pose.position.y, 
+        'z': data.camera_pose.position.z
+      }
+    })
+  for data in msg.cards:
+    jsonData['marks'].append({
+      'id': data.card_id,
+      'code': data.code_id,
+      'location': {
+        'x': data.card_pose.position.x,
+        'y': data.card_pose.position.y, 
+        'z': data.card_pose.position.z
+      }
+    })
+  send(s, dataInfo, json.dumps(jsonData), 'string')
 
-  info['sequence'] += 1
-  info['timestamp'] += 1
+  dataInfo['sequence'] += 1
+  dataInfo['timestamp'] += 1
 
 if __name__ == "__main__":
 
   rospy.init_node('vizMarkSender', anonymous=True)
-  rospy.Subscriber('/mark', Image, onData)
+  rospy.Subscriber('slam_viz', Viz, onData)
   rospy.spin()
 
   s.close()
