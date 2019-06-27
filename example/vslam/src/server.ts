@@ -16,10 +16,11 @@ const WSPort = 3000;
 const DataPort = 9000;
 
 class MyTimerMiddleware extends TimerMiddleware {
+  private dataCount = 0;
   private lastTime = 0;
 
   async onData(next: Function, data: any, context: MiddlewareContext): Promise<void> {
-    console.log('received data.');
+    console.log('received data. count: ' + (this.dataCount++));
     await next();
   }
 }

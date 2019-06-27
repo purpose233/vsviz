@@ -16,10 +16,12 @@ if (self !== undefined) {
     }
 
     while (true) {
-      let parsedData;
+      let parsedData, parseSuccess = true;
       try {
+        // No need to handle sticky packages, so just use deserialize instead of parse
         parsedData = deserialize(buffer, offset);
       } catch(e) {
+        console.log(e);
         break;
       }
       if (!parsedData) { break; }
@@ -29,10 +31,13 @@ if (self !== undefined) {
           parsedData.appendData = getImageRGBA(parsedData.data, parsedData.info.dataType);
         } catch(e) {
           console.log(e);
+          parseSuccess = false;
         }
       }
-      
-      parsedResults.push(parsedData);
+
+      if (parseSuccess) {
+        parsedResults.push(parsedData);
+      }
       offset += HeaderSize + parsedData.info.size;
     }
     (self).postMessage(parsedResults);

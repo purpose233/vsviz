@@ -52,7 +52,7 @@ function writeIntoBuffer(target: Buffer, source: StreamDataType,
 }
 
 // TODO: add validation
-export function deserialize(buffer: Buffer, offset: number = 0): ParsedDataType {
+export function deserialize(buffer: Buffer, offset: number = 0, needTransfrom: boolean = true): ParsedDataType {
   if (offset < 0 || offset >= buffer.length) { return null; }
   const info = <DataInfoType> {
     id:         readStringFromBuffer(buffer, 0 + offset, 8 + offset),
@@ -62,7 +62,8 @@ export function deserialize(buffer: Buffer, offset: number = 0): ParsedDataType 
     sequence:   readNumberFromBuffer(buffer, NumberTypeEnum.UINT32, 28 + offset),
     timestamp:  readNumberFromBuffer(buffer, NumberTypeEnum.UINT32, 32 + offset)
   };
-  const data = transformStreamData(buffer.slice(HeaderSize, HeaderSize + info.size), info.dataType);
+  const metaData = buffer.slice(HeaderSize + offset, HeaderSize + info.size + offset);
+  const data = needTransfrom ? transformStreamData(metaData, info.dataType) : metaData;
   return {info, data};
 };
 
@@ -89,6 +90,13 @@ function readNumberFromBuffer(buffer: Buffer, numType: NumberTypeEnum,
     case NumberTypeEnum.UINT32:
       return buffer.readUInt32BE(offset);
   }
+}
+
+export function transformParsedData(parsedData: ParsedDataType): ParsedDataType {
+  return {
+    info: parsedData.info,
+    data: transformStreamData(parsedData.data, parsedData.info.dataType)
+  };
 }
 
 // TODO: handle when data is not buffer

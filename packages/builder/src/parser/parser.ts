@@ -1,6 +1,6 @@
 import { DataInfoType, ParsedDataType } from '../common/types';
-import { deserialize } from '../common/serialize';
-import { HeaderSize } from '../common/constants';
+import { deserialize, transformParsedData } from '../common/serialize';
+import { HeaderSize, DataTypeName, StreamTypeName } from '../common/constants';
 
 function calcBufferSize(datas: Buffer[]): number {
   let size = 0;
@@ -40,36 +40,62 @@ export class Parser {
     this.stashedSize = 0;
   }
 
-  // argument offset is used for sticky packages
-  public parse(metaData: Buffer, offset: number = 0): ParsedDataType[] {
+  private validateDataInfo(info: DataInfoType) {
+    return Object.values(StreamTypeName).includes(info.streamType) 
+      && Object.values(DataTypeName).includes(info.dataType);
+  }
+
+  private lastInfo: DataInfoType = null;
+  private lastMetaDataLength: number = 0;
+  private lastResult: ParsedDataType[] = null;
+  private flag = false;
+
+  private parseData(metaData: Buffer, offset: number): ParsedDataType[] {
     const parsedResults: ParsedDataType[] = [];
+    // when all data is parsed
     if (metaData.length - offset === 0) {
       return parsedResults;
     }
     if (!this.isPacking) {
+      // when handling complete package or first segment of package
       let parsedData;
       try {
-        parsedData = deserialize(metaData, offset);
+        // Argument false means do not transfrom data when parsing,
+        //  cuz the data might not be complete.
+        parsedData = deserialize(metaData, offset, false);
       } catch(e) {
         return parsedResults;
       }
-      if (!parsedData) { return parsedResults; }
+      // when deserializing is failed, discard all rest data
+      // TODO: when error ocurrs and all head segment is sticky to the end segment, it will never parse the right info
+      if (!parsedData || !this.validateDataInfo(parsedData.info)) { 
+        console.log('invalid data info. ', metaData.length, offset);
+        return parsedResults;
+      }
+
       const info = parsedData.info;
+      // without data transformation, current data must be buffer
       const data = <Buffer>parsedData.data;
       if (info.size > data.length) {
+        // prepare to pack further segements
         this.isPacking = true;
         this.stashedData.push(data);
         this.stashedDataInfo = info;
         this.stashedSize = data.length;
-      } else {
+      } else if (info.size === data.length) {
+        // get all data for one package, continue to parse next sticky package
         parsedResults.push(parsedData);
-        parsedResults.push(...this.parse(metaData, offset + HeaderSize + info.size));
+        parsedResults.push(...this.parseData(metaData, offset + HeaderSize + info.size));
       }
+      // if info.size < data.length, parsing must be error, dicard current package and rest data
     } else {
+      // when isPacking is true, the offset must be 0
+
+      // TODO: packing might exist bugs, cuz sometimes the segment of package might be processed by deserializing
+
       const currentSize = this.stashedSize + metaData.length;
       if (currentSize >= this.stashedDataInfo.size) {
-        const continueParsing = currentSize > this.stashedDataInfo.size;
-        // when isPacking is true, the offset must be 0
+        // if current could fulfill the need of packing package
         const remainLength = this.stashedDataInfo.size - this.stashedSize;
         const dataBuffer = metaData.slice(0, remainLength);
         this.stashedData.push(dataBuffer);
@@ -79,14 +105,26 @@ export class Parser {
         };
         this.initPacking();
         parsedResults.push(parsedData);
-        if (continueParsing) {
-          parsedResults.push(...this.parse(metaData, remainLength))
-        }
+        parsedResults.push(...this.parseData(metaData, remainLength));
       } else if (currentSize < this.stashedDataInfo.size) {
         this.stashedData.push(metaData);
         this.stashedSize = currentSize;
       }
+
+      this.lastInfo = this.stashedDataInfo;
+      this.lastMetaDataLength = metaData.length;
     }
+    return parsedResults;
+  }
+
+  // argument offset is used for sticky packages
+  public parse(metaData: Buffer, offset: number = 0): ParsedDataType[] {
+    const parsedResults = this.parseData(metaData, offset).map(
+      parsedData => transformParsedData(parsedData)
+    )
+    
+    this.lastResult = parsedResults;
+
     return parsedResults;
   }
 };

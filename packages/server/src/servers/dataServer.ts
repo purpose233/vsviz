@@ -9,16 +9,14 @@ import { TimerEventName } from '../common/constants';
 export class DataServer extends BaseServer {
 
   private port: number;
-  private addr: string;
   private server: net.Server;
   private handler: TimerHandler;
   private timerEmitter: EventEmitter;
 
   // TODO: add handler
-  constructor(port: number, addr: string = '127.0.0.1', interval: number = 30) {
+  constructor(port: number, interval: number = 30) {
     super();
     this.port = port;
-    this.addr = addr;
     
     this.server = net.createServer((socket: net.Socket): void => {
       const parser = new Parser();
@@ -30,8 +28,9 @@ export class DataServer extends BaseServer {
       
       socket.on('data', (data: Buffer) => {
         const parsedResult = parser.parse(data);
+        // console.log('receive package.');
         if (parsedResult.length > 0) {
-          console.log('receive pacakge');
+          // console.log('receive pacakge');
           this.timerEmitter.emit(TimerEventName.DATA, parsedResult);
         }
       });
@@ -48,7 +47,7 @@ export class DataServer extends BaseServer {
   public async start(): Promise<void> {
     this.isStarted = true;
     await this.handler.start();
-    this.server.listen(this.port, this.addr);
+    this.server.listen(this.port);
     this.timerEmitter.emit(TimerEventName.INITIAL);
   }
 

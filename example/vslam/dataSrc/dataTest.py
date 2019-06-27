@@ -18,12 +18,12 @@ if __name__ == "__main__":
 
 	msg = {
 		'observer': {
-			'location': { 'x': 1, 'y': -2, 'z': 1}
+			'location': { 'x': 1, 'y': 2, 'z': 1}
 		},
 		'marks': [
 			{
 				'id': 'mark1',
-				'location': {'x': 0, 'y': 0, 'z': 1},
+				'location': {'x': 0, 'y': 2, 'z': 1},
 				'code': '0101001'
 			}
 		]

@@ -1,20 +1,21 @@
 // TODO: refactor with typescript
 import React from 'react';
-import { FreeCamera, HemisphericLight, StandardMaterial,
-  Mesh, MeshBuilder, Vector3, Color3, Color4 } from 'babylonjs';
+import { UniversalCamera, HemisphericLight, StandardMaterial,
+  Mesh, MeshBuilder, Vector2, Vector3, Color3, Color4 } from 'babylonjs';
 import { render } from 'react-dom';
 import { WSLoader, Video, Canvas3D } from '../../../packages/ui/lib/index';
 
 // the ratio from ros -> babylon is 1:1
 
 const RefLineColor = new Color4(1, 1, 1, 0.2);
-const MarkSize = 0.2;
+const MarkSize = 0.4;
+const MarkDepth = 0.05;
 const SpecularColor = new Color3(1, 1, 1);
 const MarkBlue = new Color3(0, 0, 1);
 const MarkYellow = new Color3(1, 1, 0);
 const MarkDefault = new Color3(1, 1, 1);
-const ObserverWidth = 0.4;
-const ObserverHeight = 0.2;
+const ObserverWidth = 0.6;
+const ObserverHeight = 0.3;
 const ObserverColor = new Color4(0.1, 0.5, 0.1, 1);
 const ObserverRefLineColor = new Color4(0.1, 0.1, 0.5, 1);
 
@@ -71,17 +72,29 @@ class Mark {
       const material = code[i] === '1' ? materialBlue : 
         (code[i] === '0' ? materialYellow : materialDefault);
       // TODO: use box instead
-      const mesh = MeshBuilder.CreatePlane('plane', 
-        {width: MarkSize, height: MarkSize}, scene);
+      const mesh = MeshBuilder.CreateBox('mark', 
+        {width: MarkSize, height: MarkSize, depth: MarkDepth}, scene);
       mesh.material = material;
       mesh.position.y = location.y + (-i + 3.5) * MarkSize;
       mesh.position.x = location.x;
       mesh.position.z = location.z;
+      meshList.push(mesh);
     }
     return meshList;
   }
 
-  setOrientation(orientation) {
+  setOrientation(camera) {
+    const cameraLocation = camera.position;
+    const vector = new Vector2(cameraLocation.x - this.location.x, cameraLocation.z - this.location.z);
+    let length = vector.length(), angle;
+    if (length < Number.EPSILON) {
+      return;
+    }
+    angle = Math.acos(vector.x / length) * (vector.y > 0 ? -1 : 1) + Math.PI / 2;
+    // angle = angle > 2 * Math.PI ? angle - 2 * Math.PI : angle;
+    for (const singleMesh of this.mesh) {
+      singleMesh.rotation.y = angle;
+    }
   }
 }
 
@@ -140,6 +153,12 @@ class SlamCanvas extends Canvas3D {
     return new Vector3(location.x, location.y, location.z);
   }
 
+  async renderCanvasOnLoop() {
+    for (const mark of this.marks) {
+      mark.setOrientation(this.camera);
+    }
+  }
+
   async renderCanvasOnData(loaderDataMap) {
     const dataId = this.props.dataIds[0];
     const loaderData = loaderDataMap.get(dataId);
@@ -169,7 +188,7 @@ class SlamCanvas extends Canvas3D {
   }
 
   async onCanvasInit() {
-    this.camera = new FreeCamera('camera1', new Vector3(0, 5, -10), this.scene);
+    this.camera = new UniversalCamera('camera1', new Vector3(0, 5, -10), this.scene);
     this.camera.setTarget(Vector3.Zero());
     this.camera.attachControl(this.canvas, false);
     this.light = new HemisphericLight('light1', new Vector3(0, 1, 0), this.scene);
@@ -188,7 +207,8 @@ class App extends React.Component {
   constructor(props) {
     super(props);
 
-    this.loader = new WSLoader('ws://localhost:3000/');
+    // TODO: auto set the domain
+    this.loader = new WSLoader('ws://192.168.3.223:3000/');
   }
 
   render () {
@@ -200,12 +220,12 @@ class App extends React.Component {
           width={800}
           height={600}
         />
-        {/* <Video 
+        <Video 
           loader={this.loader}
           dataIds={['video0']}
           width={640}
           height={480}
-        /> */}
+        />
       </div>
     );
   }
