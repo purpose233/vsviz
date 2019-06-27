@@ -1,5 +1,6 @@
 import socket
 import json
+import time
 
 from common import send, SERVER
 
@@ -17,9 +18,11 @@ dataInfo = {
 if __name__ == "__main__":
 
 	msg = {
-		'observer': {
-			'location': { 'x': 1, 'y': 2, 'z': 1}
-		},
+		'observer': [
+			{
+				'location': { 'x': 1, 'y': 2, 'z': 1}
+			}
+		],
 		'marks': [
 			{
 				'id': 'mark1',
@@ -28,6 +31,25 @@ if __name__ == "__main__":
 			}
 		]
 	}
+	send(s, dataInfo, json.dumps(msg), 'string')
+
+	time.sleep(30 / 1000)
+	dataInfo['sequence'] += 1
+	dataInfo['timestamp'] += 1
+
+	msg = {
+		'observer': [{
+			'location': { 'x': 2, 'y': 2.5, 'z': 1}
+		}],
+		'marks': [
+			{
+				'id': 'mark1',
+				'location': {'x': 0, 'y': 2, 'z': 1},
+				'code': '0101001'
+			}
+		]
+	}
+
 	send(s, dataInfo, json.dumps(msg), 'string')
 
 	s.close()

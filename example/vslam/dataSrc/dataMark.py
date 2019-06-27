@@ -20,28 +20,30 @@ dataInfo = {
 
 def onData(msg):
   # get json data
-  # jsonData = {}
+  jsonData = {
+    'observers': [],
+    'marks': []
+  }
+  # for in :
+  #   jsonData['observers'].append({
+  #     'location': {
+  #       'x': , 'y': , 'z'
+  #     }
+  #   })
+  # for in :
+  #   jsonData['marks'].append({
+  #     'id': ,
+  #     'code': ,
+  #     'location': {
+  #       'x': ,'y': , 'z'
+  #     }
+  #   })
   send(s, info, json.dumps(jsonData), 'string')
 
   info['sequence'] += 1
   info['timestamp'] += 1
 
-
 if __name__ == "__main__":
-
-  # info = {
-  #   'id': 'video0',
-  #   'streamType': 'meta',
-  #   'dataType': 'json',
-  #   'sequence': 122,
-  #   'timestamp': 0
-  # }
-  # dataOrigin = {
-  #   'width': 640,
-  #   'height': 480
-  # }
-  # data = json.dumps(dataOrigin)
-  # send(s, info, data, 'string')
 
   rospy.init_node('vizMarkSender', anonymous=True)
   rospy.Subscriber('/mark', Image, onData)

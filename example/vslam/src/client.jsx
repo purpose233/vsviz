@@ -18,14 +18,17 @@ const ObserverWidth = 0.6;
 const ObserverHeight = 0.3;
 const ObserverColor = new Color4(0.1, 0.5, 0.1, 1);
 const ObserverRefLineColor = new Color4(0.1, 0.1, 0.5, 1);
+const ObserverConnectColor = new Color4(0.1, 0.1, 0.5, 1);
 
 class Observer {
-  constructor(scene, location, orientation, refMarks) {
+  constructor(scene, location, orientation, lastObserver=null, refMarks=null) {
     this.mesh = Observer.createObserverMesh(scene, location, orientation);
     this.location = location;
     this.orientation = orientation;
-    this.refMarks = refMarks;
-    this.refLinesMesh = Observer.createRefLinesMesh(scene, location, refMarks);
+    this.lastObserver = lastObserver;
+    this.connectMesh = Observer.createConnectionMesh(scene, location, lastObserver);
+    // this.refMarks = refMarks;
+    // this.refLinesMesh = Observer.createRefLinesMesh(scene, location, refMarks);
   } 
 
   static createObserverMesh(scene, location, orientation) {
@@ -51,6 +54,15 @@ class Observer {
       }, scene));
     }
     return refMesh;
+  }
+
+  static createConnectionMesh(scene, location, lastObserver) {
+    if (!lastObserver) { return null; }
+    return MeshBuilder.CreateLines('line', {
+      points: [lastObserver.location, location],
+      colors: [ObserverConnectColor, ObserverConnectColor],
+      updatable: false
+    }, scene);
   }
 }
 
@@ -150,7 +162,7 @@ class SlamCanvas extends Canvas3D {
   }
 
   transfromAxis(location) {
-    return new Vector3(location.x, location.y, location.z);
+    return new Vector3(location.y, location.z, -location.x);
   }
 
   async renderCanvasOnLoop() {
@@ -180,10 +192,14 @@ class SlamCanvas extends Canvas3D {
       this.marks.push(...newMarks);
     }
     
-    if (loaderData.data['observer']) {
-      const location = this.transfromAxis(loaderData.data.observer.location);
-      this.observers.push(new Observer(this.scene, location, null, refMarks, 
-        this.materialObserver, this.materialObserverRefLine));
+    if (loaderData.data['observers']) {
+      let lastObserver = this.observers.length > 0 ? this.observers[this.observers.length - 1] : null;
+      for (const observerData of loaderData.data['observer']) {
+        const location = this.transfromAxis(observerData.location);
+        const observer = new Observer(this.scene, location, null, lastObserver, null);
+        lastObserver = observer;
+        this.observers.push(observer);
+      }
     }
   }
 

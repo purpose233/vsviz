@@ -47,7 +47,7 @@ if __name__ == "__main__":
   send(s, info, data, 'string')
 
   rospy.init_node('vizVideoSender', anonymous=True)
-  rospy.Subscriber('/image', Image, onData)
+  rospy.Subscriber('usb_cam_image_raw', Image, onData)
   rospy.spin()
 
   s.close()
