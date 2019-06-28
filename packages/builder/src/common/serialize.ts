@@ -1,5 +1,5 @@
 import { StreamBuilder } from '../builder/streamBuidler';
-import { DataTypeName, NumberTypeEnum } from './constants';
+import { DataTypeName, NumberTypeEnum, PackageInitCodeBuffer } from './constants';
 import { StreamDataType, ParsedDataType, DataInfoType } from './types';
 import { HeaderSize } from './constants';
 
@@ -66,6 +66,15 @@ export function deserialize(buffer: Buffer, offset: number = 0, needTransfrom: b
   const data = needTransfrom ? transformStreamData(metaData, info.dataType) : metaData;
   return {info, data};
 };
+
+export function findInitCodeIndex(buffer: Buffer, initOffset: number = 0): number {
+  return buffer.indexOf(PackageInitCodeBuffer, initOffset);
+}
+
+export function deserializeWithInitCode(buffer: Buffer, offset: number = 0, 
+                                        needTransfrom: boolean = true): ParsedDataType {
+  return null;
+}
 
 function readStringFromBuffer(buffer: Buffer, start: number = 0, 
                               end: number = -1): string {

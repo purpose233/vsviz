@@ -27,3 +27,6 @@ export enum NumberTypeEnum {
 };
 
 export const HeaderSize: number = 36;
+
+export const PackageInitCode: string = 'ADAM';
+export const PackageInitCodeBuffer: Buffer = Buffer.from(PackageInitCode, 'utf-8');
