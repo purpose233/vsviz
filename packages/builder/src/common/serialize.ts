@@ -1,7 +1,12 @@
 import { StreamBuilder } from '../builder/streamBuidler';
-import { DataTypeName, NumberTypeEnum, PackageInitCodeBuffer } from './constants';
+import { DataTypeName, NumberTypeEnum, PackageInitCodeBuffer, 
+  HeaderSize, StreamTypeName } from './constants';
 import { StreamDataType, ParsedDataType, DataInfoType } from './types';
-import { HeaderSize } from './constants';
+
+export function validateDataInfo(info: DataInfoType) {
+  return Object.values(StreamTypeName).includes(info.streamType) 
+    && Object.values(DataTypeName).includes(info.dataType);
+}
 
 export function serializeBuilder(builder: StreamBuilder) {
   const headerInfo = builder.getHeader();
@@ -53,7 +58,7 @@ function writeIntoBuffer(target: Buffer, source: StreamDataType,
 
 // TODO: add validation
 export function deserialize(buffer: Buffer, offset: number = 0, needTransfrom: boolean = true): ParsedDataType {
-  if (offset < 0 || offset >= buffer.length) { return null; }
+  if (offset < 0 || offset >= buffer.length || buffer.length - offset < HeaderSize) { return null; }
   const info = <DataInfoType> {
     id:         readStringFromBuffer(buffer, 0 + offset, 8 + offset),
     streamType: readStringFromBuffer(buffer, 8 + offset, 16 + offset),
@@ -72,8 +77,11 @@ export function findInitCodeIndex(buffer: Buffer, initOffset: number = 0): numbe
 }
 
 export function deserializeWithInitCode(buffer: Buffer, offset: number = 0, 
-                                        needTransfrom: boolean = true): ParsedDataType {
-  return null;
+                                        needTransfrom: boolean = true, findCode: boolean = false): ParsedDataType {
+  const initCodeIndex = buffer.indexOf(PackageInitCodeBuffer, offset);
+  if (initCodeIndex === -1) { return null; }
+  if (!findCode && initCodeIndex !== offset) { return null; }
+  return deserialize(buffer, offset + PackageInitCodeBuffer.length, needTransfrom);  
 }
 
 function readStringFromBuffer(buffer: Buffer, start: number = 0, 

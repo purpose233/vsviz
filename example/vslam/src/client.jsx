@@ -81,8 +81,8 @@ class Mark {
                         materialBlue, materialYellow, materialDefault) {
     const meshList = [];
     for (let i = 0; i < 7; i++) {
-      const material = code[i] === '1' ? materialBlue : 
-        (code[i] === '0' ? materialYellow : materialDefault);
+      const material = code[i] === '0' ? materialBlue : 
+        (code[i] === '1' ? materialYellow : materialDefault);
       // TODO: use box instead
       const mesh = MeshBuilder.CreateBox('mark', 
         {width: MarkSize, height: MarkSize, depth: MarkDepth}, scene);
@@ -162,7 +162,7 @@ class SlamCanvas extends Canvas3D {
   }
 
   transfromAxis(location) {
-    return new Vector3(location.y, location.z, -location.x);
+    return new Vector3(-location.y, location.z, -location.x);
   }
 
   async renderCanvasOnLoop() {

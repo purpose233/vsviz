@@ -1,6 +1,12 @@
 import { DataInfoType, ParsedDataType } from '../common/types';
-import { deserialize, transformParsedData } from '../common/serialize';
-import { HeaderSize, DataTypeName, StreamTypeName } from '../common/constants';
+import { transformParsedData, validateDataInfo, 
+  findInitCodeIndex, deserializeWithInitCode } from '../common/serialize';
+import { HeaderSize, PackageInitCodeBuffer } from '../common/constants';
+
+interface ParseFindResult {
+  offset: number,
+  parsedData: ParsedDataType
+};
 
 function calcBufferSize(datas: Buffer[]): number {
   let size = 0;
@@ -40,36 +46,43 @@ export class Parser {
     this.stashedSize = 0;
   }
 
-  private validateDataInfo(info: DataInfoType) {
-    return Object.values(StreamTypeName).includes(info.streamType) 
-      && Object.values(DataTypeName).includes(info.dataType);
+  private getFirstValidPackage(metaData: Buffer, offset: number = 0): ParseFindResult {
+    let index = offset, parsedData: ParsedDataType = null;
+    while ((index = findInitCodeIndex(metaData, index)) !== -1) {
+      parsedData = deserializeWithInitCode(metaData, index, false, false);
+      if (validateDataInfo(parsedData.info)) {
+        break;
+      } else {
+        parsedData = null;
+      }
+      index += PackageInitCodeBuffer.length;
+    }
+    return {
+      offset: index,
+      parsedData: parsedData
+    };
   }
-
-  private lastInfo: DataInfoType = null;
-  private lastMetaDataLength: number = 0;
-  private lastResult: ParsedDataType[] = null;
-  private flag = false;
 
   private parseData(metaData: Buffer, offset: number): ParsedDataType[] {
     const parsedResults: ParsedDataType[] = [];
     // when all data is parsed
-    if (metaData.length - offset === 0) {
+    if (metaData.length - offset <= 0) {
       return parsedResults;
     }
     if (!this.isPacking) {
       // when handling complete package or first segment of package
-      let parsedData;
+      let parsedData, nextOffset = offset;
       try {
-        // Argument false means do not transfrom data when parsing,
-        //  cuz the data might not be complete.
-        parsedData = deserialize(metaData, offset, false);
+        const result = this.getFirstValidPackage(metaData, offset);
+        if (result.parsedData) {
+          parsedData = result.parsedData;
+          nextOffset = result.offset;
+        } else {
+          // when deserializing is failed, discard all rest data
+          console.log('invalid package. ', metaData.length, offset);
+          return parsedResults;
+        }
       } catch(e) {
-        return parsedResults;
-      }
-      // when deserializing is failed, discard all rest data
-      // TODO: when error ocurrs and all head segment is sticky to the end segment, it will never parse the right info
-      if (!parsedData || !this.validateDataInfo(parsedData.info)) { 
-        console.log('invalid data info. ', metaData.length, offset);
         return parsedResults;
       }
 
@@ -85,7 +98,7 @@ export class Parser {
       } else if (info.size === data.length) {
         // get all data for one package, continue to parse next sticky package
         parsedResults.push(parsedData);
-        parsedResults.push(...this.parseData(metaData, offset + HeaderSize + info.size));
+        parsedResults.push(...this.parseData(metaData, nextOffset + PackageInitCodeBuffer.length + HeaderSize + info.size));
       }
       // if info.size < data.length, parsing must be error, dicard current package and rest data
     } else {
@@ -110,9 +123,6 @@ export class Parser {
         this.stashedData.push(metaData);
         this.stashedSize = currentSize;
       }
-
-      this.lastInfo = this.stashedDataInfo;
-      this.lastMetaDataLength = metaData.length;
     }
     return parsedResults;
   }
@@ -122,8 +132,6 @@ export class Parser {
     const parsedResults = this.parseData(metaData, offset).map(
       parsedData => transformParsedData(parsedData)
     )
-    
-    this.lastResult = parsedResults;
 
     return parsedResults;
   }
