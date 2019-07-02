@@ -7,7 +7,7 @@ module.exports = {
 
   devtool: 'sourcemap',
 
-  watch: true,
+  // watch: true,
 
   output: {
     path: path.resolve(__dirname, './dist'),

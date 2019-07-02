@@ -5,6 +5,8 @@ import { UniversalCamera, HemisphericLight, StandardMaterial,
 import { render } from 'react-dom';
 import { WSLoader, Video, Canvas3D } from '../../../packages/ui/lib/index';
 
+const WSAddress = 'ws://192.168.3.223:3000/';
+
 // the ratio from ros -> babylon is 1:1
 
 const RefLineColor = new Color4(1, 1, 1, 0.2);
@@ -224,7 +226,7 @@ class App extends React.Component {
     super(props);
 
     // TODO: auto set the domain
-    this.loader = new WSLoader('ws://192.168.3.223:3000/');
+    this.loader = new WSLoader(WSAddress);
   }
 
   render () {

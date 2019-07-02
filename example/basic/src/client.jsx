@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from 'react-dom'
-import { WSLoader, Canvas2D, Video } from '../../../packages/ui/lib/index';
+import { WSLoader, Canvas2D, Video, Canvas3DSimple } from '../../../packages/ui/lib/index';
 
 class MyCanvas extends Canvas2D {
   renderCanvasOnData(loaderData) {
@@ -31,6 +31,12 @@ class App extends React.Component {
           width={800}
           height={600}
         />
+        {/* <Canvas3DSimple 
+          loader={this.loader}
+          dataIds={['canvas1']}
+          width={800}
+          height={600}
+        /> */}
         <Video 
           loader={this.loader}
           dataIds={['video0']}
