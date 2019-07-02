@@ -1,5 +1,5 @@
 # VSVIZ
-VSVIZ is a framework for auto collecting visualize data based on Web.
+VSVIZ is a framework for auto collecting & visualizing data based on Web.
 
 ~~Learn more in the Docs~~ (coming soon).
 

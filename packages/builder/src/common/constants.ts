@@ -15,7 +15,7 @@ export const ImageTypeName = {
 const SimpleDataTypeName = {
   JSON: 'json',
   STRING: 'string',
-  METADATA: 'metadata'
+  BINARY: 'binary'
 };
 
 export const DataTypeName = Object.assign(SimpleDataTypeName, ImageTypeName);
