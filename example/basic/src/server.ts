@@ -24,6 +24,7 @@ class MyTimerMiddleware extends TimerMiddleware {
       console.log('Time interval: ', currentTime - this.lastTime);
       this.lastTime = currentTime;
     }
+    console.log('package size: ' + (data[0].info.size / 1024).toFixed(1) + 'kb');
     // console.log(context.get(Symbol.for('metaData')));
     await next();
   }

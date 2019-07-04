@@ -26,9 +26,9 @@ def wrapData(info, data, dataType):
   copyByte(bytearray(info['id'], 'utf-8'), b, 4, 0, 8)
   copyByte(bytearray(info['streamType'], 'utf-8'), b, 12, 0, 8)
   copyByte(bytearray(info['dataType'], 'utf-8'), b, 20, 0, 8)
-  copyByte(to_bytes(len(data), 4), b, 28, 0, 8)
-  copyByte(to_bytes(info['sequence'], 4), b, 32, 0, 8)
-  copyByte(to_bytes(info['timestamp'], 4), b, 36, 0, 8)
+  copyByte(len(data).to_bytes(4, byteorder='big'), b, 28, 0, 8)
+  copyByte(info['sequence'].to_bytes(4, byteorder='big'), b, 32, 0, 8)
+  copyByte(info['timestamp'].to_bytes(4, byteorder='big'), b, 36, 0, 8)
   if dataType == 'string':
     copyByte(bytearray(data, 'utf-8'), b, 40, 0, len(data))
   else:
@@ -52,16 +52,16 @@ if __name__ == "__main__":
       'timestamp': 0
     }
     dataOrigin = {
-      'width': 640,
-      'height': 480
+      'width': 1280,
+      'height': 720
     }
     data = json.dumps(dataOrigin)
     send(s, info, data, 'string')
   else:
-    # cv.namedWindow('camera', 1)
+    cv.namedWindow('camera', 1)
     capture = cv.VideoCapture(0) 
-    capture.set(3, 640)
-    capture.set(4, 480)
+    capture.set(3, 1280)
+    capture.set(4, 720)
 
     info = {
       'id': 'video0',
@@ -73,7 +73,7 @@ if __name__ == "__main__":
 
     while(True):
       ref, frame = capture.read()
-      # cv.imshow('camera', frame)
+      cv.imshow('camera', frame)
 
       # data = frame.flatten()
       img = cv.imencode('.jpg', frame)[1]

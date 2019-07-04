@@ -40,8 +40,8 @@ class App extends React.Component {
         <Video 
           loader={this.loader}
           dataIds={['video0']}
-          width={640}
-          height={480}
+          width={1280}
+          height={720}
         />
       </div>
     );
