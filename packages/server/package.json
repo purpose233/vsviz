@@ -12,9 +12,9 @@
   "author": "Purpose233",
   "license": "ISC",
   "devDependencies": {
-    "typescript": "^3.5.2",
     "@types/uuid": "^3.4.4",
-    "@types/ws": "^6.0.1"
+    "@types/ws": "^6.0.1",
+    "typescript": "^3.5.2"
   },
   "dependencies": {
     "@vsviz/builder": "^0.0.1",

@@ -19,14 +19,14 @@
     "@types/ws": "^6.0.1",
     "babel-loader": "^8.0.6",
     "babel-polyfill": "^6.26.0",
-    "ts-loader": "^6.0.2",
-    "webpack": "^4.34.0",
-    "webpack-cli": "^3.3.4",
-    "worker-loader": "^2.0.0",
-    "typescript": "^3.5.2",
+    "babylonjs": "^4.0.3",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "babylonjs": "^4.0.3"
+    "ts-loader": "^6.0.2",
+    "typescript": "^3.5.2",
+    "webpack": "^4.34.0",
+    "webpack-cli": "^3.3.4",
+    "worker-loader": "^2.0.0"
   },
   "dependencies": {
     "@types/prop-types": "^15.7.1",
