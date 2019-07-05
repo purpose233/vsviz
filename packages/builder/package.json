@@ -8,8 +8,13 @@
     "start": "./node_modules/.bin/tsc -w",
     "build": "./node_modules/.bin/tsc"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/purpose233/vsviz.git",
+    "directory": "packages/builder"
+  },
   "keywords": [],
-  "author": "Purpose233",
+  "author": "purpose233",
   "license": "ISC",
   "devDependencies": {
     "@types/jpeg-js": "^0.3.0",

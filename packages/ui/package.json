@@ -7,8 +7,13 @@
   "scripts": {
     "start": "./node_modules/.bin/webpack"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/purpose233/vsviz.git",
+    "directory": "packages/ui"
+  },
   "keywords": [],
-  "author": "Purpose233",
+  "author": "purpose233",
   "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.4.5",
