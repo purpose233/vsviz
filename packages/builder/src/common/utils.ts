@@ -44,3 +44,14 @@ export function getImageRGBA(src: Buffer, srcType: ImageDataType): Buffer {
   return null;
 }
 
+export function readArrayBufferFromBlob(blob: Blob): Promise<ArrayBuffer> {
+  return new Promise((resolve, reject) => {
+    const fileReader = new FileReader();
+    fileReader.onerror = (ev: ProgressEvent) => { reject(ev); }
+    fileReader.onload = (ev: ProgressEvent) => {
+      const arrayBuffer = <ArrayBuffer>fileReader.result;
+      resolve(arrayBuffer); 
+    }
+    fileReader.readAsArrayBuffer(blob);
+  });
+}

@@ -20,5 +20,10 @@
     "@vsviz/builder": "^0.0.1",
     "uuid": "^3.3.2",
     "ws": "^7.0.0"
-  }
+  },
+  "files": [
+    "README.md",
+    "tsconfig.json",
+    "lib/"
+  ]
 }

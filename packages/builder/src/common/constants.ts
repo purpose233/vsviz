@@ -15,7 +15,8 @@ export const ImageTypeName = {
 const SimpleDataTypeName = {
   JSON: 'json',
   STRING: 'string',
-  BINARY: 'binary'
+  BINARY: 'binary',
+  H264: 'h264'
 };
 
 export const DataTypeName = Object.assign(SimpleDataTypeName, ImageTypeName);

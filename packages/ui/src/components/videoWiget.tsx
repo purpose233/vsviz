@@ -1,6 +1,7 @@
-import { StreamTypeName } from '@vsviz/builder';
+import { StreamTypeName, DataTypeName } from '@vsviz/builder';
 import { Canvas2D } from './canvas2DWidget';
 import { LoaderDataType } from '../common/types';
+const Decoder = require('../../third-party/Decoder.js');
 
 const FPSCountThreshold: number = 10;
 
@@ -12,6 +13,9 @@ export class Video extends Canvas2D {
   private initFrameTime: number = 0;
   private frameCount: number = 0;
   private fps: number = 0;
+
+  private h264Decoder = null;
+  // private h264Decoder = new Decoder({ rgb: true });
 
   public onInit(metaData: Map<string, any>) {
     const dataId = this.props.dataIds[0];
@@ -39,15 +43,38 @@ export class Video extends Canvas2D {
       return; 
     }
     this.clearCanvas();
-    const imageRGBAData = loaderData.appendData as Buffer;
-    if (!imageRGBAData) {
-      console.log('Image data parsing error!');
-      return;
+    if (loaderData.info.dataType === DataTypeName.H264) {
+      // TODO: need to figure out a way to handle the order of frame
+
+      // TODO: put the decode progress in worker
+
+      if (!this.h264Decoder) { 
+        this.h264Decoder = new Decoder({ rgb: true }); 
+        this.h264Decoder.onPictureDecoded = (data: Uint8Array, width: number, height: number) => {
+          this.drawFrame(data, true);
+        }
+      }
+      this.h264Decoder.decode();
     }
-    const imageData = new ImageData(new Uint8ClampedArray(imageRGBAData), 
-      this.imageWidth, this.imageHeight);
+    else {
+      const imageRGBAData = loaderData.appendData as Buffer;
+      if (!imageRGBAData) {
+        console.log('Image data parsing error!');
+        return;
+      }
+      this.drawFrame(imageRGBAData, true);
+    }
+  }
+
+  private drawFrame(buffer: Buffer | ArrayBuffer, showFPS: boolean = true): void {
+    const imageData = new ImageData(new Uint8ClampedArray(buffer), 
+    this.imageWidth, this.imageHeight);
     this.canvasCtx.putImageData(imageData, 0, 0);
 
+    if (showFPS) { this.drawFPS(); }
+  }
+
+  private drawFPS(): void {
     if (this.frameCount === 0) {
       this.initFrameTime = new Date().getTime();
     } else if (this.frameCount === FPSCountThreshold) {

@@ -15,22 +15,32 @@ export function serializeBuilder(builder: StreamBuilder) {
   return serialize(headerInfo, bodyData);
 }
 
-export function serialize(headerInfo: DataInfoType, bodyData: StreamDataType) {
+export function serialize(headerInfo: DataInfoType, bodyData: StreamDataType, 
+                          buffer: Buffer = null, offset: number = 0) {
   if (headerInfo.dataType === DataTypeName.JSON && typeof bodyData !== 'string') {
     bodyData = JSON.stringify(bodyData);
   }
 
-  const buffer = Buffer.alloc(HeaderSize + (<string>bodyData).length);
+  if (!buffer) {
+    offset = 0;
+    buffer = Buffer.alloc(HeaderSize + headerInfo.size);
+  }
 
-  writeIntoBuffer(buffer, headerInfo.id, 0);
-  writeIntoBuffer(buffer, headerInfo.streamType, 8);
-  writeIntoBuffer(buffer, headerInfo.dataType, 16);
-  writeNumberIntoBuffer(buffer, headerInfo.size, NumberTypeEnum.UINT32, 24);
-  writeNumberIntoBuffer(buffer, headerInfo.sequence, NumberTypeEnum.UINT32, 28)
-  writeNumberIntoBuffer(buffer, headerInfo.timestamp, NumberTypeEnum.UINT32, 32);
-  writeIntoBuffer(buffer, bodyData, 36);
+  writeIntoBuffer(buffer, headerInfo.id, 0 + offset);
+  writeIntoBuffer(buffer, headerInfo.streamType, 8 + offset);
+  writeIntoBuffer(buffer, headerInfo.dataType, 16 + offset);
+  writeNumberIntoBuffer(buffer, headerInfo.size, NumberTypeEnum.UINT32, 24 + offset);
+  writeNumberIntoBuffer(buffer, headerInfo.sequence, NumberTypeEnum.UINT32, 28 + offset)
+  writeNumberIntoBuffer(buffer, headerInfo.timestamp, NumberTypeEnum.UINT32, 32 + offset);
+  writeIntoBuffer(buffer, bodyData, 36 + offset);
   
   return buffer;
+}
+
+export function serializeWithInitCode(headerInfo: DataInfoType, bodyData: StreamDataType) {
+  const buffer = Buffer.alloc(PackageInitCodeBuffer.length + HeaderSize + headerInfo.size);
+  writeIntoBuffer(buffer, PackageInitCodeBuffer, 0);
+  return serialize(headerInfo, bodyData, buffer, PackageInitCodeBuffer.length);
 }
 
 function writeNumberIntoBuffer(target: Buffer, source: number, 

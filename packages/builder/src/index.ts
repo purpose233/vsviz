@@ -1,6 +1,7 @@
 export { StreamTypeName, DataTypeName, ImageTypeName, HeaderSize } from './common/constants';
 export { DataInfoType, ParsedDataType, StreamDataType, ImageDataType } from './common/types';
-export { serialize, serializeBuilder, deserialize, 
+export { serialize, serializeBuilder, serializeWithInitCode, 
+    deserialize, deserializeWithInitCode,
     blobToBuffer, transformParsedData } from './common/serialize';
 export { isImageType, getImageRGBA } from './common/utils';
 

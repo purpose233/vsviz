@@ -4,7 +4,7 @@ export type ImageDataType = 'jpg' | 'png' | 'rgb' | 'bgr' | 'rgba';
 export interface DataInfoType {
   id: string,
   streamType: 'customed' | 'video' | 'meta',
-  dataType: 'json' | 'string' | 'binary' | ImageDataType,
+  dataType: 'json' | 'string' | 'binary' | 'h264' | ImageDataType,
   size: number,
   sequence: number,
   timestamp: number
