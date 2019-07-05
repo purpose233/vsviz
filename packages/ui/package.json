@@ -1,6 +1,6 @@
 {
   "name": "@vsviz/ui",
-  "version": "0.0.4",
+  "version": "0.0.5-alpha.0",
   "description": "",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -35,7 +35,7 @@
   },
   "dependencies": {
     "@types/prop-types": "^15.7.1",
-    "@vsviz/builder": "^0.0.4",
+    "@vsviz/builder": "^0.0.5-alpha.0",
     "prop-types": "^15.7.2",
     "ws": "^7.0.0"
   },
