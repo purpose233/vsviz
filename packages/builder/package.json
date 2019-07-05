@@ -1,6 +1,6 @@
 {
   "name": "@vsviz/builder",
-  "version": "0.0.4",
+  "version": "0.0.0",
   "description": "",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -31,5 +31,5 @@
   "publishConfig": {
     "access": "public"
   },
-  "gitHead": "ce1ed231eab3c3b8c6c8675fc64ffa410def27dd"
+  "gitHead": "1b9666bf2c8c14cb85c23f198ef8a3c5da4dccbe"
 }
