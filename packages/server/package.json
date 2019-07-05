@@ -1,6 +1,6 @@
 {
   "name": "@vsviz/server",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "",
   "main": "./lib/index.js",
   "typings": "./lib/index.d.ts",
@@ -22,7 +22,7 @@
     "typescript": "^3.5.2"
   },
   "dependencies": {
-    "@vsviz/builder": "^0.0.1",
+    "@vsviz/builder": "^0.0.2",
     "uuid": "^3.3.2",
     "ws": "^7.0.0"
   },
