@@ -50,5 +50,8 @@
     "webpack.config.js",
     "lib/"
   ],
-  "gitHead": "d572498053c7f0d67aa703c30d8cdcbb11fd443c"
+  "publishConfig": {
+    "access": "public"
+  },
+  "gitHead": "ce1ed231eab3c3b8c6c8675fc64ffa410def27dd"
 }
