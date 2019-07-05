@@ -27,5 +27,6 @@
     "README.md",
     "tsconfig.json",
     "lib/"
-  ]
+  ],
+  "gitHead": "509cb588f4f920ca13d4545cbb3684c7699190e5"
 }
