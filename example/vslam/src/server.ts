@@ -41,6 +41,7 @@ console.log('WSServer & DataServer have started.');
 
 const app = express();
 app.use(express.static(path.resolve(__dirname)));
+app.use(express.static(path.resolve(__dirname, '../third-party')));
 app.get('/', (req, res) => {
   res.sendFile(path.resolve(__dirname, '../index.html'));
 });

@@ -50,6 +50,7 @@ console.log('WSServer & DataServer have started\n');
 
 const app = express();
 app.use(express.static(path.resolve(__dirname)));
+app.use(express.static(path.resolve(__dirname, '../third-party')));
 app.get('/', (req, res) => {
   res.sendFile(path.resolve(__dirname, '../index.html'));
 });
@@ -57,3 +58,5 @@ app.listen(AppPort);
 
 console.log('App is listening on ' + AppPort + '.\n');
 
+let a = new Uint8Array();
+let b: Buffer = <Buffer> a;

@@ -1,6 +1,9 @@
-import React from 'react';
-import { render } from 'react-dom'
+// import React from 'react';
+// import { render } from 'react-dom'
 import { WSLoader, Canvas2D, Video } from '../../../packages/ui/lib/index';
+
+const React = window.React;
+const render = window.ReactDOM.render;
 
 class MyCanvas extends Canvas2D {
   renderCanvasOnData(loaderData) {
@@ -33,7 +36,7 @@ class App extends React.Component {
         />
         <Video 
           loader={this.loader}
-          dataIds={['video0']}
+          dataIds={['video1']}
           width={1280}
           height={720}
         />

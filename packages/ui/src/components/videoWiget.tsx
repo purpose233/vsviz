@@ -1,7 +1,9 @@
 import { StreamTypeName, DataTypeName } from '@vsviz/builder';
 import { Canvas2D } from './canvas2DWidget';
 import { LoaderDataType } from '../common/types';
-const Decoder = require('../../third-party/Decoder.js');
+
+const Decoder = (window as any).Decoder;
+const isDecoderEnabled = !!Decoder;
 
 const FPSCountThreshold: number = 10;
 
@@ -43,18 +45,20 @@ export class Video extends Canvas2D {
       return; 
     }
     this.clearCanvas();
-    if (loaderData.info.dataType === DataTypeName.H264) {
+    if (loaderData.info.dataType === DataTypeName.H264 && isDecoderEnabled) {
       // TODO: need to figure out a way to handle the order of frame
 
       // TODO: put the decode progress in worker
 
+      console.log(this.h264Decoder, loaderData);
+
       if (!this.h264Decoder) { 
-        this.h264Decoder = new Decoder({ rgb: true }); 
+        this.h264Decoder = new Decoder({ rgb: true });
         this.h264Decoder.onPictureDecoded = (data: Uint8Array, width: number, height: number) => {
           this.drawFrame(data, true);
         }
       }
-      this.h264Decoder.decode();
+      this.h264Decoder.decode(loaderData.data);
     }
     else {
       const imageRGBAData = loaderData.appendData as Buffer;

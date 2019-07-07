@@ -5,9 +5,9 @@ module.exports = {
 
   entry: path.resolve(__dirname, './src/client.jsx'),
 
-  devtool: 'sourcemap',
+  // devtool: 'sourcemap',
 
-  // watch: true,
+  watch: true,
 
   output: {
     path: path.resolve(__dirname, './dist'),
