@@ -1,7 +1,5 @@
 language : node_js
 node_js :
  - stable
-install:
- - ./node_modules/.bin/lerna bootstrap
 script:
  - npm test
