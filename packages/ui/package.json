@@ -1,6 +1,6 @@
 {
   "name": "@vsviz/ui",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -35,7 +35,7 @@
     "worker-loader": "^2.0.0"
   },
   "dependencies": {
-    "@vsviz/builder": "^0.0.5"
+    "@vsviz/builder": "^0.0.6"
   },
   "peerDependencies": {
     "babylonjs": ">=4.0.0",
