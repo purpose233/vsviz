@@ -11,6 +11,7 @@ __pycache__/
 *.mp4
 example/basic/dist
 example/vslam/dist
+coverage/
 
 # lib
 lib/

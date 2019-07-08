@@ -1,5 +1,4 @@
 import H264DecodeWorker from '../worker/h264decode.worker.js';
-import { number } from 'prop-types';
 
 export class H264Decoder {
 

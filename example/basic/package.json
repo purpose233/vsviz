@@ -12,6 +12,8 @@
   "author": "Purpose233",
   "license": "ISC",
   "dependencies": {
+    "@vsviz/server": "0.0.6",
+    "@vsviz/ui": "0.0.6",
     "express": "^4.17.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6"

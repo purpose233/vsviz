@@ -4,7 +4,8 @@ import { DataTypeName, NumberTypeEnum, PackageInitCodeBuffer,
 import { StreamDataType, ParsedDataType, DataInfoType } from './types';
 
 export function validateDataInfo(info: DataInfoType) {
-  return Object.values(StreamTypeName).includes(info.streamType) 
+  return !!info 
+    && Object.values(StreamTypeName).includes(info.streamType) 
     && Object.values(DataTypeName).includes(info.dataType);
 }
 
