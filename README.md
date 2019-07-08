@@ -1,4 +1,4 @@
-# VSVIZ [![Build Status](https://travis-ci.org/purpose233/vsviz.svg?branch=master)](https://travis-ci.org/purpose233/vsviz)
+# VSVIZ [![Build Status](https://travis-ci.org/purpose233/vsviz.svg?branch=master)](https://travis-ci.org/purpose233/vsviz) [![Coverage Status](https://coveralls.io/repos/github/purpose233/vsviz/badge.svg?branch=dev)](https://coveralls.io/github/purpose233/vsviz?branch=dev)
 VSVIZ is a framework for auto collecting & visualizing data based on Web.
 
 ~~Learn more in the Docs~~ (coming soon).
