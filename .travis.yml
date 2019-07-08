@@ -2,6 +2,6 @@ language : node_js
 node_js :
  - stable
 install:
- - lerna bootstrap
+ - ./node_modules/.bin/lerna bootstrap
 script:
  - npm test
