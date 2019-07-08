@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "postinstall": "lerna bootstrap",
     "test": "./node_modules/.bin/jest --config=jest.config.js"
   },
   "repository": {
