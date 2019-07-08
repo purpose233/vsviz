@@ -1,4 +1,4 @@
-# VSVIZ
+# VSVIZ [![Build Status](https://travis-ci.org/purpose233/vsviz.svg?branch=master)](https://travis-ci.org/purpose233/vsviz)
 VSVIZ is a framework for auto collecting & visualizing data based on Web.
 
 ~~Learn more in the Docs~~ (coming soon).
