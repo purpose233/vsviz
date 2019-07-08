@@ -1,9 +1,7 @@
 import { StreamTypeName, DataTypeName } from '@vsviz/builder';
 import { Canvas2D } from './canvas2DWidget';
 import { LoaderDataType } from '../common/types';
-
-const Decoder = (window as any).Decoder;
-const isDecoderEnabled = !!Decoder;
+import { H264Decoder } from '../common/h264Decoder';
 
 const FPSCountThreshold: number = 10;
 
@@ -17,7 +15,6 @@ export class Video extends Canvas2D {
   private fps: number = 0;
 
   private h264Decoder = null;
-  // private h264Decoder = new Decoder({ rgb: true });
 
   public onInit(metaData: Map<string, any>) {
     const dataId = this.props.dataIds[0];
@@ -44,36 +41,32 @@ export class Video extends Canvas2D {
       console.log('No loaderData!');
       return; 
     }
-    this.clearCanvas();
-    if (loaderData.info.dataType === DataTypeName.H264 && isDecoderEnabled) {
-      // TODO: need to figure out a way to handle the order of frame
 
-      // TODO: put the decode progress in worker
-
-      console.log(this.h264Decoder, loaderData);
-
-      if (!this.h264Decoder) { 
-        this.h264Decoder = new Decoder({ rgb: true });
-        this.h264Decoder.onPictureDecoded = (data: Uint8Array, width: number, height: number) => {
-          this.drawFrame(data, true);
-        }
+    if (loaderData.info.dataType === DataTypeName.H264) {
+      // No need to create the instance of decoder until it is required.
+      if (!this.h264Decoder) {
+        this.h264Decoder = new H264Decoder(this.drawFrame.bind(this), true);
       }
       this.h264Decoder.decode(loaderData.data);
-    }
-    else {
+    } else {
       const imageRGBAData = loaderData.appendData as Buffer;
       if (!imageRGBAData) {
         console.log('Image data parsing error!');
         return;
       }
-      this.drawFrame(imageRGBAData, true);
+      this.drawFrame(imageRGBAData);
     }
   }
 
-  private drawFrame(buffer: Buffer | ArrayBuffer, showFPS: boolean = true): void {
-    const imageData = new ImageData(new Uint8ClampedArray(buffer), 
-    this.imageWidth, this.imageHeight);
-    this.canvasCtx.putImageData(imageData, 0, 0);
+  private drawFrame(data: Buffer | ArrayBuffer | ImageBitmap, showFPS: boolean = true): void {
+    this.clearCanvas();
+    if (data instanceof ImageBitmap) {
+      this.canvasCtx.drawImage(data, 0, 0);
+    } else {
+      const imageData = new ImageData(new Uint8ClampedArray(data), 
+        this.imageWidth, this.imageHeight);
+      this.canvasCtx.putImageData(imageData, 0, 0);
+    }
 
     if (showFPS) { this.drawFPS(); }
   }
