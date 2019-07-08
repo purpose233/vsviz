@@ -148,17 +148,3 @@ function readStreamData(buffer: Buffer, dataType: string): StreamDataType {
       return buffer;
   }
 }
-
-export function blobToBuffer(blob: Blob): Promise<Buffer> {
-  return new Promise((resolve, reject) => {
-    const fileReader = new FileReader();
-    fileReader.addEventListener('load', (e: ProgressEvent) => {
-      const typeArray = new Uint8Array((<any>e.target).result);
-      resolve(Buffer.from(typeArray));
-    });
-    // fileReader.addEventListener('error', (err) => {
-    //   reject(err);
-    // });
-    fileReader.readAsArrayBuffer(blob);
-  });
-}

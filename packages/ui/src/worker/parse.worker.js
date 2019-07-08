@@ -1,5 +1,5 @@
-import { deserialize, HeaderSize, 
-  blobToBuffer, getImageRGBA, isImageType } from '@vsviz/builder';
+import { deserialize, HeaderSize, readreadArrayBufferFromBlob, 
+  getImageRGBA, isImageType } from '@vsviz/builder';
 
 // TODO: maybe parse image in worker
 if (self !== undefined) {
@@ -10,7 +10,7 @@ if (self !== undefined) {
     const data = e.data;
     let buffer;
     if (data instanceof Blob) {
-      buffer = await blobToBuffer(data);
+      buffer = Buffer.from(await readArrayBufferFromBlob(data));
     } else {
       buffer = data;
     }
