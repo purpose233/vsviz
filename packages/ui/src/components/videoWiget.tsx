@@ -45,7 +45,7 @@ export class Video extends Canvas2D {
     if (loaderData.info.dataType === DataTypeName.H264) {
       // No need to create the instance of decoder until it is required.
       if (!this.h264Decoder) {
-        this.h264Decoder = new H264Decoder(this.drawFrame.bind(this), true);
+        this.h264Decoder = new H264Decoder(this.drawFrame.bind(this));
       }
       this.h264Decoder.decode(loaderData.data);
     } else {
