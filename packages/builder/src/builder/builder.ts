@@ -20,7 +20,7 @@ export class Builder {
   }
 
   public getFrameData(): Buffer[] {
-    return this.getAllDirtyBuilders().map((builder) => serializeBuilder(builder));
+    return this.getAllDirtyBuilders().map((builder) => <Buffer>serializeBuilder(builder));
   }
 
   public clearAllDirtyBuilders(): void {
@@ -43,7 +43,7 @@ export class Builder {
     return dirtyBuilders;
   }
 
-  private findBuilderById(id: string): StreamBuilder {
+  private findBuilderById(id: string): StreamBuilder | null {
     for (const builder of this.streamBuilders) {
       if (builder.getId() === id) {
         return builder;

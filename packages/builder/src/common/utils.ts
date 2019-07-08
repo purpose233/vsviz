@@ -6,7 +6,7 @@ export function isImageType(type: string): boolean {
   return Object.values(ImageTypeName).some(imageType => imageType === type);
 }
 
-export function getImageRGBA(src: Buffer, srcType: ImageDataType): Buffer {
+export function getImageRGBA(src: Buffer, srcType: ImageDataType): Buffer | null {
   // if (!isImageType(srcType)) { return null; }
 
   let rgbaBuffer, i, j;

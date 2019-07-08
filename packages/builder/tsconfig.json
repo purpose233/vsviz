@@ -2,7 +2,7 @@
   "compilerOptions": {
     /* Basic Options */
     "outDir": "./lib",
-    "strictNullChecks": false,
+    // "strictNullChecks": false,
     "declaration": true,
     "sourceMap": true,
     "declarationMap": true,

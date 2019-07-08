@@ -3,21 +3,22 @@ import { DataTypeName, NumberTypeEnum, PackageInitCodeBuffer,
   HeaderSize, StreamTypeName } from './constants';
 import { StreamDataType, ParsedDataType, DataInfoType } from './types';
 
-export function validateDataInfo(info: DataInfoType) {
-  return !!info 
-    && Object.values(StreamTypeName).includes(info.streamType) 
+export function validateDataInfo(info: DataInfoType): boolean {
+  return Object.values(StreamTypeName).includes(info.streamType) 
     && Object.values(DataTypeName).includes(info.dataType);
 }
 
-export function serializeBuilder(builder: StreamBuilder) {
+export function serializeBuilder(builder: StreamBuilder): Buffer | null {
   const headerInfo = builder.getHeader();
   let bodyData = builder.getBody();
+
+  if (!headerInfo || !bodyData) { return null; }
 
   return serialize(headerInfo, bodyData);
 }
 
 export function serialize(headerInfo: DataInfoType, bodyData: StreamDataType, 
-                          buffer: Buffer = null, offset: number = 0) {
+                          buffer: Buffer | null = null, offset: number = 0): Buffer | null {
   if (headerInfo.dataType === DataTypeName.JSON && typeof bodyData !== 'string') {
     bodyData = JSON.stringify(bodyData);
   }
@@ -38,14 +39,15 @@ export function serialize(headerInfo: DataInfoType, bodyData: StreamDataType,
   return buffer;
 }
 
-export function serializeWithInitCode(headerInfo: DataInfoType, bodyData: StreamDataType) {
+export function serializeWithInitCode(headerInfo: DataInfoType, 
+                                      bodyData: StreamDataType): Buffer | null {
   const buffer = Buffer.alloc(PackageInitCodeBuffer.length + HeaderSize + headerInfo.size);
   writeIntoBuffer(buffer, PackageInitCodeBuffer, 0);
   return serialize(headerInfo, bodyData, buffer, PackageInitCodeBuffer.length);
 }
 
 function writeNumberIntoBuffer(target: Buffer, source: number, 
-                               numType: NumberTypeEnum, offset: number = 0) {
+                               numType: NumberTypeEnum, offset: number = 0): number {
   switch (numType) {
     case NumberTypeEnum.UINT8:
       return target.writeUInt8(source, offset);
@@ -68,7 +70,7 @@ function writeIntoBuffer(target: Buffer, source: StreamDataType,
 }
 
 // TODO: add validation
-export function deserialize(buffer: Buffer, offset: number = 0, needTransfrom: boolean = true): ParsedDataType {
+export function deserialize(buffer: Buffer, offset: number = 0, needTransfrom: boolean = true): ParsedDataType | null {
   if (offset < 0 || offset >= buffer.length || buffer.length - offset < HeaderSize) { return null; }
   const info = <DataInfoType> {
     id:         readStringFromBuffer(buffer, 0 + offset, 8 + offset),
@@ -88,7 +90,7 @@ export function findInitCodeIndex(buffer: Buffer, initOffset: number = 0): numbe
 }
 
 export function deserializeWithInitCode(buffer: Buffer, offset: number = 0, 
-                                        needTransfrom: boolean = true, findCode: boolean = false): ParsedDataType {
+                                        needTransfrom: boolean = true, findCode: boolean = false): ParsedDataType | null {
   const initCodeIndex = buffer.indexOf(PackageInitCodeBuffer, offset);
   if (initCodeIndex === -1) { return null; }
   if (!findCode && initCodeIndex !== offset) { return null; }

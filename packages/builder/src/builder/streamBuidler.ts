@@ -5,7 +5,7 @@ export class StreamBuilder {
   private id: string;
   private streamType: string;
   private dataStack: ParsedDataType[] = [];
-  private currentData: ParsedDataType = null;
+  private currentData: ParsedDataType | null = null;
 
   constructor(id: string, streamType: string) {
     this.id = id;
@@ -20,11 +20,11 @@ export class StreamBuilder {
     this.currentData = parsedData;
   };
 
-  public getHeader(): DataInfoType {
+  public getHeader(): DataInfoType | null {
     return this.currentData ? this.currentData.info : null;
   };
 
-  public getBody(): StreamDataType {
+  public getBody(): StreamDataType | null {
     return this.currentData ? this.currentData.data : null;
   };
 

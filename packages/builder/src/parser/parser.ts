@@ -5,7 +5,7 @@ import { HeaderSize, PackageInitCodeBuffer } from '../common/constants';
 
 interface ParseFindResult {
   offset: number,
-  parsedData: ParsedDataType
+  parsedData: ParsedDataType | null
 };
 
 function calcBufferSize(datas: Buffer[]): number {
@@ -20,7 +20,7 @@ function calcBufferSize(datas: Buffer[]): number {
 
 // assume that all element in datas are the same type
 export function concatBuffer(datas: Buffer[]): Buffer {
-  if (datas.length <= 0) { return null; }
+  if (datas.length <= 0) { return Buffer.alloc(0); }
   // TODO: reduce will cause the type inference 
   const size: any = calcBufferSize(datas);
   const concatedData = Buffer.alloc(size);
@@ -36,7 +36,7 @@ export class Parser {
 
   private isPacking: boolean = false;
   private stashedData: Buffer[] = [];
-  private stashedDataInfo: DataInfoType = null;
+  private stashedDataInfo: DataInfoType | null = null;
   private stashedSize: number = 0;
 
   private initPacking(): void {
@@ -47,10 +47,10 @@ export class Parser {
   }
 
   private getFirstValidPackage(metaData: Buffer, offset: number = 0): ParseFindResult {
-    let index = offset, parsedData: ParsedDataType = null;
+    let index = offset, parsedData: ParsedDataType | null = null;
     while ((index = findInitCodeIndex(metaData, index)) !== -1) {
       parsedData = deserializeWithInitCode(metaData, index, false, false);
-      if (validateDataInfo(parsedData.info)) {
+      if (parsedData && validateDataInfo(parsedData.info)) {
         break;
       } else {
         parsedData = null;
@@ -104,7 +104,10 @@ export class Parser {
     } else {
       // when isPacking is true, the offset must be 0
 
-      // TODO: packing might exist bugs, cuz sometimes the segment of package might be processed by deserializing
+      if (!this.stashedDataInfo) { 
+        this.initPacking();
+        return parsedResults;
+      }
 
       const currentSize = this.stashedSize + metaData.length;
       if (currentSize >= this.stashedDataInfo.size) {
