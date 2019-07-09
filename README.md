@@ -11,7 +11,7 @@ VSVIZ contains the several submodules:
  - @vsviz/cli: providing with several useful tools(still developing).
 
 ## Quick Start
-For now, VSVIZ provides with two demo to show the basic functions.
+For now, VSVIZ provides with one demo to show the basic functions.
 And you need npm & node to run them.
 
 **basic demo**: 
@@ -32,29 +32,4 @@ $ npm run runServer
 # send data from source
 $ python3 ./src/dataSrc00.py meta
 $ python3 ./src/dataSrc00.py data
-```
-
-**vslam demo**:
-
-Vslam demo shows how to cooperate with ROS. 
-It relies on the specific topic and message structure of ROS application. 
-
-If you happens to have the right ros support, you could give a try.
-
-Before you start to use it, you need to modify the server IP in `./src/client.jsx` and `./src/server.ts`.
-
-```bash
-$ cd example/vslam
-
-# build
-$ npm install
-$ npm run buildServer
-$ npm run buildClient
-
-# run server, it will listen on port 8080
-$ npm run runServer
-
-# send data from source
-$ python3 ./dataSrc/dataMark.py
-$ python3 ./dataSrc/dataVideo.py
 ```
