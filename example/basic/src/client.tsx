@@ -1,29 +1,24 @@
-// import React from 'react';
-// import { render } from 'react-dom'
+import React from 'react';
+import { render } from 'react-dom'
 import { WSLoader, Canvas2D, Video } from '../../../packages/ui/lib/index';
-
-const React = window.React;
-const render = window.ReactDOM.render;
+import { LoaderDataType } from '../../../packages/ui/lib/index';
 
 class MyCanvas extends Canvas2D {
-  renderCanvasOnData(loaderData) {
+  protected async renderCanvasOnData(loaderData: Map<string, LoaderDataType>): Promise<void> {
     // console.log(loaderData);
     this.clearCanvas();
     this.canvasCtx.fillStyle = 'green';
     this.canvasCtx.fillRect(10, 10, 100, 100);
   }
 
-  onInit(metaData) {
-    // console.log(metaData);
-  }
+  // onInit(metaData: any) {
+  //   console.log(metaData);
+  // }
 }
 
 class App extends React.Component {
-  constructor(props) {
-    super(props);
 
-    this.loader = new WSLoader('ws://localhost:3000/');
-  }
+  private loader: WSLoader = new WSLoader('ws://localhost:3000/');
 
   render () {
     return (
@@ -36,7 +31,7 @@ class App extends React.Component {
         />
         <Video 
           loader={this.loader}
-          dataIds={['video1']}
+          dataIds={['video0']}
           width={1280}
           height={720}
         />

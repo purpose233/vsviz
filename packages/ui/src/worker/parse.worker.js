@@ -1,4 +1,4 @@
-import { deserialize, HeaderSize, readreadArrayBufferFromBlob, 
+import { deserialize, HeaderSize, readArrayBufferFromBlob, 
   getImageRGBA, isImageType } from '@vsviz/builder';
 
 // TODO: maybe parse image in worker

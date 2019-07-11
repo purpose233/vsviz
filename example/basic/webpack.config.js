@@ -3,7 +3,7 @@ const path = require('path');
 module.exports = {
   mode: 'development',
 
-  entry: path.resolve(__dirname, './src/client.jsx'),
+  entry: path.resolve(__dirname, './src/client.tsx'),
 
   // devtool: 'sourcemap',
 
@@ -16,6 +16,11 @@ module.exports = {
   
   module: {
     rules: [
+      {
+        test: /\.tsx?$/,
+        exclude: '/node_modules/',
+        use: 'ts-loader'
+      },
       {
         test: /\.(js|jsx)$/,
         exclude: '/node_modules/',
@@ -30,6 +35,6 @@ module.exports = {
   },
 
   resolve: {
-    extensions: ['.js', '.jsx']
+    extensions: ['.ts', '.tsx', '.js', '.jsx']
   }
 }

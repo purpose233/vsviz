@@ -8,15 +8,16 @@ import {
   SessionMetaDataSender
 } from '../../../packages/server/lib/index';
 
-const express = require('express');
-const path = require('path');
+import express = require('express');
+import path = require('path');
 
-const AppPort = 8080;
-const WSPort = 3000;
-const DataPort = 9000;
+const AppPort: number = 8080;
+const WSPort: number = 3000;
+const DataPort: number = 9000;
 
 class MyTimerMiddleware extends TimerMiddleware {
-  private lastTime = 0;
+
+  private lastTime: number = 0;
 
   async onData(next: Function, data: any, context: MiddlewareContext): Promise<void> {
     console.log('received data.');
@@ -51,12 +52,9 @@ console.log('WSServer & DataServer have started\n');
 const app = express();
 app.use(express.static(path.resolve(__dirname)));
 app.use(express.static(path.resolve(__dirname, '../third-party')));
-app.get('/', (req, res) => {
+app.get('/', (req: express.Request, res: express.Response) => {
   res.sendFile(path.resolve(__dirname, '../index.html'));
 });
 app.listen(AppPort);
 
 console.log('App is listening on ' + AppPort + '.\n');
-
-let a = new Uint8Array();
-let b: Buffer = <Buffer> a;
