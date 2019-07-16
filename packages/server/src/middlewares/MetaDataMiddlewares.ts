@@ -1,5 +1,5 @@
 import WebSocket from 'ws';
-import { TimerMiddleware } from './timerMiddleware';
+import { StreamMiddleware } from './streamMiddleware';
 import { MiddlewareContext } from './middlewareContext';
 import { StreamMessageType, StreamTypeName } from '@vsviz/builder';
 import { SessionMiddleware } from './sessionMiddleware';
@@ -33,10 +33,10 @@ function mapToString(map: Map<string, any>): string {
   return JSON.stringify(json);
 }
 
-export class TimerMetaDataCollector extends TimerMiddleware {
+export class StreamMetaDataCollector extends StreamMiddleware {
 
-  public copy(): TimerMetaDataCollector {
-    return new TimerMetaDataCollector();
+  public copy(): StreamMetaDataCollector {
+    return new StreamMetaDataCollector();
   }
 
   public async init(context: MiddlewareContext): Promise<void> {

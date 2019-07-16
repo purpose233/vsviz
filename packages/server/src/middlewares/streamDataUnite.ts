@@ -1,10 +1,14 @@
-import { TimerMiddleware } from './timerMiddleware';
+import { StreamMiddleware } from './streamMiddleware';
 import { MiddlewareContext } from './middlewareContext';
 import { StreamMessageType, StreamTypeName, 
   ImageTypeName, ImageDataType, getImageRGBA } from '@vsviz/builder';
 
-export class TimerDataUniteMiddleware extends TimerMiddleware {
+export class StreamDataUniteMiddleware extends StreamMiddleware {
   
+  public copy(): StreamDataUniteMiddleware {
+    return new StreamDataUniteMiddleware();
+  }
+
   protected async onInitial(next: Function, context: MiddlewareContext): Promise<void> {
     context.set(Symbol.for('unitedMsgs'), []);
     await next();

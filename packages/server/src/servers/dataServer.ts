@@ -1,20 +1,20 @@
 import net from 'net';
 import { StreamParser } from '@vsviz/builder';
 import { BaseServer } from './baseServer';
-import { TimerHandler } from '../handlers/timerHandler';
+import { StreamHandler } from '../handlers/streamHandler';
 import { EventEmitter } from 'events';
-import { TimerMiddlewareType } from '../common/types';
-import { TimerEventName } from '../common/constants';
+import { StreamMiddlewareType } from '../common/types';
+import { StreamEventName, DefaultInterval } from '../common/constants';
 
 export class DataServer extends BaseServer {
 
   private port: number;
   private server: net.Server;
-  private handler: TimerHandler;
-  private timerEmitter: EventEmitter;
+  private handler: StreamHandler;
+  private emitter: EventEmitter;
 
   // TODO: add handler
-  constructor(port: number, interval: number = 30) {
+  constructor(port: number, interval: number = DefaultInterval) {
     super();
     this.port = port;
     
@@ -31,16 +31,16 @@ export class DataServer extends BaseServer {
         // console.log('receive package.');
         if (streamMsgs.length > 0) {
           // console.log('receive pacakge');
-          this.timerEmitter.emit(TimerEventName.DATA, streamMsgs);
+          this.emitter.emit(StreamEventName.DATA, streamMsgs);
         }
       });
     });
 
-    this.timerEmitter = new EventEmitter();
-    this.handler = new TimerHandler(this.timerEmitter);
+    this.emitter = new EventEmitter();
+    this.handler = new StreamHandler(this.emitter);
 
     setInterval(() => {
-      this.timerEmitter.emit(TimerEventName.TIMEOUT);
+      this.emitter.emit(StreamEventName.TIMEOUT);
     }, interval);
   }
 
@@ -48,15 +48,15 @@ export class DataServer extends BaseServer {
     this.isStarted = true;
     await this.handler.start();
     this.server.listen(this.port);
-    this.timerEmitter.emit(TimerEventName.INITIAL);
+    this.emitter.emit(StreamEventName.INITIAL);
   }
 
   public close(): void {
     this.server.close();
-    this.timerEmitter.emit(TimerEventName.END);
+    this.emitter.emit(StreamEventName.END);
   }
 
-  public use(middleware: TimerMiddlewareType): DataServer {
+  public use(middleware: StreamMiddlewareType): DataServer {
     if (this.isStarted) {
       return this;
     }

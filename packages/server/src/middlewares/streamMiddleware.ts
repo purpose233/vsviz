@@ -1,30 +1,30 @@
-import { TimerEventEnum } from '../common/constants';
+import { StreamEventEnum } from '../common/constants';
 import { BaseMiddleware } from './baseMiddleware';
 import { MiddlewareContext } from './middlewareContext';
 import { StreamMessageType } from '@vsviz/builder';
 
-export class TimerMiddleware extends BaseMiddleware {
+export class StreamMiddleware extends BaseMiddleware {
   
-  public async callMiddleware(next: Function, type: TimerEventEnum, 
+  public async callMiddleware(next: Function, type: StreamEventEnum, 
                               msg: any, context: MiddlewareContext): Promise<void> {
     switch (type) {
-      case TimerEventEnum.INITIAL: 
+      case StreamEventEnum.INITIAL: 
         await this.onInitial(next, context);
         break;
-      case TimerEventEnum.END:
+      case StreamEventEnum.END:
         await this.onEnd(next, context);
         break;
-      case TimerEventEnum.DATA:
+      case StreamEventEnum.DATA:
         await this.onData(next, msg, context);
         break;
-      case TimerEventEnum.TIMEOUT:
+      case StreamEventEnum.TIMEOUT:
         await this.onTimeout(next, context);
         break;
     }
   }
 
-  public copy(): TimerMiddleware {
-    return new TimerMiddleware();
+  public copy(): StreamMiddleware {
+    return new StreamMiddleware();
   }
 
   protected async onInitial(next: Function, context: MiddlewareContext): Promise<void> { 

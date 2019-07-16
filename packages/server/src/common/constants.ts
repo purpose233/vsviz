@@ -4,18 +4,18 @@ export enum SessionEventEnum {
   MESSAGE
 };
 
-export enum TimerEventEnum {
+export enum StreamEventEnum {
   INITIAL,
   END,
   TIMEOUT,
   DATA
 }
 
-export const TimerEventName = {
+export const StreamEventName = {
   INITIAL: 'initial',
   END: 'end',
   TIMEOUT: 'timeout',
   DATA: 'data'
 };
 
-export const TimerInterval = 100;
+export const DefaultInterval = 30;

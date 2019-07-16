@@ -1,10 +1,10 @@
-import { TimerMiddleware } from './timerMiddleware';
+import { StreamMiddleware } from './streamMiddleware';
 import { MiddlewareContext } from './middlewareContext';
 import { WSServer } from '../servers/wsServer';
 import { Builder, StreamMessageType } from '@vsviz/builder';
 import { concatBuffer } from '@vsviz/builder';
 
-export class TimerSender extends TimerMiddleware {
+export class StreamSender extends StreamMiddleware {
 
   private sendOnData: boolean; 
   private server: WSServer;
@@ -15,8 +15,8 @@ export class TimerSender extends TimerMiddleware {
     this.sendOnData = sendOnData;
   }
 
-  public copy(): TimerSender {
-    return new TimerSender(this.server, this.sendOnData);
+  public copy(): StreamSender {
+    return new StreamSender(this.server, this.sendOnData);
   }
 
   // TODO: maybe directly send data from arguments

@@ -1,12 +1,11 @@
-export { SessionEventEnum, TimerEventEnum } from './common/constants';
+export { SessionEventEnum, StreamEventEnum } from './common/constants';
 
-// TODO: unite the name of Timer and Data
 export { SessionMiddleware } from './middlewares/sessionMiddleware';
-export { TimerMiddleware } from './middlewares/timerMiddleware';
+export { StreamMiddleware } from './middlewares/streamMiddleware';
 export { MiddlewareContext } from './middlewares/middlewareContext';
-export { TimerSender } from './middlewares/timerSender';
-export { TimerMetaDataCollector, SessionMetaDataSender} from './middlewares/MetaDataMiddlewares';
-export { TimerDataUniteMiddleware } from './middlewares/timerDataUniteMiddleware';
+export { StreamSender } from './middlewares/streamSender';
+export { StreamMetaDataCollector, SessionMetaDataSender} from './middlewares/MetaDataMiddlewares';
+export { StreamDataUniteMiddleware } from './middlewares/streamDataUnite';
 
 export { WSServer } from './servers/wsServer';
 export { DataServer } from './servers/dataServer';
