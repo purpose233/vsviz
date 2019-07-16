@@ -5,7 +5,8 @@ import {
   TimerMiddleware,
   MiddlewareContext,
   TimerMetaDataCollector,
-  SessionMetaDataSender
+  SessionMetaDataSender,
+  SessionMiddleware
 } from '../../../packages/server/lib/index';
 
 import express = require('express');
@@ -19,7 +20,7 @@ class MyTimerMiddleware extends TimerMiddleware {
 
   private lastTime: number = 0;
 
-  async onData(next: Function, data: any, context: MiddlewareContext): Promise<void> {
+  protected async onData(next: Function, data: any, context: MiddlewareContext): Promise<void> {
     console.log('received data.');
     if (this.lastTime === 0) {
       this.lastTime = new Date().getTime();
@@ -30,6 +31,13 @@ class MyTimerMiddleware extends TimerMiddleware {
     }
     console.log('package size: ' + (data[0].info.size / 1024).toFixed(1) + 'kb');
     // console.log(context.get(Symbol.for('metaData')));
+    await next();
+  }
+}
+
+class MySessionMiddleware extends SessionMiddleware {
+  protected async onMessage(next: Function, msg: string, context: MiddlewareContext): Promise<void> {
+    console.log('client message: ' + msg);
     await next();
   }
 }

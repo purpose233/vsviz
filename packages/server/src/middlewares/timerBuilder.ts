@@ -1,6 +1,6 @@
 import { TimerMiddleware } from './timerMiddleware';
 import { MiddlewareContext } from './middlewareContext';
-import { Builder, ParsedDataType, StreamTypeName } from '@vsviz/builder';
+import { Builder, StreamMessageType, StreamTypeName } from '@vsviz/builder';
 
 export class TimerBuilder extends TimerMiddleware {
 
@@ -12,14 +12,14 @@ export class TimerBuilder extends TimerMiddleware {
     context.set(Symbol.for('builder'), new Builder());
   }
 
-  protected async onData(next: Function, parsedDatas: ParsedDataType[], context: MiddlewareContext): Promise<void> {
+  protected async onData(next: Function, streamMsgs: StreamMessageType[], context: MiddlewareContext): Promise<void> {
     const builder: Builder = context.get(Symbol.for('builder'));
-    for (const parsedData of parsedDatas) {
+    for (const streamMsg of streamMsgs) {
       // meta data won't be handled by TimerBuilder&TimerSender
-      if (parsedData.info.streamType === StreamTypeName.META) {
+      if (streamMsg.info.streamType === StreamTypeName.META) {
         continue;
       }
-      builder.handleData(parsedData);
+      builder.handleData(streamMsg);
     }
     await next();
   }

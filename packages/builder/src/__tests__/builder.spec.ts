@@ -1,10 +1,10 @@
-import { validateDataInfo, serialize, deserialize, 
+import { validateStreamInfo, serialize, deserialize, 
   serializeWithInitCode, deserializeWithInitCode } from '../common/serialize';
-import { DataInfoType, ParsedDataType } from '../common/types';
+import { StreamInfoType, StreamMessageType } from '../common/types';
 import { Builder } from '../builder/builder';
 import { Parser, concatBuffer } from '../parser/parser';
 
-const headerInfo: DataInfoType = {
+const headerInfo: StreamInfoType = {
   id: 'test001',
   streamType: 'customed',
   dataType: 'string',
@@ -15,7 +15,7 @@ const headerInfo: DataInfoType = {
 
 const bodyData: string = 'testdata';
 
-const parsedData: ParsedDataType = { info: headerInfo, data: bodyData };
+const streamMsg: StreamMessageType = { info: headerInfo, data: bodyData };
 
 const binaryPackage: Buffer = Buffer.from(
   new Uint8Array([
@@ -29,7 +29,7 @@ const binaryPackage: Buffer = Buffer.from(
 
 describe('serialize', () => {
   test('validate valid header', () => {
-    expect(validateDataInfo(headerInfo)).toBe(true);
+    expect(validateStreamInfo(headerInfo)).toBe(true);
   });
 
   test('serialize & deserialize', () => {
@@ -40,9 +40,9 @@ describe('serialize', () => {
   test('serialize & deserialize with init code', () => {
     expect(deserializeWithInitCode(serializeWithInitCode(headerInfo, bodyData)).info)
       .toStrictEqual(headerInfo);
-    const parsedData = deserializeWithInitCode(binaryPackage);
-    expect(parsedData.info).toStrictEqual(headerInfo);
-    expect(parsedData.data).toBe(bodyData);
+    const streamMsg = deserializeWithInitCode(binaryPackage);
+    expect(streamMsg.info).toStrictEqual(headerInfo);
+    expect(streamMsg.data).toBe(bodyData);
   });
 });
 
@@ -59,7 +59,7 @@ describe('builder', () => {
 
 
   test('dirty builder', () => {
-    builder.handleData(parsedData);
+    builder.handleData(streamMsg);
     const streamBuilder = builder.getAllDirtyBuilders()[0];
     expect(streamBuilder).not.toBe(null);
     expect(streamBuilder.getId()).toBe(headerInfo.id);
@@ -77,7 +77,7 @@ describe('parse', () => {
   const parser = new Parser();
 
   const bodyData2 = {test: 'aaa'};
-  const headerInfo2: DataInfoType = {
+  const headerInfo2: StreamInfoType = {
     id: 'test002',
     streamType: 'customed',
     dataType: 'json',

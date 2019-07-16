@@ -5,7 +5,7 @@ import { deserialize, HeaderSize, readArrayBufferFromBlob,
 if (self !== undefined) {
   self.onmessage = async (e) => {
     let offset = 0;
-    const parsedResults = [];
+    const parsedMsgs = [];
     
     const data = e.data;
     let buffer;
@@ -16,19 +16,19 @@ if (self !== undefined) {
     }
 
     while (true) {
-      let parsedData, parseSuccess = true;
+      let streamMsg, parseSuccess = true;
       try {
         // No need to handle sticky packages, so just use deserialize instead of parse
-        parsedData = deserialize(buffer, offset);
+        streamMsg = deserialize(buffer, offset);
       } catch(e) {
         console.log(e);
         break;
       }
-      if (!parsedData) { break; }
+      if (!streamMsg) { break; }
 
-      if (isImageType(parsedData.info.dataType)) {
+      if (isImageType(streamMsg.info.dataType)) {
         try {
-          parsedData.appendData = getImageRGBA(parsedData.data, parsedData.info.dataType);
+          streamMsg.appendData = getImageRGBA(streamMsg.data, streamMsg.info.dataType);
         } catch(e) {
           console.log(e);
           parseSuccess = false;
@@ -36,10 +36,10 @@ if (self !== undefined) {
       }
 
       if (parseSuccess) {
-        parsedResults.push(parsedData);
+        parsedMsgs.push(streamMsg);
       }
-      offset += HeaderSize + parsedData.info.size;
+      offset += HeaderSize + streamMsg.info.size;
     }
-    (self).postMessage(parsedResults);
+    (self).postMessage(parsedMsgs);
   };
 }

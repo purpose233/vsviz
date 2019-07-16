@@ -1,7 +1,7 @@
-export { StreamTypeName, DataTypeName, ImageTypeName, HeaderSize } from './common/constants';
-export { DataInfoType, ParsedDataType, StreamDataType, ImageDataType } from './common/types';
+export { StreamTypeName, StreamDataTypeName, ImageTypeName, HeaderSize } from './common/constants';
+export { StreamInfoType, StreamMessageType, MessageDataType, ImageDataType } from './common/types';
 export { serialize, serializeBuilder, serializeWithInitCode, 
-    deserialize, deserializeWithInitCode, transformParsedData } from './common/serialize';
+    deserialize, deserializeWithInitCode, transformStreamMsg } from './common/serialize';
 export { isImageType, getImageRGBA, readArrayBufferFromBlob } from './common/utils';
 
 export { Builder } from './builder/builder';

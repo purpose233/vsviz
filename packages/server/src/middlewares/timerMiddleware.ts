@@ -1,7 +1,7 @@
 import { TimerEventEnum } from '../common/constants';
 import { BaseMiddleware } from './baseMiddleware';
 import { MiddlewareContext } from './middlewareContext';
-import { ParsedDataType } from '@vsviz/builder';
+import { StreamMessageType } from '@vsviz/builder';
 
 export class TimerMiddleware extends BaseMiddleware {
   
@@ -35,7 +35,7 @@ export class TimerMiddleware extends BaseMiddleware {
     await next();
   };
 
-  protected async onData(next: Function, msg: ParsedDataType[], context: MiddlewareContext): Promise<void> {
+  protected async onData(next: Function, msgs: StreamMessageType[], context: MiddlewareContext): Promise<void> {
     await next();
   };
 

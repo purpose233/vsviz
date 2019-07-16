@@ -1,20 +1,20 @@
 import { TimerMiddleware } from './timerMiddleware';
 import { MiddlewareContext } from './middlewareContext';
-import { ParsedDataType, StreamTypeName, 
+import { StreamMessageType, StreamTypeName, 
   ImageTypeName, ImageDataType, getImageRGBA } from '@vsviz/builder';
 
 export class TimerDataUniteMiddleware extends TimerMiddleware {
   
   // TODO: directly modify the arguments might not a good way
-  protected async onData(next: Function, parsedResult: ParsedDataType[], context: MiddlewareContext): Promise<void> {
-    for (const parsedData of parsedResult) {
-      const info = parsedData.info;
+  protected async onData(next: Function, streamMsgs: StreamMessageType[], context: MiddlewareContext): Promise<void> {
+    for (const streamMsg of streamMsgs) {
+      const info = streamMsg.info;
       if (info.streamType === StreamTypeName.VIDEO && 
           info.dataType !== ImageTypeName.RGBA) {
-        const rgbaData = getImageRGBA(<Buffer>parsedData.data, <ImageDataType>info.dataType);
-        parsedData.info.dataType = <ImageDataType>ImageTypeName.RGBA;
-        parsedData.info.size = rgbaData.length;
-        parsedData.data = rgbaData;
+        const rgbaData = getImageRGBA(<Buffer>streamMsg.data, <ImageDataType>info.dataType);
+        streamMsg.info.dataType = <ImageDataType>ImageTypeName.RGBA;
+        streamMsg.info.size = rgbaData.length;
+        streamMsg.data = rgbaData;
       }
     }
     await next();

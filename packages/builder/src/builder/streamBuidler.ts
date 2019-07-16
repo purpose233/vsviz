@@ -1,11 +1,11 @@
-import { DataInfoType, StreamDataType, ParsedDataType } from '../common/types';
+import { StreamInfoType, MessageDataType, StreamMessageType } from '../common/types';
 
 export class StreamBuilder {
 
   private id: string;
   private streamType: string;
-  private dataStack: ParsedDataType[] = [];
-  private currentData: ParsedDataType | null = null;
+  private dataStack: StreamMessageType[] = [];
+  private currentData: StreamMessageType | null = null;
 
   constructor(id: string, streamType: string) {
     this.id = id;
@@ -15,16 +15,16 @@ export class StreamBuilder {
   public getId(): string { return this.id; }
 
   // TODO: check the type of data
-  public build(parsedData: ParsedDataType): void {
-    this.dataStack.push(parsedData);
-    this.currentData = parsedData;
+  public build(streamMsg: StreamMessageType): void {
+    this.dataStack.push(streamMsg);
+    this.currentData = streamMsg;
   };
 
-  public getHeader(): DataInfoType | null {
+  public getHeader(): StreamInfoType | null {
     return this.currentData ? this.currentData.info : null;
   };
 
-  public getBody(): StreamDataType | null {
+  public getBody(): MessageDataType | null {
     return this.currentData ? this.currentData.data : null;
   };
 
@@ -39,29 +39,3 @@ export class StreamBuilder {
 
   public validate(): void {};
 }
-
-// export abstract class BaseBuilder {
-
-//   protected id: string;
-//   protected streamType: string;
-//   protected dataStack: ParsedDataType[] = [];
-
-//   constructor(id: string, streamType: string) {
-//     this.id = id;
-//     this.streamType = streamType;
-//   }
-
-//   public getId(): string { return this.id; }
-
-//   public abstract build(parsedData: ParsedDataType): void;
-
-//   public abstract getHeader(): DataInfoType;
-
-//   public abstract getBody(): StreamDataType;
-
-//   public abstract clear(): void;
-
-//   public abstract isDirty(): boolean;
-
-//   protected abstract validate(): void;
-// }

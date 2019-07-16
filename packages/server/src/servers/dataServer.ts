@@ -27,11 +27,11 @@ export class DataServer extends BaseServer {
       socket.on('error', e => console.log(e));
       
       socket.on('data', (data: Buffer) => {
-        const parsedResult = parser.parse(data);
+        const streamMsgs = parser.parse(data);
         // console.log('receive package.');
-        if (parsedResult.length > 0) {
+        if (streamMsgs.length > 0) {
           // console.log('receive pacakge');
-          this.timerEmitter.emit(TimerEventName.DATA, parsedResult);
+          this.timerEmitter.emit(TimerEventName.DATA, streamMsgs);
         }
       });
     });

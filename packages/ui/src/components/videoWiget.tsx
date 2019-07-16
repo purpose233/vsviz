@@ -1,4 +1,4 @@
-import { StreamTypeName, DataTypeName } from '@vsviz/builder';
+import { StreamTypeName, StreamDataTypeName } from '@vsviz/builder';
 import { Canvas2D } from './canvas2DWidget';
 import { LoaderDataType } from '../common/types';
 import { H264Decoder } from '../common/h264Decoder';
@@ -42,7 +42,7 @@ export class Video extends Canvas2D {
       return; 
     }
 
-    if (loaderData.info.dataType === DataTypeName.H264) {
+    if (loaderData.info.dataType === StreamDataTypeName.H264) {
       // No need to create the instance of decoder until it is required.
       if (!this.h264Decoder) {
         this.h264Decoder = new H264Decoder(this.drawFrame.bind(this));

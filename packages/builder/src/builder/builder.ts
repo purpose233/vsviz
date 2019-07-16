@@ -1,5 +1,5 @@
 import { StreamBuilder } from './streamBuidler';
-import { ParsedDataType } from '../common/types';
+import { StreamMessageType } from '../common/types';
 import { serializeBuilder } from '../common/serialize';
 
 export class Builder {
@@ -8,14 +8,14 @@ export class Builder {
 
   // constructor() {}
 
-  public handleData(parsedData: ParsedDataType): StreamBuilder {
-    const info = parsedData.info;
+  public handleData(streamMsg: StreamMessageType): StreamBuilder {
+    const info = streamMsg.info;
     let builder = this.findBuilderById(info.id);
     if (!builder) {
       builder = new StreamBuilder(info.id, info.streamType);
       this.streamBuilders.push(builder);
     }
-    builder.build(parsedData);
+    builder.build(streamMsg);
     return builder;
   }
 

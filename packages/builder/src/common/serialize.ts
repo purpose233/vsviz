@@ -1,13 +1,14 @@
 import { StreamBuilder } from '../builder/streamBuidler';
-import { DataTypeName, NumberTypeEnum, PackageInitCodeBuffer, 
+import { StreamDataTypeName, NumberTypeEnum, PackageInitCodeBuffer, 
   HeaderSize, StreamTypeName } from './constants';
-import { StreamDataType, ParsedDataType, DataInfoType } from './types';
+import { MessageDataType, StreamMessageType, StreamInfoType } from './types';
 
-export function validateDataInfo(info: DataInfoType): boolean {
+export function validateStreamInfo(info: StreamInfoType): boolean {
   return Object.values(StreamTypeName).includes(info.streamType) 
-    && Object.values(DataTypeName).includes(info.dataType);
+    && Object.values(StreamDataTypeName).includes(info.dataType);
 }
 
+// serialize stream message
 export function serializeBuilder(builder: StreamBuilder): Buffer | null {
   const headerInfo = builder.getHeader();
   let bodyData = builder.getBody();
@@ -17,9 +18,9 @@ export function serializeBuilder(builder: StreamBuilder): Buffer | null {
   return serialize(headerInfo, bodyData);
 }
 
-export function serialize(headerInfo: DataInfoType, bodyData: StreamDataType, 
+export function serialize(headerInfo: StreamInfoType, bodyData: MessageDataType, 
                           buffer: Buffer | null = null, offset: number = 0): Buffer | null {
-  if (headerInfo.dataType === DataTypeName.JSON && typeof bodyData !== 'string') {
+  if (headerInfo.dataType === StreamDataTypeName.JSON && typeof bodyData !== 'string') {
     bodyData = JSON.stringify(bodyData);
   }
 
@@ -39,11 +40,20 @@ export function serialize(headerInfo: DataInfoType, bodyData: StreamDataType,
   return buffer;
 }
 
-export function serializeWithInitCode(headerInfo: DataInfoType, 
-                                      bodyData: StreamDataType): Buffer | null {
+export function serializeWithInitCode(headerInfo: StreamInfoType, 
+                                      bodyData: MessageDataType): Buffer | null {
   const buffer = Buffer.alloc(PackageInitCodeBuffer.length + HeaderSize + headerInfo.size);
   writeIntoBuffer(buffer, PackageInitCodeBuffer, 0);
   return serialize(headerInfo, bodyData, buffer, PackageInitCodeBuffer.length);
+}
+
+// serialize client message
+export function serializeClientMsg() {
+
+}
+
+export function serializeClientMsgWithInitCode() {
+
 }
 
 function writeNumberIntoBuffer(target: Buffer, source: number, 
@@ -58,7 +68,7 @@ function writeNumberIntoBuffer(target: Buffer, source: number,
   }
 };
 
-function writeIntoBuffer(target: Buffer, source: StreamDataType, 
+function writeIntoBuffer(target: Buffer, source: MessageDataType, 
                          targetstart: number = 0): number {
   if (!Buffer.isBuffer(source)) {
     if (typeof source !== 'string') {
@@ -69,10 +79,10 @@ function writeIntoBuffer(target: Buffer, source: StreamDataType,
   return (<Buffer>source).copy(target, targetstart); 
 }
 
-// TODO: add validation
-export function deserialize(buffer: Buffer, offset: number = 0, needTransfrom: boolean = true): ParsedDataType | null {
+// deserialize stream message
+export function deserialize(buffer: Buffer, offset: number = 0, needTransfrom: boolean = true): StreamMessageType | null {
   if (offset < 0 || offset >= buffer.length || buffer.length - offset < HeaderSize) { return null; }
-  const info = <DataInfoType> {
+  const info = <StreamInfoType> {
     id:         readStringFromBuffer(buffer, 0 + offset, 8 + offset),
     streamType: readStringFromBuffer(buffer, 8 + offset, 16 + offset),
     dataType:   readStringFromBuffer(buffer, 16 + offset, 24 + offset),
@@ -85,16 +95,21 @@ export function deserialize(buffer: Buffer, offset: number = 0, needTransfrom: b
   return {info, data};
 };
 
-export function findInitCodeIndex(buffer: Buffer, initOffset: number = 0): number {
-  return buffer.indexOf(PackageInitCodeBuffer, initOffset);
-}
-
 export function deserializeWithInitCode(buffer: Buffer, offset: number = 0, 
-                                        needTransfrom: boolean = true, findCode: boolean = false): ParsedDataType | null {
+                                        needTransfrom: boolean = true, findCode: boolean = false): StreamMessageType | null {
   const initCodeIndex = buffer.indexOf(PackageInitCodeBuffer, offset);
   if (initCodeIndex === -1) { return null; }
   if (!findCode && initCodeIndex !== offset) { return null; }
   return deserialize(buffer, offset + PackageInitCodeBuffer.length, needTransfrom);  
+}
+
+// deserialize client message
+export function deserializeClientMsg() {}
+
+export function deserializeClientMsgWithInitCode() {}
+
+export function findInitCodeIndex(buffer: Buffer, initOffset: number = 0): number {
+  return buffer.indexOf(PackageInitCodeBuffer, initOffset);
 }
 
 function readStringFromBuffer(buffer: Buffer, start: number = 0, 
@@ -122,27 +137,27 @@ function readNumberFromBuffer(buffer: Buffer, numType: NumberTypeEnum,
   }
 }
 
-export function transformParsedData(parsedData: ParsedDataType): ParsedDataType {
+export function transformStreamMsg(streamMsg: StreamMessageType): StreamMessageType {
   return {
-    info: parsedData.info,
-    data: transformStreamData(parsedData.data, parsedData.info.dataType)
+    info: streamMsg.info,
+    data: transformStreamData(streamMsg.data, streamMsg.info.dataType)
   };
 }
 
 // TODO: handle when data is not buffer
 // for now, only parse data when data is buffer
-function transformStreamData(data: StreamDataType, dataType: string): StreamDataType {
+function transformStreamData(data: MessageDataType, dataType: string): MessageDataType {
   if (Buffer.isBuffer(data)) {
     return readStreamData(data, dataType);
   }
   return data;
 }
 
-function readStreamData(buffer: Buffer, dataType: string): StreamDataType {
+function readStreamData(buffer: Buffer, dataType: string): MessageDataType {
   switch (dataType) {
-    case DataTypeName.JSON:
+    case StreamDataTypeName.JSON:
       return JSON.parse(readStringFromBuffer(buffer));
-    case DataTypeName.STRING:
+    case StreamDataTypeName.STRING:
       return readStringFromBuffer(buffer);
     default:
       return buffer;

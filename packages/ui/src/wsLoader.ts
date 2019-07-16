@@ -39,6 +39,10 @@ export class WSLoader {
     return loaderDatas.length === 1 && loaderDatas[0].info.streamType === StreamTypeName.META;
   }
 
+  public sendMsg(message: string): void {
+    this.socket.send(message);
+  }
+
   public on(eventName: string, cb: Function): void {
     if (WSLoader.checkEventName(eventName)) {
       this.callbacks[eventName].push(cb);

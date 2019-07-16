@@ -19,8 +19,8 @@ export class WorkerFarm {
       return null;
     }
     const worker = this.idleWorkers.pop();
-    const parsedResult = await worker.parse(data);
+    const streamMsgs = await worker.parse(data);
     this.idleWorkers.push(worker);
-    return parsedResult;
+    return streamMsgs;
   }
 }

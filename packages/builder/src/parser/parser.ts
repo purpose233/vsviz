@@ -1,11 +1,11 @@
-import { DataInfoType, ParsedDataType } from '../common/types';
-import { transformParsedData, validateDataInfo, 
+import { StreamInfoType, StreamMessageType } from '../common/types';
+import { transformStreamMsg, validateStreamInfo, 
   findInitCodeIndex, deserializeWithInitCode } from '../common/serialize';
 import { HeaderSize, PackageInitCodeBuffer } from '../common/constants';
 
 interface ParseFindResult {
   offset: number,
-  parsedData: ParsedDataType | null
+  streamMsg: StreamMessageType | null
 };
 
 function calcBufferSize(datas: Buffer[]): number {
@@ -36,7 +36,7 @@ export class Parser {
 
   private isPacking: boolean = false;
   private stashedData: Buffer[] = [];
-  private stashedDataInfo: DataInfoType | null = null;
+  private stashedDataInfo: StreamInfoType | null = null;
   private stashedSize: number = 0;
 
   private initPacking(): void {
@@ -47,48 +47,48 @@ export class Parser {
   }
 
   private getFirstValidPackage(metaData: Buffer, offset: number = 0): ParseFindResult {
-    let index = offset, parsedData: ParsedDataType | null = null;
+    let index = offset, streamMsg: StreamMessageType | null = null;
     while ((index = findInitCodeIndex(metaData, index)) !== -1) {
-      parsedData = deserializeWithInitCode(metaData, index, false, false);
-      if (parsedData && validateDataInfo(parsedData.info)) {
+      streamMsg = deserializeWithInitCode(metaData, index, false, false);
+      if (streamMsg && validateStreamInfo(streamMsg.info)) {
         break;
       } else {
-        parsedData = null;
+        streamMsg = null;
       }
       index += PackageInitCodeBuffer.length;
     }
     return {
       offset: index,
-      parsedData: parsedData
+      streamMsg: streamMsg
     };
   }
 
-  private parseData(metaData: Buffer, offset: number): ParsedDataType[] {
-    const parsedResults: ParsedDataType[] = [];
+  private parseData(metaData: Buffer, offset: number): StreamMessageType[] {
+    const streamMsgs: StreamMessageType[] = [];
     // when all data is parsed
     if (metaData.length - offset <= 0) {
-      return parsedResults;
+      return streamMsgs;
     }
     if (!this.isPacking) {
       // when handling complete package or first segment of package
-      let parsedData, nextOffset = offset;
+      let streamMsg, nextOffset = offset;
       try {
         const result = this.getFirstValidPackage(metaData, offset);
-        if (result.parsedData) {
-          parsedData = result.parsedData;
+        if (result.streamMsg) {
+          streamMsg = result.streamMsg;
           nextOffset = result.offset;
         } else {
           // when deserializing is failed, discard all rest data
           console.log('invalid package. ', metaData.length, offset);
-          return parsedResults;
+          return streamMsgs;
         }
       } catch(e) {
-        return parsedResults;
+        return streamMsgs;
       }
 
-      const info = parsedData.info;
+      const info = streamMsg.info;
       // without data transformation, current data must be buffer
-      const data = <Buffer>parsedData.data;
+      const data = <Buffer>streamMsg.data;
       if (info.size > data.length) {
         // prepare to pack further segements
         this.isPacking = true;
@@ -97,8 +97,8 @@ export class Parser {
         this.stashedSize = data.length;
       } else if (info.size === data.length) {
         // get all data for one package, continue to parse next sticky package
-        parsedResults.push(parsedData);
-        parsedResults.push(...this.parseData(metaData, nextOffset + PackageInitCodeBuffer.length + HeaderSize + info.size));
+        streamMsgs.push(streamMsg);
+        streamMsgs.push(...this.parseData(metaData, nextOffset + PackageInitCodeBuffer.length + HeaderSize + info.size));
       }
       // if info.size < data.length, parsing must be error, dicard current package and rest data
     } else {
@@ -106,7 +106,7 @@ export class Parser {
 
       if (!this.stashedDataInfo) { 
         this.initPacking();
-        return parsedResults;
+        return streamMsgs;
       }
 
       const currentSize = this.stashedSize + metaData.length;
@@ -115,27 +115,26 @@ export class Parser {
         const remainLength = this.stashedDataInfo.size - this.stashedSize;
         const dataBuffer = metaData.slice(0, remainLength);
         this.stashedData.push(dataBuffer);
-        const parsedData: ParsedDataType = {
+        const streamMsg: StreamMessageType = {
           info: this.stashedDataInfo,
           data: concatBuffer(this.stashedData)
         };
         this.initPacking();
-        parsedResults.push(parsedData);
-        parsedResults.push(...this.parseData(metaData, remainLength));
+        streamMsgs.push(streamMsg);
+        streamMsgs.push(...this.parseData(metaData, remainLength));
       } else if (currentSize < this.stashedDataInfo.size) {
         this.stashedData.push(metaData);
         this.stashedSize = currentSize;
       }
     }
-    return parsedResults;
+    return streamMsgs;
   }
 
   // argument offset is used for sticky packages
-  public parse(metaData: Buffer, offset: number = 0): ParsedDataType[] {
-    const parsedResults = this.parseData(metaData, offset).map(
-      parsedData => transformParsedData(parsedData)
-    )
-
-    return parsedResults;
+  public parse(streamMsg: Buffer, offset: number = 0): StreamMessageType[] {
+    const streamMsgs = this.parseData(streamMsg, offset).map(
+      streamMsg => transformStreamMsg(streamMsg)
+    );
+    return streamMsgs;
   }
 };

@@ -1,3 +1,4 @@
+// Stream message
 export const StreamTypeName = {
   VIDEO: 'video',
   CUSTOMED: 'customed',
@@ -19,7 +20,19 @@ const SimpleDataTypeName = {
   H264: 'h264'
 };
 
-export const DataTypeName = Object.assign(SimpleDataTypeName, ImageTypeName);
+export const StreamDataTypeName = Object.assign(SimpleDataTypeName, ImageTypeName);
+
+// Client message
+export const ClientTypeName = {
+  COMMAND: 'command',
+  CUSTOMED: 'customed'
+};
+
+export const ClientDataTypeName = {
+  JSON: 'json',
+  STRING: 'string',
+  BINARY: 'binary'
+};
 
 export enum NumberTypeEnum {
   UINT8,

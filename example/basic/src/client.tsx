@@ -9,6 +9,8 @@ class MyCanvas extends Canvas2D {
     this.clearCanvas();
     this.canvasCtx.fillStyle = 'green';
     this.canvasCtx.fillRect(10, 10, 100, 100);
+
+    this.props.loader.sendMsg('received data.');
   }
 
   // onInit(metaData: any) {
