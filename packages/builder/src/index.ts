@@ -1,8 +1,11 @@
-export { StreamTypeName, StreamDataTypeName, ImageTypeName, HeaderSize } from './common/constants';
-export { StreamInfoType, StreamMessageType, MessageDataType, ImageDataType } from './common/types';
-export { serialize, serializeBuilder, serializeWithInitCode, 
-    deserialize, deserializeWithInitCode, transformStreamMsg } from './common/serialize';
+export { StreamTypeName, StreamDataTypeName, ImageTypeName, ClientDataTypeName, ClientTypeName,
+    StreamHeaderSize, ClientHeaderSize } from './common/constants';
+export { StreamInfoType, StreamMessageType, MessageDataType, ImageDataType, 
+    ClientInfoType, ClientMessageType } from './common/types';
+export { serializeStreamMsg, serializeStreamBuilder, serializeStreamMsgWithInitCode, 
+  serializeClientMsg, deserializeStreamMsg, deserializeStreamMsgWithInitCode, 
+  deserializeClientMsg, transformStreamMsg } from './common/serialize';
 export { isImageType, getImageRGBA, readArrayBufferFromBlob } from './common/utils';
 
 export { Builder } from './builder/builder';
-export { Parser, concatBuffer } from './parser/parser';
+export { StreamParser, concatBuffer } from './parser/parser';

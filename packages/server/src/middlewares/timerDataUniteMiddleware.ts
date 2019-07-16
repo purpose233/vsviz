@@ -5,16 +5,23 @@ import { StreamMessageType, StreamTypeName,
 
 export class TimerDataUniteMiddleware extends TimerMiddleware {
   
-  // TODO: directly modify the arguments might not a good way
+  protected async onInitial(next: Function, context: MiddlewareContext): Promise<void> {
+    context.set(Symbol.for('unitedMsgs'), []);
+    await next();
+  }
+
   protected async onData(next: Function, streamMsgs: StreamMessageType[], context: MiddlewareContext): Promise<void> {
+    const unitedMsgs: StreamMessageType[] = context.get(Symbol.for('unitedMsgs'));
     for (const streamMsg of streamMsgs) {
-      const info = streamMsg.info;
-      if (info.streamType === StreamTypeName.VIDEO && 
-          info.dataType !== ImageTypeName.RGBA) {
+      if (streamMsg.info.streamType === StreamTypeName.VIDEO && 
+          streamMsg.info.dataType !== ImageTypeName.RGBA) {
+        const info = Object.assign({}, streamMsg.info)
         const rgbaData = getImageRGBA(<Buffer>streamMsg.data, <ImageDataType>info.dataType);
-        streamMsg.info.dataType = <ImageDataType>ImageTypeName.RGBA;
-        streamMsg.info.size = rgbaData.length;
-        streamMsg.data = rgbaData;
+        info.dataType = <ImageDataType>ImageTypeName.RGBA;
+        info.size = rgbaData.length;
+        unitedMsgs.push({info, data: rgbaData});
+      } else {
+        unitedMsgs.push(streamMsg);
       }
     }
     await next();

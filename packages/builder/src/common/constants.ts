@@ -40,7 +40,8 @@ export enum NumberTypeEnum {
   UINT32
 };
 
-export const HeaderSize: number = 36;
+export const StreamHeaderSize: number = 36;
+export const ClientHeaderSize: number = 36;
 
 export const PackageInitCode: string = 'ADAM';
 export const PackageInitCodeBuffer: Buffer = Buffer.from(PackageInitCode, 'utf-8');

@@ -1,4 +1,4 @@
-import { deserialize, HeaderSize, readArrayBufferFromBlob, 
+import { deserializeStreamMsg, StreamHeaderSize, readArrayBufferFromBlob, 
   getImageRGBA, isImageType } from '@vsviz/builder';
 
 // TODO: maybe parse image in worker
@@ -19,7 +19,7 @@ if (self !== undefined) {
       let streamMsg, parseSuccess = true;
       try {
         // No need to handle sticky packages, so just use deserialize instead of parse
-        streamMsg = deserialize(buffer, offset);
+        streamMsg = deserializeStreamMsg(buffer, offset);
       } catch(e) {
         console.log(e);
         break;
@@ -38,7 +38,7 @@ if (self !== undefined) {
       if (parseSuccess) {
         parsedMsgs.push(streamMsg);
       }
-      offset += HeaderSize + streamMsg.info.size;
+      offset += StreamHeaderSize + streamMsg.info.size;
     }
     (self).postMessage(parsedMsgs);
   };

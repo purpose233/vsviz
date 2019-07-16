@@ -1,6 +1,6 @@
 import { StreamBuilder } from './streamBuidler';
 import { StreamMessageType } from '../common/types';
-import { serializeBuilder } from '../common/serialize';
+import { serializeStreamBuilder } from '../common/serialize';
 
 export class Builder {
 
@@ -20,7 +20,7 @@ export class Builder {
   }
 
   public getFrameData(): Buffer[] {
-    return this.getAllDirtyBuilders().map((builder) => <Buffer>serializeBuilder(builder));
+    return this.getAllDirtyBuilders().map((builder) => <Buffer>serializeStreamBuilder(builder));
   }
 
   public clearAllDirtyBuilders(): void {

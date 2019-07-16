@@ -27,6 +27,7 @@ export class TimerSender extends TimerMiddleware {
       if (data != null) {
         // console.log('prepare to send data: ', data);
         this.server.sendAll(data);
+        // TODO: cannot work for multiple clients
         builder.clearAllDirtyBuilders();
       }
     }

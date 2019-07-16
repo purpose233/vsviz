@@ -1,8 +1,8 @@
-import { validateStreamInfo, serialize, deserialize, 
-  serializeWithInitCode, deserializeWithInitCode } from '../common/serialize';
+import { validateStreamInfo, serializeStreamBuilder, deserializeStreamMsg, 
+  serializeStreamMsgWithInitCode, deserializeStreamMsgWithInitCode, serializeStreamMsg } from '../common/serialize';
 import { StreamInfoType, StreamMessageType } from '../common/types';
 import { Builder } from '../builder/builder';
-import { Parser, concatBuffer } from '../parser/parser';
+import { StreamParser, concatBuffer } from '../parser/parser';
 
 const headerInfo: StreamInfoType = {
   id: 'test001',
@@ -33,14 +33,14 @@ describe('serialize', () => {
   });
 
   test('serialize & deserialize', () => {
-    expect(deserialize(serialize(headerInfo, bodyData)).info)
+    expect(deserializeStreamMsg(serializeStreamMsg(headerInfo, bodyData)).info)
       .toStrictEqual(headerInfo);
   });
 
   test('serialize & deserialize with init code', () => {
-    expect(deserializeWithInitCode(serializeWithInitCode(headerInfo, bodyData)).info)
+    expect(deserializeStreamMsgWithInitCode(serializeStreamMsgWithInitCode(headerInfo, bodyData)).info)
       .toStrictEqual(headerInfo);
-    const streamMsg = deserializeWithInitCode(binaryPackage);
+    const streamMsg = deserializeStreamMsgWithInitCode(binaryPackage);
     expect(streamMsg.info).toStrictEqual(headerInfo);
     expect(streamMsg.data).toBe(bodyData);
   });
@@ -74,7 +74,7 @@ describe('builder', () => {
 
 describe('parse', () => {
 
-  const parser = new Parser();
+  const parser = new StreamParser();
 
   const bodyData2 = {test: 'aaa'};
   const headerInfo2: StreamInfoType = {
@@ -85,7 +85,7 @@ describe('parse', () => {
     sequence: 1,
     timestamp: 1120
   };
-  const binaryPackage2 = serializeWithInitCode(headerInfo2, bodyData2);
+  const binaryPackage2 = serializeStreamMsgWithInitCode(headerInfo2, bodyData2);
 
   test('single package', () => {
     const parsedResult = parser.parse(binaryPackage);

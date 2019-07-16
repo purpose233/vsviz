@@ -1,7 +1,8 @@
 import { StreamBuilder } from '../builder/streamBuidler';
 import { StreamDataTypeName, NumberTypeEnum, PackageInitCodeBuffer, 
-  HeaderSize, StreamTypeName } from './constants';
-import { MessageDataType, StreamMessageType, StreamInfoType } from './types';
+  StreamHeaderSize, ClientHeaderSize, 
+  StreamTypeName, ClientDataTypeName } from './constants';
+import { MessageDataType, StreamMessageType, StreamInfoType, ClientInfoType, ClientMessageType } from './types';
 
 export function validateStreamInfo(info: StreamInfoType): boolean {
   return Object.values(StreamTypeName).includes(info.streamType) 
@@ -9,24 +10,24 @@ export function validateStreamInfo(info: StreamInfoType): boolean {
 }
 
 // serialize stream message
-export function serializeBuilder(builder: StreamBuilder): Buffer | null {
+export function serializeStreamBuilder(builder: StreamBuilder): Buffer | null {
   const headerInfo = builder.getHeader();
   let bodyData = builder.getBody();
 
   if (!headerInfo || !bodyData) { return null; }
 
-  return serialize(headerInfo, bodyData);
+  return serializeStreamMsg(headerInfo, bodyData);
 }
 
-export function serialize(headerInfo: StreamInfoType, bodyData: MessageDataType, 
-                          buffer: Buffer | null = null, offset: number = 0): Buffer | null {
+export function serializeStreamMsg(headerInfo: StreamInfoType, bodyData: MessageDataType, 
+                                   buffer: Buffer | null = null, offset: number = 0): Buffer | null {
   if (headerInfo.dataType === StreamDataTypeName.JSON && typeof bodyData !== 'string') {
     bodyData = JSON.stringify(bodyData);
   }
 
   if (!buffer) {
     offset = 0;
-    buffer = Buffer.alloc(HeaderSize + headerInfo.size);
+    buffer = Buffer.alloc(StreamHeaderSize + headerInfo.size);
   }
 
   writeIntoBuffer(buffer, headerInfo.id, 0 + offset);
@@ -40,21 +41,37 @@ export function serialize(headerInfo: StreamInfoType, bodyData: MessageDataType,
   return buffer;
 }
 
-export function serializeWithInitCode(headerInfo: StreamInfoType, 
-                                      bodyData: MessageDataType): Buffer | null {
-  const buffer = Buffer.alloc(PackageInitCodeBuffer.length + HeaderSize + headerInfo.size);
+export function serializeStreamMsgWithInitCode(headerInfo: StreamInfoType, 
+                                               bodyData: MessageDataType): Buffer | null {
+  const buffer = Buffer.alloc(PackageInitCodeBuffer.length + StreamHeaderSize + headerInfo.size);
   writeIntoBuffer(buffer, PackageInitCodeBuffer, 0);
-  return serialize(headerInfo, bodyData, buffer, PackageInitCodeBuffer.length);
+  return serializeStreamMsg(headerInfo, bodyData, buffer, PackageInitCodeBuffer.length);
 }
 
 // serialize client message
-export function serializeClientMsg() {
+export function serializeClientMsg(headerInfo: ClientInfoType, bodyData: MessageDataType, 
+                                   buffer: Buffer | null = null, offset: number = 0): Buffer | null {
+  if (headerInfo.dataType === ClientDataTypeName.JSON && typeof bodyData !== 'string') {
+    bodyData = JSON.stringify(bodyData);
+  }
 
+  if (!buffer) {
+    offset = 0;
+    buffer = Buffer.alloc(ClientHeaderSize + headerInfo.size);
+  }
+
+  writeIntoBuffer(buffer, headerInfo.id, 0 + offset);
+  writeIntoBuffer(buffer, headerInfo.msgType, 8 + offset);
+  writeIntoBuffer(buffer, headerInfo.dataType, 16 + offset);
+  writeNumberIntoBuffer(buffer, headerInfo.size, NumberTypeEnum.UINT32, 24 + offset);
+  writeNumberIntoBuffer(buffer, headerInfo.sequence, NumberTypeEnum.UINT32, 28 + offset)
+  writeNumberIntoBuffer(buffer, headerInfo.timestamp, NumberTypeEnum.UINT32, 32 + offset);
+  writeIntoBuffer(buffer, bodyData, 36 + offset);
+  
+  return buffer;
 }
 
-export function serializeClientMsgWithInitCode() {
-
-}
+// export function serializeClientMsgWithInitCode() {}
 
 function writeNumberIntoBuffer(target: Buffer, source: number, 
                                numType: NumberTypeEnum, offset: number = 0): number {
@@ -80,8 +97,8 @@ function writeIntoBuffer(target: Buffer, source: MessageDataType,
 }
 
 // deserialize stream message
-export function deserialize(buffer: Buffer, offset: number = 0, needTransfrom: boolean = true): StreamMessageType | null {
-  if (offset < 0 || offset >= buffer.length || buffer.length - offset < HeaderSize) { return null; }
+export function deserializeStreamMsg(buffer: Buffer, offset: number = 0, needTransfrom: boolean = true): StreamMessageType | null {
+  if (offset < 0 || offset >= buffer.length || buffer.length - offset < StreamHeaderSize) { return null; }
   const info = <StreamInfoType> {
     id:         readStringFromBuffer(buffer, 0 + offset, 8 + offset),
     streamType: readStringFromBuffer(buffer, 8 + offset, 16 + offset),
@@ -90,23 +107,36 @@ export function deserialize(buffer: Buffer, offset: number = 0, needTransfrom: b
     sequence:   readNumberFromBuffer(buffer, NumberTypeEnum.UINT32, 28 + offset),
     timestamp:  readNumberFromBuffer(buffer, NumberTypeEnum.UINT32, 32 + offset)
   };
-  const metaData = buffer.slice(HeaderSize + offset, HeaderSize + info.size + offset);
+  const metaData = buffer.slice(StreamHeaderSize + offset, StreamHeaderSize + info.size + offset);
   const data = needTransfrom ? transformStreamData(metaData, info.dataType) : metaData;
   return {info, data};
 };
 
-export function deserializeWithInitCode(buffer: Buffer, offset: number = 0, 
+export function deserializeStreamMsgWithInitCode(buffer: Buffer, offset: number = 0, 
                                         needTransfrom: boolean = true, findCode: boolean = false): StreamMessageType | null {
   const initCodeIndex = buffer.indexOf(PackageInitCodeBuffer, offset);
   if (initCodeIndex === -1) { return null; }
   if (!findCode && initCodeIndex !== offset) { return null; }
-  return deserialize(buffer, offset + PackageInitCodeBuffer.length, needTransfrom);  
+  return deserializeStreamMsg(buffer, offset + PackageInitCodeBuffer.length, needTransfrom);  
 }
 
 // deserialize client message
-export function deserializeClientMsg() {}
+export function deserializeClientMsg(buffer: Buffer, offset: number = 0, needTransfrom: boolean = true): ClientMessageType | null {
+  if (offset < 0 || offset >= buffer.length || buffer.length - offset < ClientHeaderSize) { return null; }
+  const info = <ClientInfoType> {
+    id:         readStringFromBuffer(buffer, 0 + offset, 8 + offset),
+    msgType:    readStringFromBuffer(buffer, 8 + offset, 16 + offset),
+    dataType:   readStringFromBuffer(buffer, 16 + offset, 24 + offset),
+    size:       readNumberFromBuffer(buffer, NumberTypeEnum.UINT32, 24 + offset),
+    sequence:   readNumberFromBuffer(buffer, NumberTypeEnum.UINT32, 28 + offset),
+    timestamp:  readNumberFromBuffer(buffer, NumberTypeEnum.UINT32, 32 + offset)
+  };
+  const metaData = buffer.slice(ClientHeaderSize + offset, ClientHeaderSize + info.size + offset);
+  const data = needTransfrom ? transformStreamData(metaData, info.dataType) : metaData;
+  return {info, data};
+}
 
-export function deserializeClientMsgWithInitCode() {}
+// export function deserializeClientMsgWithInitCode() {}
 
 export function findInitCodeIndex(buffer: Buffer, initOffset: number = 0): number {
   return buffer.indexOf(PackageInitCodeBuffer, initOffset);

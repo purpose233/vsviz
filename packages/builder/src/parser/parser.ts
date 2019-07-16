@@ -1,7 +1,7 @@
 import { StreamInfoType, StreamMessageType } from '../common/types';
 import { transformStreamMsg, validateStreamInfo, 
-  findInitCodeIndex, deserializeWithInitCode } from '../common/serialize';
-import { HeaderSize, PackageInitCodeBuffer } from '../common/constants';
+  findInitCodeIndex, deserializeStreamMsgWithInitCode } from '../common/serialize';
+import { StreamHeaderSize, PackageInitCodeBuffer } from '../common/constants';
 
 interface ParseFindResult {
   offset: number,
@@ -32,7 +32,7 @@ export function concatBuffer(datas: Buffer[]): Buffer {
   return concatedData;
 }
 
-export class Parser {
+export class StreamParser {
 
   private isPacking: boolean = false;
   private stashedData: Buffer[] = [];
@@ -49,7 +49,7 @@ export class Parser {
   private getFirstValidPackage(metaData: Buffer, offset: number = 0): ParseFindResult {
     let index = offset, streamMsg: StreamMessageType | null = null;
     while ((index = findInitCodeIndex(metaData, index)) !== -1) {
-      streamMsg = deserializeWithInitCode(metaData, index, false, false);
+      streamMsg = deserializeStreamMsgWithInitCode(metaData, index, false, false);
       if (streamMsg && validateStreamInfo(streamMsg.info)) {
         break;
       } else {
@@ -98,7 +98,7 @@ export class Parser {
       } else if (info.size === data.length) {
         // get all data for one package, continue to parse next sticky package
         streamMsgs.push(streamMsg);
-        streamMsgs.push(...this.parseData(metaData, nextOffset + PackageInitCodeBuffer.length + HeaderSize + info.size));
+        streamMsgs.push(...this.parseData(metaData, nextOffset + PackageInitCodeBuffer.length + StreamHeaderSize + info.size));
       }
       // if info.size < data.length, parsing must be error, dicard current package and rest data
     } else {

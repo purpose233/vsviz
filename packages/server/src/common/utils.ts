@@ -1,5 +1,5 @@
 import WebSocket from 'ws';
-import { serialize, StreamInfoType } from '@vsviz/builder';
+import { serializeStreamMsg, StreamInfoType } from '@vsviz/builder';
 
 // TODO: handle json stringify error
 export function sendMetaData (socket: WebSocket, metaData: string | any): void {
@@ -12,6 +12,6 @@ export function sendMetaData (socket: WebSocket, metaData: string | any): void {
     sequence: 0,
     timestamp: 0
   };
-  const buffer = serialize(info, str);
+  const buffer = serializeStreamMsg(info, str);
   socket.send(buffer);
 } 

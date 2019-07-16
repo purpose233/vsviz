@@ -1,5 +1,5 @@
 import net from 'net';
-import { Parser } from '@vsviz/builder';
+import { StreamParser } from '@vsviz/builder';
 import { BaseServer } from './baseServer';
 import { TimerHandler } from '../handlers/timerHandler';
 import { EventEmitter } from 'events';
@@ -19,7 +19,7 @@ export class DataServer extends BaseServer {
     this.port = port;
     
     this.server = net.createServer((socket: net.Socket): void => {
-      const parser = new Parser();
+      const parser = new StreamParser();
       console.log('Data socket connected!');
 
       socket.on('close', () => console.log('Data socket closed!'));
