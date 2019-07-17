@@ -1,12 +1,13 @@
 import WebSocket from 'ws';
-import { StreamMiddleware } from './streamMiddleware';
-import { MiddlewareContext } from './middlewareContext';
 import { StreamMessageType, StreamTypeName } from '@vsviz/builder';
-import { SessionMiddleware } from './sessionMiddleware';
+import { BaseMiddleware } from './baseMiddleware';
+import { MiddlewareContext } from './middlewareContext';
+import { IncomingMessage } from 'http';
 import { sendMetaData } from '../common/utils';
+import { SocketContextSymbolKey } from '../common/constants';
 
 const metaDataMap = new Map<string, any>();
-let metaDataString: string = null;
+let metaDataString: string | null = null;
 
 // TODO: maybe use deep join instead
 function shallowJoin(map: Map<string, any>, streamMsg: StreamMessageType): Map<string, any> {
@@ -33,38 +34,34 @@ function mapToString(map: Map<string, any>): string {
   return JSON.stringify(json);
 }
 
-export class StreamMetaDataCollector extends StreamMiddleware {
-
-  public copy(): StreamMetaDataCollector {
-    return new StreamMetaDataCollector();
+export class MetaDataCollector extends BaseMiddleware {
+  
+  public copy(): MetaDataCollector {
+    return new MetaDataCollector();
   }
 
-  public async init(context: MiddlewareContext): Promise<void> {
-    context.set(Symbol.for('metaData'), metaDataMap);
-  }
-
-  protected async onData(next: Function, streamMsgs: StreamMessageType[], context: MiddlewareContext) {
-    const map = context.get(Symbol.for('metaData'));
+  protected async onStreamMessage(next: Function, context: MiddlewareContext, streamMsgs: StreamMessageType[]): Promise<void> {
+    // console.log(streamMsgs);
     for (const streamMsg of streamMsgs) {
       if (streamMsg.info.streamType !== StreamTypeName.META) {
         continue;
       }
-      shallowJoin(map, streamMsg);
+      shallowJoin(metaDataMap, streamMsg);
     }
-    metaDataString = mapToString(map);
+    metaDataString = mapToString(metaDataMap);
     await next();
   }
 }
 
-export class SessionMetaDataSender extends SessionMiddleware {
-  
-  public copy(): SessionMetaDataSender {
-    return new SessionMetaDataSender();
-  }
+export class MetaDataSender extends BaseMiddleware {
 
-  protected async onConnection(next: Function, msg: any, context: MiddlewareContext): Promise<void> {
+  public copy(): MetaDataSender {
+    return new MetaDataSender();
+  }
+  
+  protected async onConnection(next: Function, context: MiddlewareContext, msg: IncomingMessage): Promise<void> {
     if (metaDataString !== null) {
-      const socket: WebSocket = context.get(Symbol.for('socket'));
+      const socket: WebSocket = context.get(Symbol.for(SocketContextSymbolKey));
       sendMetaData(socket, metaDataString);
     }
     await next();

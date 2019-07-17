@@ -20,7 +20,7 @@ export function serializeStreamBuilder(builder: StreamBuilder): Buffer | null {
 }
 
 export function serializeStreamMsg(headerInfo: StreamInfoType, bodyData: MessageDataType, 
-                                   buffer: Buffer | null = null, offset: number = 0): Buffer | null {
+                                   buffer: Buffer | null = null, offset: number = 0): Buffer {
   if (headerInfo.dataType === StreamDataTypeName.JSON && typeof bodyData !== 'string') {
     bodyData = JSON.stringify(bodyData);
   }
@@ -42,7 +42,7 @@ export function serializeStreamMsg(headerInfo: StreamInfoType, bodyData: Message
 }
 
 export function serializeStreamMsgWithInitCode(headerInfo: StreamInfoType, 
-                                               bodyData: MessageDataType): Buffer | null {
+                                               bodyData: MessageDataType): Buffer {
   const buffer = Buffer.alloc(PackageInitCodeBuffer.length + StreamHeaderSize + headerInfo.size);
   writeIntoBuffer(buffer, PackageInitCodeBuffer, 0);
   return serializeStreamMsg(headerInfo, bodyData, buffer, PackageInitCodeBuffer.length);
@@ -50,7 +50,7 @@ export function serializeStreamMsgWithInitCode(headerInfo: StreamInfoType,
 
 // serialize client message
 export function serializeClientMsg(headerInfo: ClientInfoType, bodyData: MessageDataType, 
-                                   buffer: Buffer | null = null, offset: number = 0): Buffer | null {
+                                   buffer: Buffer | null = null, offset: number = 0): Buffer {
   if (headerInfo.dataType === ClientDataTypeName.JSON && typeof bodyData !== 'string') {
     bodyData = JSON.stringify(bodyData);
   }

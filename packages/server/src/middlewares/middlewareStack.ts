@@ -12,35 +12,36 @@ export class MiddlewareStack {
 
   // TODO: if msg is modified by middleware, next middlewares will be influenced.
 
-  public async dispatch(type: MiddlewareEventType, msg: any, context: MiddlewareContext): Promise<void> {
+  public async dispatch(type: MiddlewareEventType, context: MiddlewareContext, msg?: any): Promise<void> {
     if (this.middlewares.length > 0) {
-      await this.execMiddleware(this.middlewares[0], type, msg, context);
+      await this.execMiddleware(this.middlewares[0], type, context, msg);
     }
   }
 
   // add next to arguments, similar to koa
   private async execMiddleware(middleware: MiddlewareInstanceType, type: MiddlewareEventType, 
-                               msg: any, context: MiddlewareContext): Promise<void> {
+                               context: MiddlewareContext, msg: any): Promise<void> {
     const next = async () => {
       const nextMiddleware = this.getNextMiddleware(middleware);
       if (nextMiddleware) {
-        await this.execMiddleware(nextMiddleware, type, msg, context);
+        await this.execMiddleware(nextMiddleware, type, context, msg);
       }
     };
 
     if (middleware instanceof BaseMiddleware) {
-      await middleware.callMiddleware.call(middleware, next, type, msg, context);
+      await middleware.callMiddleware.call(middleware, next, type, context, msg);
     } else {
-      await middleware.call(middleware, next, type, msg, context);
+      await middleware.call(middleware, next, type, context, msg);
     }
   }
 
-  private getNextMiddleware(middleware: MiddlewareType): MiddlewareInstanceType {
+  private getNextMiddleware(middleware: MiddlewareType): MiddlewareInstanceType | null {
     for (let i = 0; i < this.middlewares.length; i++) {
       if (middleware === this.middlewares[i]) {
-        return this.middlewares[i+1];
+        return this.middlewares[i + 1];
       }
     }
+    return null;
   }
 
   private setupMiddlewares(middlewareProtos: MiddlewareType[]): MiddlewareInstanceType[] {

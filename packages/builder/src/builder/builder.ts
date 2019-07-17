@@ -2,6 +2,7 @@ import { StreamBuilder } from './streamBuidler';
 import { StreamMessageType } from '../common/types';
 import { serializeStreamBuilder } from '../common/serialize';
 
+// Builder is actually session builder
 export class Builder {
 
   private streamBuilders: StreamBuilder[] = [];

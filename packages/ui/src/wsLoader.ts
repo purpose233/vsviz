@@ -39,7 +39,7 @@ export class WSLoader {
     return loaderDatas.length === 1 && loaderDatas[0].info.streamType === StreamTypeName.META;
   }
 
-  public sendMsg(message: string): void {
+  public sendMsg(message: string | Buffer): void {
     this.socket.send(message);
   }
 

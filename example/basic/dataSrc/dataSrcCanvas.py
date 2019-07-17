@@ -36,7 +36,7 @@ if __name__ == "__main__":
     data = '{\"test\": 123}'
 
     while(True):
-      time.sleep(TIME_INTERVAL)
+      time.sleep(1)
       info['sequence'] += 1
       info['timestamp'] += 1
       send(s, info, data)

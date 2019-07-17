@@ -1,14 +1,17 @@
-import { SessionMiddleware } from '../middlewares/sessionMiddleware';
-import { StreamMiddleware } from '../middlewares/streamMiddleware';
-import { SessionEventEnum, StreamEventEnum } from './constants';
 import { BaseMiddleware } from '../middlewares/baseMiddleware';
 
-export type SessionMiddlewareType = SessionMiddleware | Function;
-
-export type StreamMiddlewareType = StreamMiddleware | Function;
+export type MiddlewareEventType = 'connection' | 'close' | 'streamMsg' | 'sessionMsg' | 'timeout';
 
 export type MiddlewareType = BaseMiddleware | typeof BaseMiddleware | Function;
 
 export type MiddlewareInstanceType = BaseMiddleware | Function;
 
-export type MiddlewareEventType = SessionEventEnum | StreamEventEnum;
+// export type StreamEventType = 'streamMsg' | 'timeout';
+
+export interface ServerOptions {
+  sessionPort: number,
+  streamPort: number,
+  wrappedClientMsg?: boolean,
+  enableMetaData?: boolean,
+  enableSender?: boolean
+}

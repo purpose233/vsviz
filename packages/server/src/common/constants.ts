@@ -1,21 +1,14 @@
-export enum SessionEventEnum {
-  CONNECTION,
-  CLOSE,
-  MESSAGE
-};
-
-export enum StreamEventEnum {
-  INITIAL,
-  END,
-  TIMEOUT,
-  DATA
+export const EmitterEventName = {
+  CONNECTION: 'connection',
+  CLOSE: 'close',
+  STREAM_MSG: 'streamMsg',
+  SESSSION_MSG: 'sessionMsg',
+  TIMEOUT: 'timeout'
 }
 
-export const StreamEventName = {
-  INITIAL: 'initial',
-  END: 'end',
-  TIMEOUT: 'timeout',
-  DATA: 'data'
-};
-
 export const DefaultInterval = 30;
+
+export const SocketContextSymbolKey = 'socket';
+export const SessonIdContextSymbolKey = 'sessionId';
+export const BuilderContextSymbolKey = 'builder';
+export const MetaDataContextSymbolKey = 'metaData';
