@@ -1,8 +1,34 @@
 import React from 'react';
 import { render } from 'react-dom'
 import { serializeClientMsg, ClientInfoType } from '../../../packages/builder/lib/index';
-import { WSLoader, Canvas2D, Video } from '../../../packages/ui/lib/index';
+import { WSLoader, Canvas2D, Video, 
+  ConnectComponent, BaseWidget, BaseWidgetPropsType } from '../../../packages/ui/lib/index';
 import { LoaderDataType } from '../../../packages/ui/lib/index';
+
+class MyConnectWidget extends BaseWidget<BaseWidgetPropsType> {
+
+  public onInit() {
+    console.log('Widget init.');
+  }
+
+  public renderNodes(loaderDataMap: Map<string, LoaderDataType>): React.ReactNode {
+    console.log('Widget render. data: ', loaderDataMap);
+    return (
+      <h1>Hello World!</h1>
+    );
+  }
+
+  public render(): React.ReactNode {
+    return (
+      <ConnectComponent 
+        loader={this.props.loader}
+        dataIds={this.props.dataIds}
+        renderNodes={this.renderNodes.bind(this)}
+        onInit={this.onInit.bind(this)}
+      />
+    )
+  }
+}
 
 class MyCanvas extends Canvas2D {
 
@@ -45,6 +71,10 @@ class App extends React.Component {
   render () {
     return (
       <div>
+        <MyConnectWidget 
+          loader={this.loader}
+          dataIds={['widget0']}
+        />
         <MyCanvas 
           loader={this.loader}
           dataIds={['canvas0']}

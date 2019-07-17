@@ -1,5 +1,7 @@
-export { LoaderDataType } from './common/types';
+export { LoaderDataType, BaseWidgetPropsType } from './common/types';
 
+export { BaseWidget } from './components/baseWidget';
+export { ConnectComponent } from './components/connectComponent';
 export { Canvas2D } from './components/canvas2DWidget';
 export { Canvas2DInteract } from './components/canvas2DInteractWidget';
 export { Video } from './components/videoWiget';
