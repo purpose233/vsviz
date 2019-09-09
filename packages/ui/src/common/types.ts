@@ -5,13 +5,20 @@ import { StreamMessageType } from '@vsviz/builder';
 export type ConnectPropsType = {
   loader: WSLoader,
   dataIds: string[],
-  onInit?: Function,
-  renderNodes: Function
+  renderNodes: Function,
+  onMetaData?: Function,
+  enabledMetaData?: boolean,
+  metaDataRepeated?: boolean,
+  dropBeforeMetaData?: boolean
 }
 
 export type BaseWidgetPropsType = {
   loader: WSLoader,
-  dataIds: string[]
+  dataIds: string[],
+  onMetaData?: Function,
+  enabledMetaData?: boolean,
+  metaDataRepeated?: boolean,
+  dropBeforeMetaData?: boolean
 }
 
 export type WorkerParseType = Buffer | Blob;

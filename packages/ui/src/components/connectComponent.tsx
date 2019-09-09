@@ -34,22 +34,22 @@ export function connectToLoader(Component: React.ComponentType<ConnectProtoProps
     public componentDidMount(): void {
       const { loader } = this.props;
       if (loader) {
-        loader.on(LoaderEventName.INIT, this.init);
-        loader.on(LoaderEventName.DATA, this.update);
+        loader.on(LoaderEventName.META, this.callOnMetaData);
+        loader.on(LoaderEventName.DATA, this.callOnData);
       }
     }
 
     public componentWillUnmount(): void {
       const { loader } = this.props;
       if (loader) {
-        loader.off(LoaderEventName.INIT, this.init);
-        loader.off(LoaderEventName.DATA, this.update);
+        loader.off(LoaderEventName.META, this.callOnMetaData);
+        loader.off(LoaderEventName.DATA, this.callOnData);
       }
     }
 
-    public init = (metaData: LoaderDataType) => {
-      const { onInit, dataIds } = this.props;
-      if (!!onInit) {
+    public callOnMetaData = (metaData: LoaderDataType) => {
+      const { onMetaData, dataIds } = this.props;
+      if (!!onMetaData) {
         const data = (metaData.data as Object);
         const filteredData = new Map<string, any>();
         for (const entry of Object.entries(data)) {
@@ -57,11 +57,11 @@ export function connectToLoader(Component: React.ComponentType<ConnectProtoProps
             filteredData.set(entry[0], entry[1]);
           }
         }
-        onInit(filteredData);
+        onMetaData(filteredData);
       }
     };
 
-    public update = (newData: LoaderDataType[], allData: Map<string, LoaderDataType>): void => {
+    public callOnData = (newData: LoaderDataType[], allData: Map<string, LoaderDataType>): void => {
       if (this.state.loaderDataMap == null) {
         if (WrappedComponent.checkNewDataUsefull(newData, this.props.dataIds)) {
           this.setState({

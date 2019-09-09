@@ -1,10 +1,9 @@
 import React from 'react';
-import { ConnectComponent } from './connectComponent';
-import { BaseWidgetPropsType, LoaderDataType } from '../common/types';
+import { LoaderDataType } from '../common/types';
 import { BaseWidget } from './baseWidget';
 import { Engine, Scene } from 'babylonjs';
 
-export type Canvas3DPropsType = BaseWidgetPropsType & {
+export type Canvas3DPropsType = {
   width: number,
   height: number
 }
@@ -50,17 +49,5 @@ export abstract class Canvas3D extends BaseWidget<Canvas3DPropsType> {
         <canvas ref={this.onCanvasLoad} />
       </div>
     );
-  }
-
-  // TODO: maybe put render in BaseWidget
-  public render(): React.ReactNode {
-    return (
-      <ConnectComponent 
-        loader={this.props.loader}
-        dataIds={this.props.dataIds}
-        renderNodes={this.renderNodes.bind(this)}
-        onInit={this.onInit.bind(this)}
-      />
-    )
   }
 }

@@ -1,4 +1,10 @@
 export const LoaderEventName = {
-  INIT: 'init',
+  META: 'meta',
   DATA: 'data'
+}
+
+export const defaultConnectOptions = {
+  enabledMetaData: true,
+  metaDataRepeated: false,
+  dropBeforeMetaData: true
 }

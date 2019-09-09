@@ -16,7 +16,7 @@ export class Video extends Canvas2D {
 
   private h264Decoder = null;
 
-  public onInit(metaData: Map<string, any>) {
+  public onMetaData(metaData: Map<string, any>) {
     const dataId = this.props.dataIds[0];
     const data = metaData.get(dataId);
     if (!data) {

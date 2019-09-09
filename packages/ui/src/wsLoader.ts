@@ -27,12 +27,12 @@ export class WSLoader {
     this.connect(addr);
     this.workerFarm = new WorkerFarm(3);
 
-    this.callbacks[LoaderEventName.INIT] = [];
+    this.callbacks[LoaderEventName.META] = [];
     this.callbacks[LoaderEventName.DATA] = [];
   }
   
   static checkEventName(eventName: string): boolean {
-    return eventName === LoaderEventName.INIT || eventName === LoaderEventName.DATA;
+    return eventName === LoaderEventName.META || eventName === LoaderEventName.DATA;
   }
 
   static checkMetaData(loaderDatas: LoaderDataType[]) {
@@ -46,7 +46,7 @@ export class WSLoader {
   public on(eventName: string, cb: Function): void {
     if (WSLoader.checkEventName(eventName)) {
       this.callbacks[eventName].push(cb);
-      if (this.metaData !== null && eventName === LoaderEventName.INIT) {
+      if (this.metaData !== null && eventName === LoaderEventName.META) {
         cb(this.metaData);
       }
     }
@@ -63,8 +63,8 @@ export class WSLoader {
 
   private emit(eventName: string, loaderDatas: LoaderDataType[] = null): void {
     switch (eventName) {
-      case LoaderEventName.INIT:
-        for (const cb of this.callbacks[LoaderEventName.INIT]) {
+      case LoaderEventName.META:
+        for (const cb of this.callbacks[LoaderEventName.META]) {
           cb(this.metaData);
         }
         break;
@@ -108,7 +108,7 @@ export class WSLoader {
 
       if (WSLoader.checkMetaData(washedDatas)) {
         this.metaData = washedDatas[0];
-        this.emit(LoaderEventName.INIT);
+        this.emit(LoaderEventName.META);
       } else {
         for (const loaderData of washedDatas) {
           this.currentData.set(loaderData.info.id, loaderData);

@@ -1,9 +1,8 @@
 import React from 'react';
-import { ConnectComponent } from './connectComponent';
-import { BaseWidgetPropsType, LoaderDataType } from '../common/types';
+import { LoaderDataType } from '../common/types';
 import { BaseWidget } from './baseWidget';
 
-export type Canvas2DPropsType = BaseWidgetPropsType & {
+export type Canvas2DPropsType = {
   width: number,
   height: number
 }
@@ -67,17 +66,5 @@ export abstract class Canvas2D extends BaseWidget<Canvas2DPropsType> {
         <canvas ref={this.onCanvasLoad} />
       </div>
     );
-  }
-
-  // TODO: maybe put render in BaseWidget
-  public render(): React.ReactNode {
-    return (
-      <ConnectComponent 
-        loader={this.props.loader}
-        dataIds={this.props.dataIds}
-        renderNodes={this.renderNodes.bind(this)}
-        onInit={this.onInit.bind(this)}
-      />
-    )
   }
 }
