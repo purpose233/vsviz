@@ -8,6 +8,7 @@ import { SocketContextSymbolKey } from '../common/constants';
 
 const metaDataMap = new Map<string, any>();
 let metaDataString: string | null = null;
+const socketSet = new Set<WebSocket>();
 
 // TODO: maybe use deep join instead
 function shallowJoin(map: Map<string, any>, streamMsg: StreamMessageType): Map<string, any> {
@@ -49,6 +50,9 @@ export class MetaDataCollector extends BaseMiddleware {
       shallowJoin(metaDataMap, streamMsg);
     }
     metaDataString = mapToString(metaDataMap);
+    for (const socket of socketSet) {
+      sendMetaData(socket, metaDataString);
+    }
     await next();
   }
 }
@@ -60,10 +64,17 @@ export class MetaDataSender extends BaseMiddleware {
   }
   
   protected async onConnection(next: Function, context: MiddlewareContext, msg: IncomingMessage): Promise<void> {
+    const socket: WebSocket = context.get(Symbol.for(SocketContextSymbolKey));
+    socketSet.add(socket);
     if (metaDataString !== null) {
-      const socket: WebSocket = context.get(Symbol.for(SocketContextSymbolKey));
       sendMetaData(socket, metaDataString);
     }
+    await next();
+  }
+
+  protected async onClose(next: Function, context: MiddlewareContext): Promise<void> {
+    const socket: WebSocket = context.get(Symbol.for(SocketContextSymbolKey));
+    socketSet.delete(socket);
     await next();
   }
 }

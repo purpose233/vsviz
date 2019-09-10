@@ -24,7 +24,8 @@ export function connectToLoader(Component: React.ComponentType<ConnectProtoProps
   return class WrappedComponent extends React.PureComponent<ConnectPropsType> {
 
     state = {
-      loaderDataMap: null
+      loaderDataMap: null,
+      receivedMetaData: false
     };
 
     static checkNewDataUsefull(loaderDatas: LoaderDataType[], dataIds: string[]): boolean {
@@ -48,6 +49,9 @@ export function connectToLoader(Component: React.ComponentType<ConnectProtoProps
     }
 
     public callOnMetaData = (metaData: LoaderDataType) => {
+      if (!this.props.enabledMetaData || 
+        (!this.props.metaDataRepeated && this.state.receivedMetaData)) { return; }
+
       const { onMetaData, dataIds } = this.props;
       if (!!onMetaData) {
         const data = (metaData.data as Object);
@@ -57,11 +61,16 @@ export function connectToLoader(Component: React.ComponentType<ConnectProtoProps
             filteredData.set(entry[0], entry[1]);
           }
         }
-        onMetaData(filteredData);
+        if (filteredData.size > 0) {
+          onMetaData(filteredData);
+          this.setState({receivedMetaData: true});
+        }
       }
     };
 
     public callOnData = (newData: LoaderDataType[], allData: Map<string, LoaderDataType>): void => {
+      if (this.props.dropBeforeMetaData && !this.state.receivedMetaData) { return; }
+      
       if (this.state.loaderDataMap == null) {
         if (WrappedComponent.checkNewDataUsefull(newData, this.props.dataIds)) {
           this.setState({

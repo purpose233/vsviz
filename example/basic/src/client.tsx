@@ -7,8 +7,8 @@ import { LoaderDataType } from '../../../packages/ui/lib/index';
 
 class MyConnectWidget extends BaseWidget<BaseWidgetPropsType> {
 
-  public onInit() {
-    console.log('Widget init.');
+  public onMetaData(metaData: Map<string, any>): void {
+    console.log(' Widget init.', metaData);
   }
 
   public renderNodes(loaderDataMap: Map<string, LoaderDataType>): React.ReactNode {
@@ -18,16 +18,16 @@ class MyConnectWidget extends BaseWidget<BaseWidgetPropsType> {
     );
   }
 
-  public render(): React.ReactNode {
-    return (
-      <ConnectComponent 
-        loader={this.props.loader}
-        dataIds={this.props.dataIds}
-        renderNodes={this.renderNodes.bind(this)}
-        onInit={this.onInit.bind(this)}
-      />
-    )
-  }
+  // public render(): React.ReactNode {
+  //   return (
+  //     <ConnectComponent 
+  //       loader={this.props.loader}
+  //       dataIds={this.props.dataIds}
+  //       renderNodes={this.renderNodes.bind(this)}
+  //       onMetaData={this.onInit.bind(this)}
+  //     />
+  //   )
+  // }
 }
 
 class MyCanvas extends Canvas2D {

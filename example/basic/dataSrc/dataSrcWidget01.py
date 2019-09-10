@@ -11,10 +11,20 @@ if __name__ == "__main__":
 
   info = {
     'id': 'widget0',
-    'streamType': 'customed',
+    'streamType': 'meta',
     'dataType': 'json',
     'sequence': 122,
     'timestamp': 0
   }
-  data = '{\"test\": 123}'
+  data = '{\"width\": 800}'
   send(s, info, data)
+  
+  # info = {
+  #   'id': 'widget0',
+  #   'streamType': 'customed',
+  #   'dataType': 'json',
+  #   'sequence': 122,
+  #   'timestamp': 0
+  # }
+  # data = '{\"test\": 123}'
+  # send(s, info, data)
